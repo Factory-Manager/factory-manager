@@ -1,0 +1,37 @@
+{
+  "name": "factory-manager",
+  "version": "1.0.0",
+  "description": "Distributed systems project for industrial machinery monitoring.",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo \"no build yet\"",
+    "clean:all": "rimraf node_modules package-lock.json",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format:check": "prettier . --check",
+    "format:write": "prettier . --write",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Factory-Manager/factory-manager.git"
+  },
+  "keywords": [],
+  "author": {
+    "name": "FactoryManager",
+    "url": "https://github.com/Factory-Manager"
+  },
+  "license": "MIT",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Factory-Manager/factory-manager/issues"
+  },
+  "homepage": "https://github.com/Factory-Manager/factory-manager#readme",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.4.0",
+    "jest": "^30.4.2",
+    "prettier": "^3.8.3",
+    "rimraf": "^6.1.3"
+  }
+}
