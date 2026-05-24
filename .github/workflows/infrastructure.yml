@@ -1,0 +1,22 @@
+name: Infrastructure
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  docker-compose:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Start infrastructure services
+        run: docker compose up -d
+
+      - name: Stop services
+        if: always()
+        run: docker compose down -v
