@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+set -e
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[0;33m'
+NC='\033[0m'
+
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+
+echo -e "${BLUE}Running pre-commit checks...${NC}"
+
+# Detect staged files
+changed_files=$(git diff --cached --name-only --diff-filter=ACM || true)
+
+if [ -z "$changed_files" ]; then
+  echo -e "${YELLOW}No staged files found. Skipping checks.${NC}"
+  exit 0
+fi
+
+node_projects=()
+
+add_node_project_if_needed() {
+  local project_dir="$1"
+
+  if [ -f "$project_dir/package.json" ]; then
+    node_projects+=("$project_dir")
+  fi
+}
+
+# Root Node project, if present
+if echo "$changed_files" | grep -Eq '(^package\.json$|^package-lock\.json$|^src/)'; then
+  add_node_project_if_needed "$ROOT_DIR"
+fi
+
+# Frontend, if present
+if echo "$changed_files" | grep -Eq '^frontend/'; then
+  add_node_project_if_needed "$ROOT_DIR/frontend"
+fi
+
+# Microservices: only Node.js services with package.json
+while IFS= read -r file; do
+  if [[ "$file" == microservices/*/* ]]; then
+    service_name="$(echo "$file" | cut -d'/' -f2)"
+    service_dir="$ROOT_DIR/microservices/$service_name"
+    add_node_project_if_needed "$service_dir"
+  fi
+done <<< "$changed_files"
+
+# Remove duplicates
+unique_projects=()
+for project in "${node_projects[@]}"; do
+  already_added=false
+
+  for existing in "${unique_projects[@]}"; do
+    if [ "$existing" = "$project" ]; then
+      already_added=true
+      break
+    fi
+  done
+
+  if [ "$already_added" = false ]; then
+    unique_projects+=("$project")
+  fi
+done
+
+if [ "${#unique_projects[@]}" -eq 0 ]; then
+  echo -e "${YELLOW}No staged Node.js projects detected. Skipping checks.${NC}"
+  exit 0
+fi
+
+errors=0
+error_messages=""
+
+relative_path() {
+  realpath --relative-to="$ROOT_DIR" "$1"
+}
+
+run_check() {
+  local project="$1"
+  local name="$2"
+  local cmd="$3"
+
+  echo -e "\n${YELLOW}Running $name in $(relative_path "$project")...${NC}"
+
+  output=$(cd "$project" && eval "$cmd" 2>&1) || {
+    echo -e "${RED}✗ $name failed${NC}"
+    error_messages+="
+${RED}[$name Error - $(relative_path "$project")]${NC}
+$output
+"
+    errors=$((errors + 1))
+    return 1
+  }
+
+  echo -e "${GREEN}✓ $name passed${NC}"
+}
+
+for project in "${unique_projects[@]}"; do
+  run_check "$project" "lint" "npm run lint --if-present"
+  run_check "$project" "format check" "npm run format:check --if-present"
+done
+
+if [ "$errors" -gt 0 ]; then
+  echo -e "\n${RED}Failed with $errors errors:${NC}"
+  echo -e "$error_messages"
+  echo -e "\n${YELLOW}Commit aborted.${NC}"
+  exit 1
+fi
+
+echo -e "\n${GREEN}All pre-commit checks passed.${NC}"
