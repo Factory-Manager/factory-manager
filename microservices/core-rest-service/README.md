@@ -7,3 +7,4 @@ REST service for the Factory Manager distributed monitoring system.
 ```bash
 npm ci
 npm run dev
+```
