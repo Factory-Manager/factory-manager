@@ -6,13 +6,14 @@ export default [
   js.configs.recommended,
 
   {
-    files: ['src/**/*.js'],
+    files: ['src/**/*.js', 'test/**/*.js'],
     languageOptions: {
       ecmaVersion: 2024,
       sourceType: 'module',
       globals: {
         process: 'readonly',
         console: 'readonly',
+        fetch: 'readonly'
       }
     },
     rules: {
