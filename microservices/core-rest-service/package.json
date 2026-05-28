@@ -1,0 +1,35 @@
+{
+  "name": "core-rest-service",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Core REST service for the Factory Manager distributed monitoring system.",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "lint": "eslint \"src/**/*.js\"",
+    "lint:fix": "eslint \"src/**/*.js\" --fix",
+    "format": "prettier --write \"src/**/*.js\""
+  },
+  "engines": {
+    "node": ">=22",
+    "npm": ">=10"
+  },
+  "contributors": [
+    "David Cohen",
+    "Giulia Nardicchia"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.6.3"
+  },
+  "devDependencies": {
+    "eslint": "^10.4.0",
+    "nodemon": "^3.1.14",
+    "prettier": "^3.8.3"
+  }
+}
