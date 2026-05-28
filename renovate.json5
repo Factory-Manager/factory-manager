@@ -1,0 +1,35 @@
+{
+  // Enables editor validation and autocomplete for Renovate configuration.
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+
+  // Recommended baseline preset maintained by Renovate.
+  "extends": ["config:recommended"],
+
+  // Creates a GitHub issue summarizing pending, open, closed, and errored updates.
+  "dependencyDashboard": true,
+
+  // Timezone used by schedule-based rules.
+  "timezone": "Europe/Rome",
+
+  // Use Conventional Commits for Renovate PR titles and commits.
+  // Example: chore(deps): update dependency express to v5.2.2
+  "semanticCommits": "enabled",
+  "semanticCommitType": "chore",
+  "semanticCommitScope": "deps",
+
+  // Keep original casing in PR titles and commit messages.
+  "commitMessageLowerCase": "never",
+
+  // Label applied to Renovate PRs.
+  "labels": ["dependencies"],
+
+  // Maximum number of Renovate PRs open at the same time.
+  "prConcurrentLimit": 3,
+
+  // Maximum number of Renovate PRs created per hour.
+  "prHourlyLimit": 2,
+
+  // Update package.json ranges together with lockfiles.
+  // Example: "express": "^5.2.1" -> "express": "^5.2.2"
+  "rangeStrategy": "bump"
+}
