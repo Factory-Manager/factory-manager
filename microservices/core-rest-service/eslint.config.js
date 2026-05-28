@@ -1,12 +1,15 @@
-module.exports = [
+import js from '@eslint/js'
+export default [
   {
     ignores: ['node_modules/**', 'coverage/**']
   },
+  js.configs.recommended,
+
   {
     files: ['src/**/*.js'],
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'commonjs',
+      ecmaVersion: 2024,
+      sourceType: 'module',
       globals: {
         process: 'readonly',
         console: 'readonly',
@@ -16,6 +19,13 @@ module.exports = [
         __filename: 'readonly'
       }
     },
-    rules: {}
+    rules: {
+      'no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_'
+        }
+      ]
+    }
   }
 ]

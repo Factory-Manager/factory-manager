@@ -4,13 +4,14 @@
   "private": true,
   "description": "Core REST service for the Factory Manager distributed monitoring system.",
   "main": "src/server.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "lint": "eslint \"src/**/*.js\"",
     "lint:fix": "eslint \"src/**/*.js\" --fix",
-    "format": "prettier --write \"src/**/*.js\""
+    "format": "prettier --write \"src/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\""
   },
   "engines": {
     "node": ">=22",
