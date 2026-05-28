@@ -1,0 +1,48 @@
+name: Core REST Service
+
+on:
+  pull_request:
+    paths:
+      - "microservices/core-rest-service/**"
+      - ".github/workflows/core-rest-service.yml"
+
+  push:
+    branches:
+      - main
+    paths:
+      - "microservices/core-rest-service/**"
+      - ".github/workflows/core-rest-service.yml"
+
+  workflow_dispatch:
+
+jobs:
+  checks:
+    name: Lint, format and test
+    runs-on: ubuntu-24.04
+
+    defaults:
+      run:
+        working-directory: microservices/core-rest-service
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: microservices/core-rest-service/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Run tests
+        run: npm test
