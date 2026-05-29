@@ -5,6 +5,9 @@ export const USER_TEST_VALUES = Object.freeze({
   lastName: 'Rossi',
   email: 'Operator@FM.com',
   normalizedEmail: 'operator@fm.com',
+  adminEmail: 'Admin@Factory.COM',
+  normalizedAdminEmail: 'admin@factory.com',
+  password: 'Password123!',
   passwordHash: 'hashed-password',
   role: USER_ROLES.OPERATOR,
   invalidRole: 'moderator',
@@ -12,15 +15,33 @@ export const USER_TEST_VALUES = Object.freeze({
 })
 
 export function createValidUserData(overrides = {}) {
+  const { name = {}, ...otherOverrides } = overrides
+
   return {
     name: {
       first: USER_TEST_VALUES.firstName,
       last: USER_TEST_VALUES.lastName,
-      ...overrides.name
+      ...name
     },
     email: USER_TEST_VALUES.email,
     passwordHash: USER_TEST_VALUES.passwordHash,
     role: USER_TEST_VALUES.role,
-    ...overrides
+    ...otherOverrides
+  }
+}
+
+export function createValidCreateUserInput(overrides = {}) {
+  const { name = {}, ...otherOverrides } = overrides
+
+  return {
+    name: {
+      first: USER_TEST_VALUES.firstName,
+      last: USER_TEST_VALUES.lastName,
+      ...name
+    },
+    email: USER_TEST_VALUES.email,
+    password: USER_TEST_VALUES.password,
+    role: USER_TEST_VALUES.role,
+    ...otherOverrides
   }
 }
