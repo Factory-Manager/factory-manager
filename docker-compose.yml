@@ -2,7 +2,7 @@ name: factory-manager
 
 services:
   mongo:
-    image: mongo:7
+    image: mongo:8
     container_name: factory-manager-mongo
     ports:
       - "27017:27017"
