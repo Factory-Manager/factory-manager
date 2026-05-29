@@ -1,23 +1,14 @@
 import 'dotenv/config'
 
-import mongoose from 'mongoose'
-
 import { app } from './app.js'
-
-const PORT = process.env.PORT || 3000
-const MONGO_URI = process.env.MONGO_URI
+import { connectToDatabase } from './bootstrap/mongoose.js'
+import { env } from './config/env.js'
 
 async function startServer() {
-  if (!MONGO_URI) {
-    throw new Error('Missing MONGO_URI environment variable')
-  }
+  await connectToDatabase(env.mongoUri)
 
-  await mongoose.connect(MONGO_URI)
-
-  console.log('[core-rest-service] connected to MongoDB')
-
-  app.listen(PORT, () => {
-    console.log(`[core-rest-service] listening on port ${PORT}`)
+  app.listen(env.port, () => {
+    console.log(`[core-rest-service] listening on port ${env.port}`)
   })
 }
 
