@@ -5,6 +5,6 @@ export const USER_ROLES = Object.freeze({
 
 export const USER_ROLE_VALUES = Object.freeze(Object.values(USER_ROLES))
 
-export function isValidUserRole(role) {
-  return USER_ROLE_VALUES.includes(role)
-}
+const USER_ROLE_SET = new Set(USER_ROLE_VALUES)
+
+export const isValidUserRole = (role) => USER_ROLE_SET.has(role)
