@@ -12,7 +12,9 @@
     "lint:fix": "eslint \"src/**/*.js\" \"test/**/*.js\" --fix",
     "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\"",
     "format:check": "prettier --check \"src/**/*.js\" \"test/**/*.js\"",
-    "test": "node --test \"test/**/*.test.js\""
+    "test": "node --test \"test/**/*.test.js\"",
+    "test:coverage": "node --test --experimental-test-coverage --test-coverage-include=src/**/*.js --test-coverage-exclude=test/**/*.js \"test/**/*.test.js\"",
+    "test:coverage:check": "node --test --experimental-test-coverage --test-coverage-include=src/**/*.js --test-coverage-exclude=test/**/*.js --test-coverage-lines=60 --test-coverage-functions=60 --test-coverage-branches=60 \"test/**/*.test.js\""
   },
   "engines": {
     "node": ">=22",
