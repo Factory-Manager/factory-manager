@@ -45,4 +45,16 @@ describe('health endpoints', () => {
     assert.equal(response.status, 404)
     assert.equal(body.error, 'Not Found')
   })
+
+  it('GET /api/ready returns not ready when database is disconnected', async () => {
+    const response = await fetch(`${baseUrl}/api/ready`)
+    const body = await response.json()
+
+    assert.equal(response.status, 503)
+    assert.equal(body.service, 'core-rest-service')
+    assert.equal(body.ready, false)
+    assert.deepEqual(body.database, {
+      connected: false
+    })
+  })
 })
