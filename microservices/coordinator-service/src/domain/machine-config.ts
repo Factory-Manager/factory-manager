@@ -7,6 +7,10 @@ export class MachineConfig {
     public readonly powerConsumption: {
       min: number
       max: number
+    },
+    public readonly emissions: {
+      min: number
+      max: number
     }
   ) {}
 }
