@@ -56,6 +56,21 @@ describe("Machine", () => {
         expect(machine.isUnderheating(config)).toBe(true)
     })
 
+    it("returns false when temperature is above min", () => {
+        const machine = new Machine(
+            "M2",
+            new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
+            new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
+            new Emission(MACHINE_VALUES.EMISSION.SAFE)
+        )
+        const config: MachineConfig = fakeConfig({
+            temperature: {
+                min: MACHINE_LIMITS.TEMPERATURE.MIN,
+            }
+        })
+        expect(machine.isUnderheating(config)).toBe(false)
+    })
+
     it("returns true when power consumption exceeds max", () => {
         const machine = new Machine(
             "M3",
