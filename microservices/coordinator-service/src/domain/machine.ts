@@ -12,14 +12,18 @@ export class Machine {
   ) {}
 
   isOverheating(config: MachineConfig): boolean {
-    return this.temperature.value > config.temperature.max
+    return this.temperature.value >= config.temperature.max
+  }
+
+  isUnderheating(config: MachineConfig): boolean {
+    return this.temperature.value <= config.temperature.min
   }
 
   isOverconsuming(config: MachineConfig): boolean {
-    return this.powerConsumption.value > config.powerConsumption.max
+    return this.powerConsumption.value >= config.powerConsumption.max
   }
 
   isOveremitting(config: MachineConfig): boolean {
-    return this.emissions.value > config.emissions.max
+    return this.emissions.value >= config.emissions.max
   }
 }
