@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { toUserOutput } from '../../../src/application/users/user.serializer.js'
+import {
+  toUserOutput,
+  toUserOutputList
+} from '../../../src/application/users/user.serializer.js'
 
 describe('User mapper', () => {
   it('maps a plain user to public output', () => {
@@ -80,5 +83,33 @@ describe('User mapper', () => {
   it('returns null and undefined as they are', () => {
     assert.equal(toUserOutput(null), null)
     assert.equal(toUserOutput(undefined), undefined)
+  })
+
+  it('maps a user list to public output list', () => {
+    const users = [
+      {
+        id: 'user-1',
+        email: 'one@fm.com',
+        passwordHash: 'hidden'
+      },
+      {
+        id: 'user-2',
+        email: 'two@fm.com',
+        passwordHash: 'hidden'
+      }
+    ]
+
+    const output = toUserOutputList(users)
+
+    assert.deepEqual(output, [
+      {
+        id: 'user-1',
+        email: 'one@fm.com'
+      },
+      {
+        id: 'user-2',
+        email: 'two@fm.com'
+      }
+    ])
   })
 })
