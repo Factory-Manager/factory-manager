@@ -7,6 +7,25 @@ import {
   USER_TEST_VALUES
 } from '../../factories/users.js'
 
+function createUserServiceTestContext({
+  repositoryOptions,
+  passwordHasherOptions
+} = {}) {
+  const userRepository = createUserRepositoryDouble(repositoryOptions)
+  const passwordHasher = createPasswordHasherDouble(passwordHasherOptions)
+
+  const userService = createUserService({
+    userRepository,
+    passwordHasher
+  })
+
+  return {
+    userService,
+    userRepository,
+    passwordHasher
+  }
+}
+
 function createUserRepositoryDouble({
   foundUser = null,
   users = [
@@ -143,12 +162,9 @@ describe('User service', () => {
     const input = createValidCreateUserInput({
       passwordHash: 'malicious-password-hash'
     })
-    const userRepository = createUserRepositoryDouble()
-    const passwordHasher = createPasswordHasherDouble()
-    const userService = createUserService({
-      userRepository,
-      passwordHasher
-    })
+
+    const { userService, userRepository, passwordHasher } =
+      createUserServiceTestContext()
 
     const user = await userService.createUser(input)
 
@@ -181,12 +197,8 @@ describe('User service', () => {
     const input = createValidCreateUserInput({
       role: undefined
     })
-    const userRepository = createUserRepositoryDouble()
-    const passwordHasher = createPasswordHasherDouble()
-    const userService = createUserService({
-      userRepository,
-      passwordHasher
-    })
+
+    const { userService, userRepository } = createUserServiceTestContext()
 
     await userService.createUser(input)
 
@@ -201,12 +213,7 @@ describe('User service', () => {
   })
 
   it('gets a user by id as public output', async () => {
-    const userRepository = createUserRepositoryDouble()
-    const passwordHasher = createPasswordHasherDouble()
-    const userService = createUserService({
-      userRepository,
-      passwordHasher
-    })
+    const { userService } = createUserServiceTestContext()
 
     const user = await userService.getUserById('user-id')
 
@@ -217,18 +224,15 @@ describe('User service', () => {
   })
 
   it('updates a user without hashing when password is not provided', async () => {
-    const userRepository = createUserRepositoryDouble()
-    const passwordHasher = createPasswordHasherDouble()
-    const userService = createUserService({
-      userRepository,
-      passwordHasher
-    })
+    const { userService, userRepository, passwordHasher } =
+      createUserServiceTestContext()
 
     await userService.updateUserById('user-id', {
       isActive: false
     })
 
     assert.deepEqual(passwordHasher.calls, [])
+
     assert.deepEqual(userRepository.calls[0], {
       method: 'updateUserById',
       id: 'user-id',
@@ -239,12 +243,7 @@ describe('User service', () => {
   })
 
   it('deletes a user and returns public output', async () => {
-    const userRepository = createUserRepositoryDouble()
-    const passwordHasher = createPasswordHasherDouble()
-    const userService = createUserService({
-      userRepository,
-      passwordHasher
-    })
+    const { userService } = createUserServiceTestContext()
 
     const user = await userService.deleteUserById('user-id')
 
@@ -255,12 +254,7 @@ describe('User service', () => {
   })
 
   it('lists users with default pagination', async () => {
-    const userRepository = createUserRepositoryDouble()
-    const passwordHasher = createPasswordHasherDouble()
-    const userService = createUserService({
-      userRepository,
-      passwordHasher
-    })
+    const { userService, userRepository } = createUserServiceTestContext()
 
     const users = await userService.listUsers()
 
@@ -281,12 +275,7 @@ describe('User service', () => {
   })
 
   it('lists users with provided pagination', async () => {
-    const userRepository = createUserRepositoryDouble()
-    const passwordHasher = createPasswordHasherDouble()
-    const userService = createUserService({
-      userRepository,
-      passwordHasher
-    })
+    const { userService, userRepository } = createUserServiceTestContext()
 
     await userService.listUsers({
       limit: 10,
