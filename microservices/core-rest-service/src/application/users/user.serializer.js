@@ -31,8 +31,12 @@ function toUserId(user) {
 }
 
 /**
- * Converts a user object to a plain JavaScript object,
- * ensuring that only defined fields are included and that the user ID is properly formatted.
+ * Converts a user document or plain object into a public user output object.
+ *
+ * Only allowlisted fields are included in the returned object.
+ *
+ * @param {object|null|undefined} user User document or plain user object.
+ * @returns {object|null|undefined} Public user output.
  */
 export function toUserOutput(user) {
   const plainUser = toPlainObject(user)
@@ -52,4 +56,13 @@ export function toUserOutput(user) {
     updatedAt: plainUser.updatedAt,
     fullName: plainUser.fullName
   })
+}
+/**
+ * Converts user documents or plain objects into a list of public user output objects.
+ *
+ * @param {Array<object>} users User documents or plain user objects.
+ * @returns {Array<object>} Public user outputs.
+ */
+export function toUserOutputList(users) {
+  return users.map(toUserOutput)
 }
