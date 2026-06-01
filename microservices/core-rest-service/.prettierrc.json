@@ -3,5 +3,7 @@
   "semi": false,
   "singleQuote": true,
   "printWidth": 80,
-  "bracketSpacing": true
+  "bracketSpacing": true,
+  "proseWrap": "always",
+  "endOfLine": "lf"
 }
