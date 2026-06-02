@@ -13,18 +13,6 @@ function isInvalidJsonError(error) {
   return error instanceof SyntaxError && error.status === 400
 }
 
-/**
- * Sends a consistent API error response.
- *
- * Optional details can be included for validation errors.
- *
- * @param {import('express').Response} res Express response object.
- * @param {Object} errorResponse Error response data.
- * @param {number} errorResponse.statusCode HTTP status code.
- * @param {string} errorResponse.code Public application error code.
- * @param {string} errorResponse.message Public error message.
- * @param {Array|Object} [errorResponse.details] Optional error details.
- */
 function sendErrorResponse(res, { statusCode, code, message, details }) {
   const responseBody = {
     code,
@@ -46,7 +34,7 @@ function sendErrorResponse(res, { statusCode, code, message, details }) {
  *
  * @param {Error} error Error raised by previous middleware or route handlers.
  * @param {import('express').Request} _req Express request object.
- * @param {import('express').Response} res Express a response object.
+ * @param {import('express').Response} res Express response object.
  * @param {import('express').NextFunction} next Express next function.
  */
 export function errorHandler(error, _req, res, next) {
