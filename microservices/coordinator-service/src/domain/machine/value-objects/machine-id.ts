@@ -1,4 +1,4 @@
-import { InvalidMachineIdError } from '../machine/errors/invalid-machine-id.error'
+import { InvalidMachineIdError } from '../errors/invalid-machine-id.error'
 
 export class MachineId {
   constructor(public readonly value: string) {

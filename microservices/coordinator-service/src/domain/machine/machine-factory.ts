@@ -1,10 +1,10 @@
-import { Emission } from '../value-objects/emission'
+import { Emission } from './value-objects/emission'
 import { Machine } from './machine'
-import { PowerConsumption } from '../value-objects/power-consuption'
-import { Pressure } from '../value-objects/pressure'
-import { Temperature } from '../value-objects/temperature'
-import { Vibration } from '../value-objects/vibration'
-import { MachineId } from '../value-objects/machine-id'
+import { PowerConsumption } from './value-objects/power-consuption'
+import { Pressure } from './value-objects/pressure'
+import { Temperature } from './value-objects/temperature'
+import { Vibration } from './value-objects/vibration'
+import { MachineId } from './value-objects/machine-id'
 
 export class MachineFactory {
   static createFromSensors(
