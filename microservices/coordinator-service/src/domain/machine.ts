@@ -1,6 +1,7 @@
 import { Emission } from './emission'
 import { MachineConfig } from './machine-config'
 import { PowerConsumption } from './power-consuption'
+import { Pressure } from './pressure'
 import { Temperature } from './temperature'
 import { Vibration } from './vibration'
 
@@ -10,7 +11,8 @@ export class Machine {
     public temperature: Temperature,
     public powerConsumption: PowerConsumption,
     public emissions: Emission,
-    public vibration: Vibration
+    public vibration: Vibration,
+    public pressure: Pressure
   ) {}
 
   isOverheating(config: MachineConfig): boolean {
@@ -31,5 +33,9 @@ export class Machine {
 
   isOvervibrating(config: MachineConfig): boolean {
     return this.vibration.value >= config.vibration.max
+  }
+
+  isOverpressurized(config: MachineConfig): boolean {
+    return this.pressure.value >= config.pressure.max
   }
 }

@@ -15,6 +15,10 @@ export class MachineConfig {
     public readonly vibration: {
       min: number
       max: number
+    },
+    public readonly pressure: {
+      min: number
+      max: number
     }
   ) {}
 }
