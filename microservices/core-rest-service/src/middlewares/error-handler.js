@@ -34,7 +34,7 @@ function sendErrorResponse(res, { statusCode, code, message, details }) {
  *
  * @param {Error} error Error raised by previous middleware or route handlers.
  * @param {import('express').Request} _req Express request object.
- * @param {import('express').Response} res Express response object.
+ * @param {import('express').Response} res an Express response object.
  * @param {import('express').NextFunction} next Express next function.
  */
 export function errorHandler(error, _req, res, next) {

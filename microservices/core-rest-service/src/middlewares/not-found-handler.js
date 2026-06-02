@@ -5,7 +5,7 @@ import { ERROR_CODES } from '../errors/error-codes.js'
  * Register this middleware after all routes and other middlewares.
  *
  * @param {import('express').Request} req Express request object.
- * @param {import('express').Response} res Express a response object.
+ * @param {import('express').Response} res an Express response object.
  */
 export function notFoundHandler(req, res) {
   res.status(404).json({
