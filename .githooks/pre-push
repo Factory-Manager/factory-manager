@@ -125,6 +125,7 @@ $output
 for project in "${unique_projects[@]}"; do
   run_check "$project" "lint" "npm run lint --if-present"
   run_check "$project" "format check" "npm run format:check --if-present"
+  run_check "$project" "tests" "npm run test:coverage:check --if-present"
 done
 
 if [ "$errors" -gt 0 ]; then
