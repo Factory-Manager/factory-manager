@@ -4,9 +4,11 @@ import { Temperature } from "../../../../../src/domain/machine/value-objects/tem
 
 describe("Range", () => {
 
+    const MIN = 10
+    const MAX = 100
     const range = new Range(
-        new Temperature(10),
-        new Temperature(100)
+        new Temperature(MIN),
+        new Temperature(MAX)
     )
 
     it("returns true when value is inside range", () => {
@@ -21,4 +23,15 @@ describe("Range", () => {
         ).toBe(false)
     })
 
+    it("returns true when value is above or equal to max", () => {
+        expect(
+            range.isAboveOrEqualMax(new Temperature(MAX))
+        ).toBe(true)
+    })
+
+    it("returns true when value is below or equal to min", () => {
+        expect(
+            range.isBelowOrEqualMin(new Temperature(MIN))
+        ).toBe(true)
+    })
 })
