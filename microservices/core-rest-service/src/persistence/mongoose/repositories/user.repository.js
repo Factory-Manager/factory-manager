@@ -65,5 +65,3 @@ export function createUserRepository({ userModel = defaultUserModel } = {}) {
     findUsers
   })
 }
-
-export const userRepository = createUserRepository()
