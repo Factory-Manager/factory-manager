@@ -1,6 +1,8 @@
 import cors from 'cors'
 import express from 'express'
 
+import { errorHandler } from '../middlewares/error-handler.js'
+import { notFoundHandler } from '../middlewares/not-found-handler.js'
 import { isDatabaseConnected } from './mongoose.js'
 
 export function configureExpress(app) {
@@ -39,10 +41,6 @@ export function configureExpress(app) {
     })
   })
 
-  app.use((req, res) => {
-    res.status(404).json({
-      error: 'Not Found',
-      message: `Route ${req.method} ${req.originalUrl} not found`
-    })
-  })
+  app.use(notFoundHandler)
+  app.use(errorHandler)
 }
