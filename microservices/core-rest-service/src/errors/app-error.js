@@ -1,6 +1,18 @@
 import { ERROR_CODES } from './error-codes.js'
 
+/**
+ * Error used for expected application failures.
+ */
 export class AppError extends Error {
+  /**
+   * Creates an application error.
+   *
+   * @param {string} message Public error message.
+   * @param {Object} options Error options.
+   * @param {number} options.statusCode HTTP status code.
+   * @param {string} options.code Public application error code.
+   * @param {Array|Object} [options.details] Optional error details.
+   */
   constructor(message, { statusCode, code, details } = {}) {
     super(message)
 
