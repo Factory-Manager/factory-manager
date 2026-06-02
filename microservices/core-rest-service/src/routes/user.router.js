@@ -26,7 +26,7 @@ function ensureUserFound(user) {
  *
  * @param {Object} dependencies Router dependencies.
  * @param {Object} dependencies.userService User application service.
- * @returns {import('express-serve-static-core').Router} User router.
+ * @returns {import('express').Router} User router.
  */
 export function createUserRouter({ userService }) {
   const router = Router()
