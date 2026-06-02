@@ -17,6 +17,11 @@ export function fakeConfig(overrides?: any): MachineConfig {
       min: MACHINE_LIMITS.EMISSION.MIN,
       max: MACHINE_LIMITS.EMISSION.MAX,
       ...(overrides?.emissions ?? {})
+    },
+    vibration: {
+      min: MACHINE_LIMITS.VIBRATION.MIN,
+      max: MACHINE_LIMITS.VIBRATION.MAX,
+      ...(overrides?.vibration ?? {})
     }
   };
 }

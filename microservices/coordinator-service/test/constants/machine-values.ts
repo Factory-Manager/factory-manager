@@ -1,17 +1,22 @@
 export const MACHINE_VALUES = {
   TEMPERATURE: {
-    SAFE: 50,
+    SAFE: 55,
     OVER: 90,
-    UNDER: 5
+    UNDER: 10,
   },
 
   POWER_CONSUMPTION: {
-    SAFE: 40,
-    OVER: 120
+    SAFE: 850,
+    OVER: 1350,
   },
 
   EMISSION: {
-    SAFE: 30,
-    OVER: 100
-  }
-};
+    SAFE: 50,
+    OVER: 95,
+  },
+
+  VIBRATION: {
+    SAFE: 2.1,
+    OVER: 5.3,
+  },
+}
