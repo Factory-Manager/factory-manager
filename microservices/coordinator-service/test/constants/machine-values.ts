@@ -1,4 +1,7 @@
 export const MACHINE_VALUES = {
+
+  ID: "M1",
+
   TEMPERATURE: {
     SAFE: 55,
     OVER: 90,
