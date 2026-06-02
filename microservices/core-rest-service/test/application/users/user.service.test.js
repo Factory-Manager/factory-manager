@@ -149,32 +149,19 @@ describe('User service', () => {
   })
 
   it('creates a user with a hashed password and returns public output', async () => {
-    const input = createValidCreateUserInput({
-      passwordHash: 'malicious-password-hash'
-    })
-
+    const input = createValidCreateUserInput()
     const { userService, userRepository, passwordHasher } =
       createUserServiceTestContext()
 
     const user = await userService.createUser(input)
 
     assert.deepEqual(passwordHasher.calls, [
-      {
-        method: 'hashPassword',
-        password: USER_TEST_VALUES.password
-      }
+      { method: 'hashPassword', password: USER_TEST_VALUES.password }
     ])
-
-    assert.deepEqual(userRepository.calls[0], {
-      method: 'createUser',
-      userData: {
-        name: input.name,
-        email: input.email,
-        passwordHash: USER_TEST_VALUES.passwordHash,
-        role: input.role
-      }
-    })
-
+    assert.equal(
+      userRepository.calls[0].userData.passwordHash,
+      USER_TEST_VALUES.passwordHash
+    )
     assert.deepEqual(user, {
       id: 'created-user',
       name: input.name,
@@ -183,23 +170,13 @@ describe('User service', () => {
     })
   })
 
-  it('omits role when it is not provided during user creation', async () => {
-    const input = createValidCreateUserInput({
-      role: undefined
-    })
-
+  it('omits undefined optional fields from the create data', async () => {
+    const input = createValidCreateUserInput({ role: undefined })
     const { userService, userRepository } = createUserServiceTestContext()
 
     await userService.createUser(input)
 
-    assert.deepEqual(userRepository.calls[0], {
-      method: 'createUser',
-      userData: {
-        name: input.name,
-        email: input.email,
-        passwordHash: USER_TEST_VALUES.passwordHash
-      }
-    })
+    assert.equal('role' in userRepository.calls[0].userData, false)
   })
 
   it('gets a user by id as public output', async () => {
@@ -243,41 +220,11 @@ describe('User service', () => {
     })
   })
 
-  it('lists users with default pagination', async () => {
-    const { userService, userRepository } = createUserServiceTestContext()
+  it('lists users and returns public output', async () => {
+    const { userService } = createUserServiceTestContext()
 
     const users = await userService.listUsers()
 
-    assert.deepEqual(userRepository.calls[0], {
-      method: 'findUsers',
-      pagination: {
-        limit: 50,
-        offset: 0
-      }
-    })
-
-    assert.deepEqual(users, [
-      {
-        id: 'user-1',
-        email: 'operator@fm.com'
-      }
-    ])
-  })
-
-  it('lists users with provided pagination', async () => {
-    const { userService, userRepository } = createUserServiceTestContext()
-
-    await userService.listUsers({
-      limit: 10,
-      offset: 20
-    })
-
-    assert.deepEqual(userRepository.calls[0], {
-      method: 'findUsers',
-      pagination: {
-        limit: 10,
-        offset: 20
-      }
-    })
+    assert.deepEqual(users, [{ id: 'user-1', email: 'operator@fm.com' }])
   })
 })

@@ -25,38 +25,18 @@ describe('User model', () => {
     assert.equal(user.fullName, USER_TEST_VALUES.fullName)
   })
 
-  it('requires first name', () => {
-    const user = createUser({
-      name: {
-        first: undefined
-      }
-    })
+  it('requires name fields, email, and password hash', () => {
+    const cases = [
+      ['name.first', { name: { first: undefined } }],
+      ['name.last', { name: { last: undefined } }],
+      ['email', { email: undefined }],
+      ['passwordHash', { passwordHash: undefined }]
+    ]
 
-    const error = user.validateSync()
-
-    assert.ok(error.errors['name.first'])
-  })
-
-  it('requires last name', () => {
-    const user = createUser({
-      name: {
-        last: undefined
-      }
-    })
-
-    const error = user.validateSync()
-
-    assert.ok(error.errors['name.last'])
-  })
-
-  it('requires email', () => {
-    const user = createUser({
-      email: undefined
-    })
-
-    const error = user.validateSync()
-
-    assert.ok(error.errors.email)
+    for (const [field, overrides] of cases) {
+      const error = createUser(overrides).validateSync()
+      assert.ok(error?.errors[field])
+    }
   })
 
   it('normalizes email to lowercase', () => {
@@ -68,16 +48,6 @@ describe('User model', () => {
 
     assert.equal(error, undefined)
     assert.equal(user.email, 'admin@factory.com')
-  })
-
-  it('requires password hash', () => {
-    const user = createUser({
-      passwordHash: undefined
-    })
-
-    const error = user.validateSync()
-
-    assert.ok(error.errors.passwordHash)
   })
 
   it('uses operator as default role', () => {
