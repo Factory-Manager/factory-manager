@@ -4,6 +4,7 @@ import express from 'express'
 import { errorHandler } from '../middlewares/error-handler.js'
 import { notFoundHandler } from '../middlewares/not-found-handler.js'
 import { isDatabaseConnected } from './mongoose.js'
+import { createUsersBootstrap } from './users.js'
 
 export function configureExpress(app) {
   app.enable('trust proxy')
@@ -40,6 +41,9 @@ export function configureExpress(app) {
       }
     })
   })
+
+  const { userRouter } = createUsersBootstrap()
+  app.use('/api/users', userRouter)
 
   app.use(notFoundHandler)
   app.use(errorHandler)
