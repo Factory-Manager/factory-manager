@@ -11,6 +11,10 @@ export class MachineConfig {
     public readonly emissions: {
       min: number
       max: number
+    },
+    public readonly vibration: {
+      min: number
+      max: number
     }
   ) {}
 }
