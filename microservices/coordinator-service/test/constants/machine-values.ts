@@ -19,4 +19,9 @@ export const MACHINE_VALUES = {
     SAFE: 2.1,
     OVER: 5.3,
   },
+
+  PRESSURE: {
+    SAFE: 6,
+    OVER: 12,
+  }
 }

@@ -22,6 +22,11 @@ export function fakeConfig(overrides?: any): MachineConfig {
       min: MACHINE_LIMITS.VIBRATION.MIN,
       max: MACHINE_LIMITS.VIBRATION.MAX,
       ...(overrides?.vibration ?? {})
+    },
+    pressure: {
+      min: MACHINE_LIMITS.PRESSURE.MIN,
+      max: MACHINE_LIMITS.PRESSURE.MAX,
+      ...(overrides?.pressure ?? {})
     }
   };
 }

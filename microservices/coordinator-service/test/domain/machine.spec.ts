@@ -8,6 +8,7 @@ import { MACHINE_VALUES } from "../constants/machine-values"
 import { MachineConfig } from "../../src/domain/machine-config"
 import { MACHINE_LIMITS } from "../constants/machine-limits"
 import { Vibration } from "../../src/domain/vibration"
+import { Pressure } from "../../src/domain/pressure"
 
 describe("Machine", () => {
     it("returns true when temperature exceeds max", () => {
@@ -16,7 +17,8 @@ describe("Machine", () => {
             new Temperature(MACHINE_VALUES.TEMPERATURE.OVER),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
-            new Vibration(MACHINE_VALUES.VIBRATION.SAFE)
+            new Vibration(MACHINE_VALUES.VIBRATION.SAFE),
+            new Pressure(MACHINE_VALUES.PRESSURE.SAFE)
         )
 
         const config: MachineConfig = fakeConfig({
@@ -34,7 +36,8 @@ describe("Machine", () => {
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
-            new Vibration(MACHINE_VALUES.VIBRATION.SAFE)
+            new Vibration(MACHINE_VALUES.VIBRATION.SAFE),
+            new Pressure(MACHINE_VALUES.PRESSURE.SAFE)
         )
         const config: MachineConfig = fakeConfig({
             temperature: {
@@ -50,7 +53,8 @@ describe("Machine", () => {
             new Temperature(MACHINE_VALUES.TEMPERATURE.UNDER),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
-            new Vibration(MACHINE_VALUES.VIBRATION.SAFE)
+            new Vibration(MACHINE_VALUES.VIBRATION.SAFE),
+            new Pressure(MACHINE_VALUES.PRESSURE.SAFE)
         )
         const config: MachineConfig = fakeConfig({
             temperature: {
@@ -66,7 +70,8 @@ describe("Machine", () => {
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
-            new Vibration(MACHINE_VALUES.VIBRATION.SAFE)
+            new Vibration(MACHINE_VALUES.VIBRATION.SAFE),
+            new Pressure(MACHINE_VALUES.PRESSURE.SAFE),
         )
         const config: MachineConfig = fakeConfig({
             temperature: {
@@ -82,7 +87,8 @@ describe("Machine", () => {
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.OVER),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
-            new Vibration(MACHINE_VALUES.VIBRATION.SAFE)
+            new Vibration(MACHINE_VALUES.VIBRATION.SAFE),
+            new Pressure(MACHINE_VALUES.PRESSURE.SAFE)
         )
         const config: MachineConfig = fakeConfig({
             powerConsumption: {
@@ -98,7 +104,8 @@ describe("Machine", () => {
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
-            new Vibration(MACHINE_VALUES.VIBRATION.SAFE)
+            new Vibration(MACHINE_VALUES.VIBRATION.SAFE),
+            new Pressure(MACHINE_VALUES.PRESSURE.SAFE)
         )
         const config: MachineConfig = fakeConfig({
             powerConsumption: {
@@ -114,7 +121,8 @@ describe("Machine", () => {
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.OVER),
-            new Vibration(MACHINE_VALUES.VIBRATION.SAFE)
+            new Vibration(MACHINE_VALUES.VIBRATION.SAFE),
+            new Pressure(MACHINE_VALUES.PRESSURE.SAFE)
         )
         const config: MachineConfig = fakeConfig({
             emissions: {
@@ -130,7 +138,8 @@ describe("Machine", () => {
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
-            new Vibration(MACHINE_VALUES.VIBRATION.SAFE)
+            new Vibration(MACHINE_VALUES.VIBRATION.SAFE),
+            new Pressure(MACHINE_VALUES.PRESSURE.SAFE)
         )
         const config: MachineConfig = fakeConfig({
             emissions: {
@@ -146,7 +155,8 @@ describe("Machine", () => {
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
-            new Vibration(MACHINE_VALUES.VIBRATION.OVER)
+            new Vibration(MACHINE_VALUES.VIBRATION.OVER),
+            new Pressure(MACHINE_VALUES.PRESSURE.SAFE)
         )
         const config: MachineConfig = fakeConfig({
             vibration: {
@@ -162,7 +172,8 @@ describe("Machine", () => {
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
-            new Vibration(MACHINE_VALUES.VIBRATION.SAFE)
+            new Vibration(MACHINE_VALUES.VIBRATION.SAFE),
+            new Pressure(MACHINE_VALUES.PRESSURE.SAFE)
         )
         const config: MachineConfig = fakeConfig({
             vibration: {
@@ -170,5 +181,39 @@ describe("Machine", () => {
             }
         })
         expect(machine.isOvervibrating(config)).toBe(false)
+    })
+
+    it("returns true when pressure exceeds max", () => {
+        const machine = new Machine(
+            "M9",
+            new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
+            new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
+            new Emission(MACHINE_VALUES.EMISSION.SAFE),
+            new Vibration(MACHINE_VALUES.VIBRATION.SAFE),
+            new Pressure(MACHINE_VALUES.PRESSURE.OVER)
+        )
+        const config: MachineConfig = fakeConfig({
+            pressure: {
+                max: MACHINE_LIMITS.PRESSURE.MAX
+            }
+        })
+        expect(machine.isOverpressurized(config)).toBe(true)
+    })
+
+    it("returns false when pressure is below max", () => {
+        const machine = new Machine(
+            "M10",
+            new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
+            new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
+            new Emission(MACHINE_VALUES.EMISSION.SAFE),
+            new Vibration(MACHINE_VALUES.VIBRATION.SAFE),
+            new Pressure(MACHINE_VALUES.PRESSURE.SAFE)
+        )
+        const config: MachineConfig = fakeConfig({
+            pressure: {
+                max: MACHINE_LIMITS.PRESSURE.MAX
+            }
+        })
+        expect(machine.isOverpressurized(config)).toBe(false)
     })
 })

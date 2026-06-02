@@ -18,4 +18,9 @@ export const MACHINE_LIMITS = {
     MIN: 0,
     MAX: 4.5,
   },
+
+  PRESSURE: {
+    MIN: 0,
+    MAX: 10,
+  }
 }
