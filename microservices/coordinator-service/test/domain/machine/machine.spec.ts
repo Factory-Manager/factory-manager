@@ -1,19 +1,65 @@
 import { describe, it, expect } from "vitest"
-import { Machine } from "../../src/domain/machine"
-import { Temperature } from "../../src/domain/temperature"
-import { PowerConsumption } from "../../src/domain/power-consuption"
-import { Emission } from "../../src/domain/emission"
-import { fakeConfig } from "../utils/fake-config"
-import { MACHINE_VALUES } from "../constants/machine-values"
-import { MachineConfig } from "../../src/domain/machine-config"
-import { MACHINE_LIMITS } from "../constants/machine-limits"
-import { Vibration } from "../../src/domain/vibration"
-import { Pressure } from "../../src/domain/pressure"
+import { Machine } from "../../../src/domain/machine/machine"
+import { Temperature } from "../../../src/domain/value-objects/temperature"
+import { PowerConsumption } from "../../../src/domain/value-objects/power-consuption"
+import { Emission } from "../../../src/domain/value-objects/emission"
+import { fakeConfig } from "../../utils/fake-config"
+import { MACHINE_VALUES } from "../../constants/machine-values"
+import { MachineConfig } from "../../../src/domain/machine/machine-config"
+import { MACHINE_LIMITS } from "../../constants/machine-limits"
+import { Vibration } from "../../../src/domain/value-objects/vibration"
+import { Pressure } from "../../../src/domain/value-objects/pressure"
+import { MachineId } from "../../../src/domain/value-objects/machine-id"
 
 describe("Machine", () => {
+
+    it("is equal to another machine with the same id", () => {
+        const machine1 = new Machine(
+            new MachineId("M1"),
+            new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
+            new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
+            new Emission(MACHINE_VALUES.EMISSION.SAFE),
+            new Vibration(MACHINE_VALUES.VIBRATION.SAFE),
+            new Pressure(MACHINE_VALUES.PRESSURE.SAFE)
+        )
+
+        const machine2 = new Machine(
+            new MachineId("M1"),
+            new Temperature(MACHINE_VALUES.TEMPERATURE.OVER),
+            new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.OVER),
+            new Emission(MACHINE_VALUES.EMISSION.OVER),
+            new Vibration(MACHINE_VALUES.VIBRATION.OVER),
+            new Pressure(MACHINE_VALUES.PRESSURE.OVER)
+        )
+
+        expect(machine1.isEqual(machine2)).toBe(true)
+    })
+
+    it("is not equal to another machine with different id", () => {
+        const machine1 = new Machine(
+            new MachineId("M1"),
+            new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
+            new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
+            new Emission(MACHINE_VALUES.EMISSION.SAFE),
+            new Vibration(MACHINE_VALUES.VIBRATION.SAFE),
+            new Pressure(MACHINE_VALUES.PRESSURE.SAFE)
+        )
+
+        const machine2 = new Machine(
+            new MachineId("M2"),
+            new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
+            new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
+            new Emission(MACHINE_VALUES.EMISSION.SAFE),
+            new Vibration(MACHINE_VALUES.VIBRATION.SAFE),
+            new Pressure(MACHINE_VALUES.PRESSURE.SAFE)
+        )
+
+        expect(machine1.isEqual(machine2)).toBe(false)
+    })
+
     it("returns true when temperature exceeds max", () => {
         const machine: Machine = new Machine(
-            "M1",
+            new MachineId("M1"),
             new Temperature(MACHINE_VALUES.TEMPERATURE.OVER),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
@@ -32,7 +78,7 @@ describe("Machine", () => {
 
     it("returns false when temperature is below max", () => {
         const machine = new Machine(
-            "M2",
+            new MachineId("M1"),
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
@@ -49,7 +95,7 @@ describe("Machine", () => {
 
     it("returns true when temperature is below min", () => {
         const machine = new Machine(
-            "M2",
+            new MachineId("M1"),
             new Temperature(MACHINE_VALUES.TEMPERATURE.UNDER),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
@@ -66,7 +112,7 @@ describe("Machine", () => {
 
     it("returns false when temperature is above min", () => {
         const machine = new Machine(
-            "M2",
+            new MachineId("M1"),
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
@@ -83,7 +129,7 @@ describe("Machine", () => {
 
     it("returns true when power consumption exceeds max", () => {
         const machine = new Machine(
-            "M3",
+            new MachineId("M2"),
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.OVER),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
@@ -100,7 +146,7 @@ describe("Machine", () => {
 
     it("returns false when power consumption is below max", () => {
         const machine = new Machine(
-            "M4",
+            new MachineId("M2"),
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
@@ -117,7 +163,7 @@ describe("Machine", () => {
 
     it("returns true when emissions exceed max", () => {
         const machine = new Machine(
-            "M5",
+            new MachineId("M3"),
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.OVER),
@@ -134,7 +180,7 @@ describe("Machine", () => {
 
     it("returns false when emissions are below max", () => {
         const machine = new Machine(
-            "M6",
+            new MachineId("M3"),
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
@@ -151,7 +197,7 @@ describe("Machine", () => {
 
     it("returns true when vibration exceeds max", () => {
         const machine = new Machine(
-            "M7",
+            new MachineId("M4"),
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
@@ -168,7 +214,7 @@ describe("Machine", () => {
 
     it("returns false when vibration is below max", () => {
         const machine = new Machine(
-            "M8",
+            new MachineId("M4"),
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
@@ -185,7 +231,7 @@ describe("Machine", () => {
 
     it("returns true when pressure exceeds max", () => {
         const machine = new Machine(
-            "M9",
+            new MachineId("M5"),
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),
@@ -202,7 +248,7 @@ describe("Machine", () => {
 
     it("returns false when pressure is below max", () => {
         const machine = new Machine(
-            "M10",
+            new MachineId("M5"),
             new Temperature(MACHINE_VALUES.TEMPERATURE.SAFE),
             new PowerConsumption(MACHINE_VALUES.POWER_CONSUMPTION.SAFE),
             new Emission(MACHINE_VALUES.EMISSION.SAFE),

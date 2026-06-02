@@ -1,4 +1,4 @@
-import { MachineConfig } from "../../src/domain/machine-config";
+import { MachineConfig } from "../../src/domain/machine/machine-config";
 import { MACHINE_LIMITS } from "../constants/machine-limits"
 
 export function fakeConfig(overrides?: any): MachineConfig {
