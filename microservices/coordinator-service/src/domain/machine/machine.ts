@@ -1,10 +1,10 @@
-import { Emission } from '../value-objects/emission'
-import { MachineConfig } from './machine-config'
-import { PowerConsumption } from '../value-objects/power-consuption'
-import { Pressure } from '../value-objects/pressure'
-import { Temperature } from '../value-objects/temperature'
-import { Vibration } from '../value-objects/vibration'
-import { MachineId } from '../value-objects/machine-id'
+import type { Emission } from './value-objects/emission'
+import type { MachineConfig } from './machine-config'
+import type { PowerConsumption } from './value-objects/power-consuption'
+import type { Pressure } from './value-objects/pressure'
+import type { Temperature } from './value-objects/temperature'
+import type { Vibration } from './value-objects/vibration'
+import type { MachineId } from './value-objects/machine-id'
 
 export class Machine {
   constructor(
@@ -21,26 +21,26 @@ export class Machine {
   }
 
   isOverheating(config: MachineConfig): boolean {
-    return this.temperature.value >= config.temperature.max
+    return config.temperature.isAboveOrEqualMax(this.temperature)
   }
 
   isUnderheating(config: MachineConfig): boolean {
-    return this.temperature.value <= config.temperature.min
+    return config.temperature.isBelowOrEqualMin(this.temperature)
   }
 
   isOverconsuming(config: MachineConfig): boolean {
-    return this.powerConsumption.value >= config.powerConsumption.max
+    return config.powerConsumption.isAboveOrEqualMax(this.powerConsumption)
   }
 
   isOveremitting(config: MachineConfig): boolean {
-    return this.emissions.value >= config.emissions.max
+    return config.emissions.isAboveOrEqualMax(this.emissions)
   }
 
   isOvervibrating(config: MachineConfig): boolean {
-    return this.vibration.value >= config.vibration.max
+    return config.vibration.isAboveOrEqualMax(this.vibration)
   }
 
   isOverpressurized(config: MachineConfig): boolean {
-    return this.pressure.value >= config.pressure.max
+    return config.pressure.isAboveOrEqualMax(this.pressure)
   }
 }
