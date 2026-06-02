@@ -1,16 +1,21 @@
 export const MACHINE_LIMITS = {
   TEMPERATURE: {
-    MIN: 10,
-    MAX: 90
+    MIN: 20,
+    MAX: 85,
   },
 
   POWER_CONSUMPTION: {
     MIN: 0,
-    MAX: 120
+    MAX: 1200,
   },
 
   EMISSION: {
     MIN: 0,
-    MAX: 100
-  }
-};
+    MAX: 80,
+  },
+
+  VIBRATION: {
+    MIN: 0,
+    MAX: 4.5,
+  },
+}
