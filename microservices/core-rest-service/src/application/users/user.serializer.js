@@ -57,6 +57,7 @@ export function toUserOutput(user) {
     fullName: plainUser.fullName
   })
 }
+
 /**
  * Converts user documents or plain objects into a list of public user output objects.
  *
