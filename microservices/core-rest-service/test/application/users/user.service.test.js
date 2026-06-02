@@ -27,7 +27,6 @@ function createUserServiceTestContext({
 }
 
 function createUserRepositoryDouble({
-  foundUser = null,
   users = [
     {
       id: 'user-1',
@@ -51,15 +50,6 @@ function createUserRepositoryDouble({
         id: 'created-user',
         ...userData
       }
-    },
-
-    async findUserByEmail(email) {
-      calls.push({
-        method: 'findUserByEmail',
-        email
-      })
-
-      return foundUser
     },
 
     async findUserById(id) {
