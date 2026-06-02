@@ -14,4 +14,11 @@ describe("Range", () => {
             range.contains(new Temperature(50))
         ).toBe(true)
     })
+
+    it("returns false when value is outside range", () => {
+        expect(
+            range.contains(new Temperature(5))
+        ).toBe(false)
+    })
+
 })
