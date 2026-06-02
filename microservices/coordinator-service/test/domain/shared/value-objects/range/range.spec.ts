@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 import { Range } from "../../../../../src/domain/shared/value-objects/range/range"
 import { Temperature } from "../../../../../src/domain/machine/value-objects/temperature"
+import { InvalidRangeError } from "../../../../../src/domain/shared/value-objects/range/invalid-range.error"
 
 describe("Range", () => {
 
@@ -33,5 +34,14 @@ describe("Range", () => {
         expect(
             range.isBelowOrEqualMin(new Temperature(MIN))
         ).toBe(true)
+    })
+
+    it("throws error when min is greater than max", () => {
+        expect(() => {
+            new Range(
+                new Temperature(MAX),
+                new Temperature(MIN)
+            )
+        }).toThrow(InvalidRangeError)
     })
 })
