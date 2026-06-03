@@ -3,8 +3,10 @@ import express from 'express'
 
 import { errorHandler } from '../middlewares/error-handler.js'
 import { notFoundHandler } from '../middlewares/not-found-handler.js'
+import { configureDocs } from './docs.js'
 import { isDatabaseConnected } from './mongoose.js'
 import { createUsersBootstrap } from './users.js'
+import { env } from '../config/env.js'
 
 export function configureExpress(app) {
   app.enable('trust proxy')
@@ -41,6 +43,10 @@ export function configureExpress(app) {
       }
     })
   })
+
+  if (env.docEnabled) {
+    configureDocs(app)
+  }
 
   const { userRouter } = createUsersBootstrap()
   app.use('/api/users', userRouter)
