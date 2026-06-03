@@ -18,7 +18,7 @@
     "docs:validate": "node scripts/validate-spec.js"
   },
   "engines": {
-    "node": ">=22.22.3",
+    "node": ">=24.16.0",
     "npm": ">=10.9.8"
   },
   "contributors": [
