@@ -251,6 +251,18 @@ components:
         message:
           type: string
           example: User not found
+        details:
+          type: array
+          items:
+            type: object
+            required: [field, message]
+            properties:
+              field:
+                type: string
+                example: email
+              message:
+                type: string
+                example: '"email" must be a valid email'
 
   responses:
     ValidationError:
