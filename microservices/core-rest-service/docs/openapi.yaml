@@ -62,13 +62,59 @@ paths:
                 $ref: '#/components/schemas/ReadinessStatus'
 
   /api/users:
+    post:
+      tags: [Users]
+      operationId: createUser
+      summary: Create a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
     get:
       tags: [Users]
       operationId: listUsers
       summary: List users
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
       responses:
         '200':
           description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '500':
           $ref: '#/components/responses/InternalError'
 
@@ -113,17 +159,100 @@ components:
               type: boolean
               example: true
 
+    UserName:
+      type: object
+      required: [first, last]
+      properties:
+        first:
+          type: string
+          example: Mario
+        last:
+          type: string
+          example: Rossi
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '507f1f77bcf86cd799439011'
+        name:
+          $ref: '#/components/schemas/UserName'
+        email:
+          type: string
+          format: email
+          example: mario.rossi@fm.com
+        role:
+          type: string
+          enum: [admin, operator]
+          example: operator
+        isActive:
+          type: boolean
+          example: true
+        lastLoginAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        fullName:
+          type: string
+          example: Mario Rossi
+
+    CreateUserRequest:
+      type: object
+      required: [name, email, password]
+      properties:
+        name:
+          $ref: '#/components/schemas/UserName'
+        email:
+          type: string
+          format: email
+          example: mario.rossi@fm.com
+        password:
+          type: string
+          format: password
+          minLength: 8
+          description: >
+            At least 8 characters containing one letter, one number, and one
+            special character (@$!%*#?&).
+          example: Password123!
+        role:
+          type: string
+          enum: [admin, operator]
+          example: operator
+
     ErrorResponse:
       type: object
       properties:
         code:
           type: string
-          example: INTERNAL_ERROR
+          enum: [VALIDATION_ERROR, NOT_FOUND, CONFLICT, INTERNAL_ERROR]
+          example: VALIDATION_ERROR
         message:
           type: string
-          example: Internal server error
+          example: Invalid request
 
   responses:
+    ValidationError:
+      description: Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    Conflict:
+      description: Resource already exists
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
     InternalError:
       description: Unexpected server error
       content:
