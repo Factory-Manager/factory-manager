@@ -1,4 +1,4 @@
-name: Core REST Service
+name: Core REST Service CI
 
 on:
   pull_request:
@@ -44,8 +44,8 @@ jobs:
       - name: Check formatting
         run: npm run format:check
 
+      - name: Validate OpenAPI spec
+        run: npm run spec:validate
+
       - name: Check test coverage threshold
-        run: |
-          echo "Running unit tests with Node test runner."
-          echo "Coverage threshold: 60% lines, 60% functions, 60% branches."
-          npm run test:coverage:check
+        run: npm run test:coverage:check
