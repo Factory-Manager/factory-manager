@@ -16,7 +16,11 @@ const VALID_USER = Object.freeze({
   name: { first: 'Mario', last: 'Rossi' },
   email: 'operator@fm.com',
   role: 'operator',
-  isActive: true
+  isActive: true,
+  lastLoginAt: null,
+  createdAt: '2024-01-01T00:00:00.000Z',
+  updatedAt: '2024-01-01T00:00:00.000Z',
+  fullName: 'Mario Rossi'
 })
 
 const VALID_CREATE_BODY = Object.freeze({
