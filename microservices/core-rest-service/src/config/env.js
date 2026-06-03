@@ -22,11 +22,11 @@ function getRequiredEnv(name) {
 
 export const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
-  docEnabled: getBooleanEnv(
+  docsEnabled: getBooleanEnv(
     'DOCS_ENABLED',
     process.env.NODE_ENV !== 'production'
   ),
-  port: Number(process.env.REST_PORT || DEFAULT_PORT),
+  port: Number(process.env.PORT || DEFAULT_PORT),
   get mongoUri() {
     return getRequiredEnv('MONGO_URI')
   }
