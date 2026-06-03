@@ -15,3 +15,4 @@ Distributed Systems project for industrial machinery monitoring.
 
 ```bash
 docker compose up -d
+```
