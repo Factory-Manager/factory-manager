@@ -21,26 +21,28 @@ export class Machine {
   }
 
   isOverheating(config: MachineConfig): boolean {
-    return config.temperature.isAboveOrEqualMax(this.temperature)
+    return this.temperature.isGreaterThanOrEqual(config.temperature.max)
   }
 
   isUnderheating(config: MachineConfig): boolean {
-    return config.temperature.isBelowOrEqualMin(this.temperature)
+    return this.temperature.isLessThanOrEqual(config.temperature.min)
   }
 
   isOverconsuming(config: MachineConfig): boolean {
-    return config.powerConsumption.isAboveOrEqualMax(this.powerConsumption)
+    return this.powerConsumption.isGreaterThanOrEqual(
+      config.powerConsumption.max
+    )
   }
 
   isOveremitting(config: MachineConfig): boolean {
-    return config.emissions.isAboveOrEqualMax(this.emissions)
+    return this.emissions.isGreaterThanOrEqual(config.emissions.max)
   }
 
   isOvervibrating(config: MachineConfig): boolean {
-    return config.vibration.isAboveOrEqualMax(this.vibration)
+    return this.vibration.isGreaterThanOrEqual(config.vibration.max)
   }
 
   isOverpressurized(config: MachineConfig): boolean {
-    return config.pressure.isAboveOrEqualMax(this.pressure)
+    return this.pressure.isGreaterThanOrEqual(config.pressure.max)
   }
 }

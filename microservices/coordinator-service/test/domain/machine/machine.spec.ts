@@ -12,16 +12,16 @@ describe("Machine", () => {
         const machine1 = fakeMachine({
             id: "M1",
             temperature: MACHINE_VALUES.TEMPERATURE.SAFE,
-            power: MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
-            emission: MACHINE_VALUES.EMISSION.SAFE,
+            powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
+            emissions: MACHINE_VALUES.EMISSION.SAFE,
             vibration: MACHINE_VALUES.VIBRATION.SAFE,
             pressure: MACHINE_VALUES.PRESSURE.SAFE
         })
         const machine2 = fakeMachine({
             id: "M1",
             temperature: MACHINE_VALUES.TEMPERATURE.OVER,
-            power: MACHINE_VALUES.POWER_CONSUMPTION.OVER,
-            emission: MACHINE_VALUES.EMISSION.OVER,
+            powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.OVER,
+            emissions: MACHINE_VALUES.EMISSION.OVER,
             vibration: MACHINE_VALUES.VIBRATION.OVER,
             pressure: MACHINE_VALUES.PRESSURE.OVER
         })
@@ -84,7 +84,7 @@ describe("Machine", () => {
 
     it("returns true when power consumption exceeds max", () => {
         const machine: Machine = fakeMachine(
-            { power: MACHINE_VALUES.POWER_CONSUMPTION.OVER }
+            { powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.OVER }
         )
         const config: MachineConfig = fakeConfig({
             powerConsumption: {
@@ -96,7 +96,7 @@ describe("Machine", () => {
 
     it("returns false when power consumption is below max", () => {
         const machine: Machine = fakeMachine(
-            { power: MACHINE_VALUES.POWER_CONSUMPTION.SAFE }
+            { powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE }
         )
         const config: MachineConfig = fakeConfig({
             powerConsumption: {
@@ -108,7 +108,7 @@ describe("Machine", () => {
 
     it("returns true when emissions exceed max", () => {
         const machine: Machine = fakeMachine(
-            { emission: MACHINE_VALUES.EMISSION.OVER }
+            { emissions: MACHINE_VALUES.EMISSION.OVER }
         )
         const config: MachineConfig = fakeConfig({
             emissions: {
@@ -120,7 +120,7 @@ describe("Machine", () => {
 
     it("returns false when emissions are below max", () => {
         const machine: Machine = fakeMachine(
-            { emission: MACHINE_VALUES.EMISSION.SAFE }
+            { emissions: MACHINE_VALUES.EMISSION.SAFE }
         )
         const config: MachineConfig = fakeConfig({
             emissions: {

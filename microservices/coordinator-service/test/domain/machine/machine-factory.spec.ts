@@ -4,15 +4,23 @@ import { MachineFactory } from "../../../src/domain/machine/machine-factory"
 describe("MachineFactory", () => {
     it("should create a machine from sensors data", () => {
 
-        const inputSensors = {
+        const telemetryInput = {
+            id: "M1",
             temperature: 50,
-            power: 100,
-            emission: 20,
+            powerConsumption: 100,
+            emissions: 20,
             vibration: 1.2,
             pressure: 5
         }
 
-        const machine = MachineFactory.createFromSensors("M1", inputSensors)
+        const machine = MachineFactory.createFromSensors(
+            telemetryInput.id,
+            telemetryInput.temperature,
+            telemetryInput.powerConsumption,
+            telemetryInput.emissions,
+            telemetryInput.vibration,
+            telemetryInput.pressure
+        )
 
         expect(machine).toMatchObject({
             id: expect.objectContaining({ value: "M1" }),
