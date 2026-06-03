@@ -17,7 +17,7 @@
     "test:coverage:check": "node --test --experimental-test-coverage --test-coverage-include=src/**/*.js --test-coverage-exclude=test/**/*.js --test-coverage-lines=60 --test-coverage-functions=60 --test-coverage-branches=60 \"test/**/*.test.js\""
   },
   "engines": {
-    "node": ">=22",
+    "node": ">=22.22.3",
     "npm": ">=10.9.8"
   },
   "contributors": [
