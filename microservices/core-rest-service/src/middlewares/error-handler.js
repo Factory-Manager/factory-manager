@@ -1,3 +1,4 @@
+import { logger } from '../bootstrap/logger.js'
 import { AppError } from '../errors/app-error.js'
 import { ERROR_CODES } from '../errors/error-codes.js'
 
@@ -80,7 +81,7 @@ export function errorHandler(error, _req, res, next) {
     return
   }
 
-  console.error('[core-rest-service] Unexpected error', error)
+  logger.error({ err: error }, 'Unexpected error')
 
   sendErrorResponse(res, {
     statusCode: 500,
