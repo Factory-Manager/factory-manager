@@ -12,9 +12,9 @@
     "lint:fix": "eslint \"src/**/*.js\" \"test/**/*.js\" \"scripts/**/*.js\" --fix",
     "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\" \"scripts/**/*.js\"",
     "format:check": "prettier --check \"src/**/*.js\" \"test/**/*.js\" \"scripts/**/*.js\"",
-    "test": "node --test \"test/**/*.test.js\"",
-    "test:coverage": "node --test --experimental-test-coverage --test-coverage-include=src/**/*.js --test-coverage-exclude=test/**/*.js \"test/**/*.test.js\"",
-    "test:coverage:check": "node --test --experimental-test-coverage --test-coverage-include=src/**/*.js --test-coverage-exclude=test/**/*.js --test-coverage-lines=60 --test-coverage-functions=60 --test-coverage-branches=60 \"test/**/*.test.js\"",
+    "test": "cross-env NODE_ENV=test node --test \"test/**/*.test.js\"",
+    "test:coverage": "cross-env NODE_ENV=test node --test --experimental-test-coverage --test-coverage-include=src/**/*.js --test-coverage-exclude=test/**/*.js \"test/**/*.test.js\"",
+    "test:coverage:check": "cross-env NODE_ENV=test node --test --experimental-test-coverage --test-coverage-include=src/**/*.js --test-coverage-exclude=test/**/*.js --test-coverage-lines=60 --test-coverage-functions=60 --test-coverage-branches=60 \"test/**/*.test.js\"",
     "docs:validate": "node scripts/validate-spec.js"
   },
   "engines": {
@@ -41,6 +41,7 @@
   "devDependencies": {
     "@apidevtools/swagger-parser": "^10.1.1",
     "@eslint/js": "^10.0.1",
+    "cross-env": "^10.1.0",
     "eslint": "^10.4.1",
     "nodemon": "^3.1.14",
     "pino-pretty": "^13.1.3",
