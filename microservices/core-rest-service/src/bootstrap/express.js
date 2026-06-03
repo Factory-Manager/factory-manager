@@ -44,7 +44,7 @@ export function configureExpress(app) {
     })
   })
 
-  if (env.docEnabled) {
+  if (env.docsEnabled) {
     configureDocs(app)
   }
 
