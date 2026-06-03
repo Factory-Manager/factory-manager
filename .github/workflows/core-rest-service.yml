@@ -44,8 +44,8 @@ jobs:
       - name: Check formatting
         run: npm run format:check
 
-      - name: Validate OpenAPI spec
-        run: npm run spec:validate
+      - name: Validate OpenAPI documentation
+        run: npm run docs:validate
 
       - name: Check test coverage threshold
         run: npm run test:coverage:check
