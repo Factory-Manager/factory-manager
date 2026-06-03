@@ -9,21 +9,19 @@ import { MachineId } from './value-objects/machine-id'
 export class MachineFactory {
   static createFromSensors(
     id: string,
-    sensors: {
-      temperature: number
-      power: number
-      emission: number
-      vibration: number
-      pressure: number
-    }
+    temperature: number,
+    powerConsumption: number,
+    emissions: number,
+    vibration: number,
+    pressure: number
   ): Machine {
     return new Machine(
       new MachineId(id),
-      new Temperature(sensors.temperature),
-      new PowerConsumption(sensors.power),
-      new Emission(sensors.emission),
-      new Vibration(sensors.vibration),
-      new Pressure(sensors.pressure)
+      new Temperature(temperature),
+      new PowerConsumption(powerConsumption),
+      new Emission(emissions),
+      new Vibration(vibration),
+      new Pressure(pressure)
     )
   }
 }
