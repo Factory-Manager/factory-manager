@@ -22,6 +22,9 @@ function getRequiredEnv(name) {
 
 export const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
+  logLevel:
+    process.env.LOG_LEVEL ||
+    (process.env.NODE_ENV === 'test' ? 'silent' : 'info'),
   docsEnabled: getBooleanEnv(
     'DOCS_ENABLED',
     process.env.NODE_ENV !== 'production'
