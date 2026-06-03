@@ -29,4 +29,6 @@ if (missing.length > 0) {
   process.exit(1)
 }
 
-console.log(`OpenAPI spec covers all ${REQUIRED_OPERATIONS.length} required operations`)
+console.log(
+  `OpenAPI spec covers all ${REQUIRED_OPERATIONS.length} required operations`
+)
