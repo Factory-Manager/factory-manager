@@ -224,7 +224,15 @@ components:
       minProperties: 1
       properties:
         name:
-          $ref: '#/components/schemas/UserName'
+          type: object
+          minProperties: 1
+          properties:
+            first:
+              type: string
+              example: Mario
+            last:
+              type: string
+              example: Rossi
         email:
           type: string
           format: email
