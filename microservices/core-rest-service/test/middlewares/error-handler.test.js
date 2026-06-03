@@ -95,22 +95,15 @@ describe('errorHandler', () => {
   })
 
   it('responds with internal error for unexpected errors', () => {
-    const originalConsoleError = console.error
-    console.error = () => {}
+    const res = createRes()
+    const next = createNext()
 
-    try {
-      const res = createRes()
-      const next = createNext()
+    errorHandler(new Error('something exploded'), {}, res, next)
 
-      errorHandler(new Error('something exploded'), {}, res, next)
-
-      assert.equal(res.statusCode, 500)
-      assert.deepEqual(res.body, {
-        code: ERROR_CODES.INTERNAL_ERROR,
-        message: 'Internal server error'
-      })
-    } finally {
-      console.error = originalConsoleError
-    }
+    assert.equal(res.statusCode, 500)
+    assert.deepEqual(res.body, {
+      code: ERROR_CODES.INTERNAL_ERROR,
+      message: 'Internal server error'
+    })
   })
 })

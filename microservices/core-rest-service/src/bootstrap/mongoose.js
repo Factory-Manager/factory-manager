@@ -1,20 +1,20 @@
 import mongoose from 'mongoose'
+import { logger } from './logger.js'
 
 mongoose.connection.on('connected', () => {
-  console.log('[core-rest-service] MongoDB connected')
+  logger.info('MongoDB connected')
 })
 
 mongoose.connection.on('error', (error) => {
-  console.error('[core-rest-service] MongoDB connection error')
-  console.error(error)
+  logger.error({ err: error }, 'MongoDB connection error')
 })
 
 mongoose.connection.on('disconnected', () => {
-  console.warn('[core-rest-service] MongoDB disconnected')
+  logger.warn('MongoDB disconnected')
 })
 
 mongoose.connection.on('reconnected', () => {
-  console.log('[core-rest-service] MongoDB reconnected')
+  logger.info('MongoDB reconnected')
 })
 
 export async function connectToDatabase(mongoUri) {

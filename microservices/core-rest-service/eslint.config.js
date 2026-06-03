@@ -32,6 +32,13 @@ export default [
   },
 
   {
+    files: ['src/**/*.js'],
+    rules: {
+      'no-console': 'error'
+    }
+  },
+
+  {
     files: ['src/domain/**/*.js', 'src/application/**/*.js'],
     rules: {
       'no-restricted-imports': [
