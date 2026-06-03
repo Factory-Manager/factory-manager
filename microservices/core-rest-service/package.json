@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
+    "dev": "cross-env NODE_ENV=development nodemon src/server.js",
     "lint": "eslint \"src/**/*.js\" \"test/**/*.js\" \"scripts/**/*.js\"",
     "lint:fix": "eslint \"src/**/*.js\" \"test/**/*.js\" \"scripts/**/*.js\" --fix",
     "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\" \"scripts/**/*.js\"",
