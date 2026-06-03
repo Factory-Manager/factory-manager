@@ -8,13 +8,14 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "lint": "eslint \"src/**/*.js\" \"test/**/*.js\"",
-    "lint:fix": "eslint \"src/**/*.js\" \"test/**/*.js\" --fix",
-    "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\"",
-    "format:check": "prettier --check \"src/**/*.js\" \"test/**/*.js\"",
+    "lint": "eslint \"src/**/*.js\" \"test/**/*.js\" \"scripts/**/*.js\"",
+    "lint:fix": "eslint \"src/**/*.js\" \"test/**/*.js\" \"scripts/**/*.js\" --fix",
+    "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\" \"scripts/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"test/**/*.js\" \"scripts/**/*.js\"",
     "test": "node --test \"test/**/*.test.js\"",
     "test:coverage": "node --test --experimental-test-coverage --test-coverage-include=src/**/*.js --test-coverage-exclude=test/**/*.js \"test/**/*.test.js\"",
-    "test:coverage:check": "node --test --experimental-test-coverage --test-coverage-include=src/**/*.js --test-coverage-exclude=test/**/*.js --test-coverage-lines=60 --test-coverage-functions=60 --test-coverage-branches=60 \"test/**/*.test.js\""
+    "test:coverage:check": "node --test --experimental-test-coverage --test-coverage-include=src/**/*.js --test-coverage-exclude=test/**/*.js --test-coverage-lines=60 --test-coverage-functions=60 --test-coverage-branches=60 \"test/**/*.test.js\"",
+    "docs:validate": "node scripts/validate-spec.js"
   },
   "engines": {
     "node": ">=22.22.3",
@@ -31,9 +32,12 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "joi": "^18.2.1",
-    "mongoose": "^9.6.3"
+    "js-yaml": "^4.1.0",
+    "mongoose": "^9.6.3",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@apidevtools/swagger-parser": "^10.1.0",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.4.1",
     "nodemon": "^3.1.14",

@@ -1,5 +1,15 @@
 const DEFAULT_PORT = 3000
 
+function getBooleanEnv(name, defaultValue = false) {
+  const value = process.env[name]
+
+  if (value === undefined) {
+    return defaultValue
+  }
+
+  return value === 'true'
+}
+
 function getRequiredEnv(name) {
   const value = process.env[name]
 
@@ -12,6 +22,12 @@ function getRequiredEnv(name) {
 
 export const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
+  docsEnabled: getBooleanEnv(
+    'DOCS_ENABLED',
+    process.env.NODE_ENV !== 'production'
+  ),
   port: Number(process.env.PORT || DEFAULT_PORT),
-  mongoUri: getRequiredEnv('MONGO_URI')
+  get mongoUri() {
+    return getRequiredEnv('MONGO_URI')
+  }
 }

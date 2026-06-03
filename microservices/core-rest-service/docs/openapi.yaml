@@ -1,0 +1,314 @@
+openapi: 3.0.3
+
+info:
+  title: Core REST Service
+  description: REST API for the Factory Manager distributed monitoring system.
+  version: 0.1.0
+
+servers:
+  - url: http://localhost:3000
+    description: Local development
+
+tags:
+  - name: Users
+    description: User management
+
+paths:
+  /api/users:
+    post:
+      tags: [Users]
+      operationId: createUser
+      summary: Create a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    get:
+      tags: [Users]
+      operationId: listUsers
+      summary: List users
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/users/{id}:
+    parameters:
+      - $ref: '#/components/parameters/UserId'
+
+    get:
+      tags: [Users]
+      operationId: getUserById
+      summary: Get a user by ID
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    patch:
+      tags: [Users]
+      operationId: updateUserById
+      summary: Update a user by ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    delete:
+      tags: [Users]
+      operationId: deleteUserById
+      summary: Delete a user by ID
+      responses:
+        '200':
+          description: User deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+components:
+  parameters:
+    UserId:
+      name: id
+      in: path
+      required: true
+      description: 24-character hexadecimal MongoDB ObjectId
+      schema:
+        type: string
+        pattern: '^[0-9a-f]{24}$'
+        example: '507f1f77bcf86cd799439011'
+
+  schemas:
+    UserName:
+      type: object
+      required: [first, last]
+      properties:
+        first:
+          type: string
+          example: Mario
+        last:
+          type: string
+          example: Rossi
+
+    User:
+      type: object
+      required: [id, name, email, role, isActive, lastLoginAt, createdAt, updatedAt, fullName]
+      properties:
+        id:
+          type: string
+          example: '507f1f77bcf86cd799439011'
+        name:
+          $ref: '#/components/schemas/UserName'
+        email:
+          type: string
+          format: email
+          example: mario.rossi@fm.com
+        role:
+          type: string
+          enum: [admin, operator]
+          example: operator
+        isActive:
+          type: boolean
+          example: true
+        lastLoginAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        fullName:
+          type: string
+          example: Mario Rossi
+
+    CreateUserRequest:
+      type: object
+      required: [name, email, password]
+      properties:
+        name:
+          $ref: '#/components/schemas/UserName'
+        email:
+          type: string
+          format: email
+          example: mario.rossi@fm.com
+        password:
+          type: string
+          format: password
+          minLength: 8
+          description: >
+            At least 8 characters containing one letter, one number, and one
+            special character (@$!%*#?&).
+          example: Password123!
+        role:
+          type: string
+          enum: [admin, operator]
+          example: operator
+
+    UpdateUserRequest:
+      type: object
+      minProperties: 1
+      properties:
+        name:
+          type: object
+          minProperties: 1
+          properties:
+            first:
+              type: string
+              example: Mario
+            last:
+              type: string
+              example: Rossi
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          minLength: 8
+          description: >
+            At least 8 characters containing one letter, one number, and one
+            special character (@$!%*#?&).
+        role:
+          type: string
+          enum: [admin, operator]
+        isActive:
+          type: boolean
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          enum: [VALIDATION_ERROR, NOT_FOUND, CONFLICT, INTERNAL_ERROR]
+          example: NOT_FOUND
+        message:
+          type: string
+          example: User not found
+        details:
+          type: array
+          items:
+            type: object
+            required: [field, message]
+            properties:
+              field:
+                type: string
+                example: email
+              message:
+                type: string
+                example: '"email" must be a valid email'
+
+  responses:
+    ValidationError:
+      description: Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: VALIDATION_ERROR
+            message: '"email" must be a valid email'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: NOT_FOUND
+            message: User not found
+
+    Conflict:
+      description: Resource already exists
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: CONFLICT
+            message: A resource with this value already exists
+
+    InternalError:
+      description: Unexpected server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: INTERNAL_ERROR
+            message: Internal server error
