@@ -10,57 +10,10 @@ servers:
     description: Local development
 
 tags:
-  - name: Health
-    description: Service health and readiness checks
   - name: Users
     description: User management
 
 paths:
-  /:
-    get:
-      tags: [Health]
-      operationId: getServiceStatus
-      summary: Get service status
-      responses:
-        '200':
-          description: Service is running
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ServiceStatus'
-
-  /api/health:
-    get:
-      tags: [Health]
-      operationId: getHealthStatus
-      summary: Get health status
-      responses:
-        '200':
-          description: Service is healthy
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HealthStatus'
-
-  /api/ready:
-    get:
-      tags: [Health]
-      operationId: getReadinessStatus
-      summary: Get readiness status
-      responses:
-        '200':
-          description: Service is ready
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ReadinessStatus'
-        '503':
-          description: Service is not ready
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ReadinessStatus'
-
   /api/users:
     post:
       tags: [Users]
@@ -118,47 +71,85 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 
+  /api/users/{id}:
+    parameters:
+      - $ref: '#/components/parameters/UserId'
+
+    get:
+      tags: [Users]
+      operationId: getUserById
+      summary: Get a user by ID
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    patch:
+      tags: [Users]
+      operationId: updateUserById
+      summary: Update a user by ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    delete:
+      tags: [Users]
+      operationId: deleteUserById
+      summary: Delete a user by ID
+      responses:
+        '200':
+          description: User deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
 components:
+  parameters:
+    UserId:
+      name: id
+      in: path
+      required: true
+      description: 24-character hexadecimal MongoDB ObjectId
+      schema:
+        type: string
+        pattern: '^[0-9a-f]{24}$'
+        example: '507f1f77bcf86cd799439011'
+
   schemas:
-    ServiceStatus:
-      type: object
-      properties:
-        service:
-          type: string
-          example: core-rest-service
-        status:
-          type: string
-          example: running
-
-    HealthStatus:
-      type: object
-      properties:
-        service:
-          type: string
-          example: core-rest-service
-        status:
-          type: string
-          example: ok
-        timestamp:
-          type: string
-          format: date-time
-
-    ReadinessStatus:
-      type: object
-      properties:
-        service:
-          type: string
-          example: core-rest-service
-        ready:
-          type: boolean
-          example: true
-        database:
-          type: object
-          properties:
-            connected:
-              type: boolean
-              example: true
-
     UserName:
       type: object
       required: [first, last]
@@ -172,6 +163,7 @@ components:
 
     User:
       type: object
+      required: [id, name, email, role, isActive, lastLoginAt, createdAt, updatedAt, fullName]
       properties:
         id:
           type: string
@@ -227,16 +219,38 @@ components:
           enum: [admin, operator]
           example: operator
 
+    UpdateUserRequest:
+      type: object
+      minProperties: 1
+      properties:
+        name:
+          $ref: '#/components/schemas/UserName'
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          minLength: 8
+          description: >
+            At least 8 characters containing one letter, one number, and one
+            special character (@$!%*#?&).
+        role:
+          type: string
+          enum: [admin, operator]
+        isActive:
+          type: boolean
+
     ErrorResponse:
       type: object
       properties:
         code:
           type: string
           enum: [VALIDATION_ERROR, NOT_FOUND, CONFLICT, INTERNAL_ERROR]
-          example: VALIDATION_ERROR
+          example: NOT_FOUND
         message:
           type: string
-          example: Invalid request
+          example: User not found
 
   responses:
     ValidationError:
@@ -245,6 +259,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: VALIDATION_ERROR
+            message: '"email" must be a valid email'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: NOT_FOUND
+            message: User not found
 
     Conflict:
       description: Resource already exists
@@ -252,6 +279,9 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: CONFLICT
+            message: A resource with this value already exists
 
     InternalError:
       description: Unexpected server error
@@ -259,3 +289,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: INTERNAL_ERROR
+            message: Internal server error
