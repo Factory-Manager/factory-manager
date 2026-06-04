@@ -155,6 +155,31 @@ describe('User repository', () => {
     })
   })
 
+  it('finds a user by email including passwordHash', async () => {
+    const selectCalls = []
+    const userModel = {
+      findOne(query) {
+        return {
+          select(fields) {
+            selectCalls.push(fields)
+            return { exec: async () => ({ id: 'found-user', query }) }
+          }
+        }
+      }
+    }
+    const repository = createUserRepository({ userModel })
+
+    const result = await repository.findUserByEmailForAuth(
+      'operator@factory.com'
+    )
+
+    assert.deepEqual(result, {
+      id: 'found-user',
+      query: { email: 'operator@factory.com' }
+    })
+    assert.deepEqual(selectCalls, ['+passwordHash'])
+  })
+
   it('finds a user by id', async () => {
     const userModel = createUserModelDouble()
     const repository = createUserRepository({ userModel })
@@ -196,6 +221,29 @@ describe('User repository', () => {
         context: 'query'
       }
     })
+  })
+
+  it('updates lastLoginAt for a user', async () => {
+    const date = new Date('2026-06-01T10:00:00.000Z')
+    const calls = []
+    const userModel = {
+      findByIdAndUpdate(id, updateData, options) {
+        calls.push({ id, updateData, options })
+        return { exec: async () => ({ id, ...updateData }) }
+      }
+    }
+    const repository = createUserRepository({ userModel })
+
+    const result = await repository.updateLastLoginAt('user-id', date)
+
+    assert.deepEqual(result, { id: 'user-id', lastLoginAt: date })
+    assert.deepEqual(calls, [
+      {
+        id: 'user-id',
+        updateData: { lastLoginAt: date },
+        options: { new: true, runValidators: true, context: 'query' }
+      }
+    ])
   })
 
   it('deletes a user by id', async () => {
