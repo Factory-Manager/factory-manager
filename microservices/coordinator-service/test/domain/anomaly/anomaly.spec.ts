@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { Anomaly } from "../../../src/domain/anomaly/anomaly";
-import { AnomalyEventId } from "../../../src/domain/anomaly/value-objetcs/anomaly-event-id";
+import { AnomalyEventId } from "../../../src/domain/anomaly/value-objects/anomaly-event-id";
 import { MachineId } from "../../../src/domain/machine/value-objects/machine-id";
-import { AnomalyType } from "../../../src/domain/anomaly/value-objetcs/anomaly-type";
-import { SensorType } from "../../../src/domain/anomaly/value-objetcs/sensor-type";
+import { AnomalyType } from "../../../src/domain/anomaly/value-objects/anomaly-type";
+import { SensorType } from "../../../src/domain/anomaly/value-objects/sensor-type";
 import { MACHINE_VALUES } from "../../constants/machine-values";
 import { MACHINE_LIMITS } from "../../constants/machine-limits";
 import { AnomalyEventIdInvalidError } from "../../../src/domain/anomaly/errors/anomaly-event-id-invalid.error";
