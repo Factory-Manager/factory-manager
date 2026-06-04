@@ -30,7 +30,11 @@ export const env = {
     process.env.NODE_ENV !== 'production'
   ),
   port: Number(process.env.PORT || DEFAULT_PORT),
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1h',
   get mongoUri() {
     return getRequiredEnv('MONGO_URI')
+  },
+  get jwtSecret() {
+    return getRequiredEnv('JWT_SECRET')
   }
 }
