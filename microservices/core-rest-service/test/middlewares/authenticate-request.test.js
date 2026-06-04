@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict'
+﻿import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
 import { createAuthenticateRequest } from '../../src/middlewares/authenticate-request.js'
@@ -34,6 +34,15 @@ describe('authenticateRequest Middleware', () => {
 
     assert.throws(
       () => mw({ headers: { authorization: 'Basic abc123' } }, {}, () => {}),
+      (err) => err instanceof AppError && err.statusCode === 401
+    )
+  })
+
+  it('throws 401 when Bearer token is empty', () => {
+    const mw = createAuthenticateRequest({ jwtService: createFakeJwtService() })
+
+    assert.throws(
+      () => mw({ headers: { authorization: 'Bearer ' } }, {}, () => {}),
       (err) => err instanceof AppError && err.statusCode === 401
     )
   })
