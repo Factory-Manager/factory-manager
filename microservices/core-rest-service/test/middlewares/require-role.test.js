@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict'
+﻿import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
 import { requireRole } from '../../src/middlewares/require-role.js'
@@ -40,12 +40,15 @@ describe('requireRole', () => {
     )
   })
 
-  it('throws 403 when req.auth is missing', () => {
+  it('throws 401 when req.auth is missing', () => {
     const mw = requireRole('admin')
 
     assert.throws(
       () => mw({}, {}, () => {}),
-      (err) => err instanceof AppError && err.statusCode === 403
+      (err) =>
+        err instanceof AppError &&
+        err.statusCode === 401 &&
+        err.code === ERROR_CODES.UNAUTHORIZED
     )
   })
 })

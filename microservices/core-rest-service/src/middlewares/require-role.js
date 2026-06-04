@@ -1,4 +1,4 @@
-import { AppError } from '../errors/app-error.js'
+﻿import { AppError } from '../errors/app-error.js'
 
 /**
  * Creates middleware that allows only users with one of the given roles.
@@ -10,7 +10,11 @@ export function requireRole(...roles) {
   const allowed = new Set(roles)
 
   return function (req, _res, next) {
-    if (!req.auth || !allowed.has(req.auth.role)) {
+    if (!req.auth) {
+      throw AppError.unauthorized('Authentication required')
+    }
+
+    if (!allowed.has(req.auth.role)) {
       throw AppError.forbidden('Insufficient permissions')
     }
 
