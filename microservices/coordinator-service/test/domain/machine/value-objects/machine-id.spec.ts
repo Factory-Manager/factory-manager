@@ -9,4 +9,16 @@ describe("MachineId", () => {
       InvalidMachineIdError
     )
   })
+
+  it("equals method should return true for same value", () => {
+    const id1 = new MachineId("M1")
+    const id2 = new MachineId("M1")
+    expect(id1.equals(id2)).toBe(true)
+  })
+
+  it("equals method should return false for different values", () => {
+    const id1 = new MachineId("M1")
+    const id2 = new MachineId("M2")
+    expect(id1.equals(id2)).toBe(false)
+  })
 })
