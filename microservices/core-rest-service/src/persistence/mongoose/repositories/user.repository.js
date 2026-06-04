@@ -7,13 +7,9 @@ const USER_UPDATE_OPTIONS = Object.freeze({
 })
 
 /**
- * @typedef {Object} ExecutableQuery
- * @property {() => Promise<unknown>} exec
- */
-
-/**
- * @typedef {Object} FindUsersQuery
- * @property {(offset: number) => { limit: (limit: number) => ExecutableQuery }} skip
+ * @typedef {ExecutableQuery & {
+ *   select: (fields: string) => ExecutableQuery
+ * }} SelectableQuery
  */
 
 /**
@@ -26,7 +22,6 @@ const USER_UPDATE_OPTIONS = Object.freeze({
  * @property {() => FindUsersQuery} find
  */
 
-/** @type {UserModelPort} */
 const defaultUserModel = MongooseUserModel
 
 export function createUserRepository({ userModel = defaultUserModel } = {}) {
@@ -36,6 +31,16 @@ export function createUserRepository({ userModel = defaultUserModel } = {}) {
 
   async function findUserByEmail(email) {
     return userModel.findOne({ email }).exec()
+  }
+
+  async function findUserByEmailForAuth(email) {
+    return userModel.findOne({ email }).select('+passwordHash').exec()
+  }
+
+  async function updateLastLoginAt(userId, date) {
+    return userModel
+      .findByIdAndUpdate(userId, { lastLoginAt: date }, USER_UPDATE_OPTIONS)
+      .exec()
   }
 
   async function findUserById(id) {
@@ -59,8 +64,10 @@ export function createUserRepository({ userModel = defaultUserModel } = {}) {
   return Object.freeze({
     createUser,
     findUserByEmail,
+    findUserByEmailForAuth,
     findUserById,
     updateUserById,
+    updateLastLoginAt,
     deleteUserById,
     findUsers
   })
