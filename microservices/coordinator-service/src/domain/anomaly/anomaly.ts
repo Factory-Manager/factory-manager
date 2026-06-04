@@ -1,7 +1,7 @@
 import { MachineId } from '../machine/value-objects/machine-id'
-import { AnomalyEventId } from './value-objetcs/anomaly-event-id'
-import { SensorType } from './value-objetcs/sensor-type'
-import { AnomalyType } from './value-objetcs/anomaly-type'
+import { AnomalyEventId } from './value-objects/anomaly-event-id'
+import { AnomalyType } from './value-objects/anomaly-type'
+import { SensorType } from './value-objects/sensor-type'
 
 export class Anomaly {
   constructor(
