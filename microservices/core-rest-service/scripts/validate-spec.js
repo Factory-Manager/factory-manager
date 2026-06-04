@@ -1,6 +1,8 @@
 import SwaggerParser from '@apidevtools/swagger-parser'
 
 const REQUIRED_OPERATIONS = [
+  ['post', '/api/auth/login'],
+  ['post', '/api/auth/logout'],
   ['post', '/api/users'],
   ['get', '/api/users'],
   ['get', '/api/users/{id}'],
