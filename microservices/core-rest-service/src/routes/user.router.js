@@ -1,6 +1,8 @@
 import { Router } from 'express'
 
+import { USER_ROLES } from '../domain/users/user.roles.js'
 import { AppError } from '../errors/app-error.js'
+import { requireRole } from '../middlewares/require-role.js'
 import {
   validateBody,
   validateParams,
@@ -24,30 +26,49 @@ function ensureUserFound(user) {
 /**
  * Creates the user HTTP router.
  *
- * @param {Object} dependencies Router dependencies.
- * @param {Object} dependencies.userService User application service.
- * @returns {import('express').Router} User router.
+ * @param {Object} dependencies
+ * @param {Object} dependencies.userService
+ * @param {import('express').RequestHandler} dependencies.authenticateRequest
+ * @returns {import('express').Router}
  */
-export function createUserRouter({ userService }) {
+export function createUserRouter({ userService, authenticateRequest }) {
   const router = Router()
 
-  router.post('/', validateBody(createUserSchema), async (req, res) => {
-    const user = await userService.createUser(req.body)
-    res.status(201).json(user)
-  })
+  router.post(
+    '/',
+    authenticateRequest,
+    requireRole(USER_ROLES.ADMIN),
+    validateBody(createUserSchema),
+    async (req, res) => {
+      const user = await userService.createUser(req.body)
+      res.status(201).json(user)
+    }
+  )
 
-  router.get('/', validateQuery(listUsersQuerySchema), async (req, res) => {
-    const users = await userService.listUsers(req.query)
-    res.json(users)
-  })
+  router.get(
+    '/',
+    authenticateRequest,
+    validateQuery(listUsersQuerySchema),
+    async (req, res) => {
+      const users = await userService.listUsers(req.query)
+      res.json(users)
+    }
+  )
 
-  router.get('/:id', validateParams(userIdSchema), async (req, res) => {
-    const user = await userService.getUserById(req.params.id)
-    res.json(ensureUserFound(user))
-  })
+  router.get(
+    '/:id',
+    authenticateRequest,
+    validateParams(userIdSchema),
+    async (req, res) => {
+      const user = await userService.getUserById(req.params.id)
+      res.json(ensureUserFound(user))
+    }
+  )
 
   router.patch(
     '/:id',
+    authenticateRequest,
+    requireRole(USER_ROLES.ADMIN),
     validateParams(userIdSchema),
     validateBody(updateUserSchema),
     async (req, res) => {
@@ -56,10 +77,16 @@ export function createUserRouter({ userService }) {
     }
   )
 
-  router.delete('/:id', validateParams(userIdSchema), async (req, res) => {
-    const user = await userService.deleteUserById(req.params.id)
-    res.json(ensureUserFound(user))
-  })
+  router.delete(
+    '/:id',
+    authenticateRequest,
+    requireRole(USER_ROLES.ADMIN),
+    validateParams(userIdSchema),
+    async (req, res) => {
+      const user = await userService.deleteUserById(req.params.id)
+      res.json(ensureUserFound(user))
+    }
+  )
 
   return router
 }

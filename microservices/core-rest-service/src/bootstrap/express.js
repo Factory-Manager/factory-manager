@@ -1,13 +1,15 @@
 import cors from 'cors'
 import express from 'express'
 
+import { env } from '../config/env.js'
 import { errorHandler } from '../middlewares/error-handler.js'
 import { notFoundHandler } from '../middlewares/not-found-handler.js'
 import { requestLogger } from '../middlewares/request-logger.js'
+import { createUserRouter } from '../routes/user.router.js'
+import { createAuthBootstrap } from './auth.js'
 import { configureDocs } from './docs.js'
 import { isDatabaseConnected } from './mongoose.js'
 import { createUsersBootstrap } from './users.js'
-import { env } from '../config/env.js'
 
 export function configureExpress(app) {
   app.enable('trust proxy')
@@ -50,8 +52,11 @@ export function configureExpress(app) {
     configureDocs(app)
   }
 
-  const { userRouter } = createUsersBootstrap()
-  app.use('/api/users', userRouter)
+  const { authRouter, authenticateRequest } = createAuthBootstrap()
+  app.use('/api/auth', authRouter)
+
+  const { userService } = createUsersBootstrap()
+  app.use('/api/users', createUserRouter({ userService, authenticateRequest }))
 
   app.use(notFoundHandler)
   app.use(errorHandler)

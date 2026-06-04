@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
+import { USER_ROLES } from '../../src/domain/users/user.roles.js'
 
 import express from 'express'
 
+import { AppError } from '../../src/errors/app-error.js'
 import { ERROR_CODES } from '../../src/errors/error-codes.js'
 import { errorHandler } from '../../src/middlewares/error-handler.js'
 import { notFoundHandler } from '../../src/middlewares/not-found-handler.js'
@@ -15,11 +17,11 @@ const VALID_USER = Object.freeze({
   id: VALID_ID,
   name: { first: 'Mario', last: 'Rossi' },
   email: 'operator@fm.com',
-  role: 'operator',
+  role: USER_ROLES.OPERATOR,
   isActive: true,
   lastLoginAt: null,
-  createdAt: '2024-01-01T00:00:00.000Z',
-  updatedAt: '2024-01-01T00:00:00.000Z',
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
   fullName: 'Mario Rossi'
 })
 
@@ -28,6 +30,17 @@ const VALID_CREATE_BODY = Object.freeze({
   email: 'operator@fm.com',
   password: 'Password123!'
 })
+
+function createFakeAuthenticate(role = USER_ROLES.ADMIN) {
+  return function (req, _res, next) {
+    req.auth = { sub: VALID_ID, role }
+    next()
+  }
+}
+
+function rejectAuth(_req, _res, _next) {
+  throw AppError.unauthorized('Authentication required')
+}
 
 function createFakeUserService(overrides = {}) {
   return {
@@ -50,22 +63,24 @@ function createFakeUserService(overrides = {}) {
   }
 }
 
-function createTestApp(userService) {
+function createTestApp(
+  userService,
+  authenticateRequest = createFakeAuthenticate()
+) {
   const app = express()
   app.use(express.json())
-
-  app.use('/api/users', createUserRouter({ userService }))
-
+  app.use('/api/users', createUserRouter({ userService, authenticateRequest }))
   app.use(notFoundHandler)
   app.use(errorHandler)
-
   return app
 }
 
-function startUserRoutesTestServer(serviceOverrides = {}) {
+function startUserRoutesTestServer(
+  serviceOverrides = {},
+  authenticateRequest = createFakeAuthenticate()
+) {
   const userService = createFakeUserService(serviceOverrides)
-  const app = createTestApp(userService)
-
+  const app = createTestApp(userService, authenticateRequest)
   return startTestServer(app)
 }
 
@@ -233,6 +248,63 @@ describe('user routes', () => {
 
       assert.equal(response.status, 200)
       assert.equal(body.id, VALID_USER.id)
+    } finally {
+      await closeTestServer(server)
+    }
+  })
+
+  it('returns 401 on protected routes when not authenticated', async () => {
+    const { server, baseUrl } = startUserRoutesTestServer({}, rejectAuth)
+
+    try {
+      const cases = await Promise.all([
+        fetch(`${baseUrl}/api/users`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(VALID_CREATE_BODY)
+        }),
+        fetch(`${baseUrl}/api/users`),
+        fetch(`${baseUrl}/api/users/${VALID_ID}`),
+        fetch(`${baseUrl}/api/users/${VALID_ID}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ isActive: false })
+        }),
+        fetch(`${baseUrl}/api/users/${VALID_ID}`, { method: 'DELETE' })
+      ])
+
+      for (const response of cases) {
+        assert.equal(response.status, 401)
+      }
+    } finally {
+      await closeTestServer(server)
+    }
+  })
+
+  it('returns 403 on admin-only routes when operator', async () => {
+    const { server, baseUrl } = startUserRoutesTestServer(
+      {},
+      createFakeAuthenticate(USER_ROLES.OPERATOR)
+    )
+
+    try {
+      const cases = await Promise.all([
+        fetch(`${baseUrl}/api/users`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(VALID_CREATE_BODY)
+        }),
+        fetch(`${baseUrl}/api/users/${VALID_ID}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ isActive: false })
+        }),
+        fetch(`${baseUrl}/api/users/${VALID_ID}`, { method: 'DELETE' })
+      ])
+
+      for (const response of cases) {
+        assert.equal(response.status, 403)
+      }
     } finally {
       await closeTestServer(server)
     }
