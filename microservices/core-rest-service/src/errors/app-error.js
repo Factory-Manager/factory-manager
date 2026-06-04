@@ -65,4 +65,18 @@ export class AppError extends Error {
       details
     })
   }
+
+  static unauthorized(message = 'Unauthorized') {
+    return new AppError(message, {
+      statusCode: 401,
+      code: ERROR_CODES.UNAUTHORIZED
+    })
+  }
+
+  static forbidden(message = 'Forbidden') {
+    return new AppError(message, {
+      statusCode: 403,
+      code: ERROR_CODES.FORBIDDEN
+    })
+  }
 }
