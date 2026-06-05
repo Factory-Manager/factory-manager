@@ -12,10 +12,11 @@
     "lint:fix": "eslint \"src/**/*.js\" \"test/**/*.js\" \"scripts/**/*.js\" --fix",
     "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\" \"scripts/**/*.js\"",
     "format:check": "prettier --check \"src/**/*.js\" \"test/**/*.js\" \"scripts/**/*.js\"",
-    "test": "cross-env NODE_ENV=test node --test \"test/**/*.test.js\"",
-    "test:coverage": "cross-env NODE_ENV=test node --test --experimental-test-coverage --test-coverage-include=src/**/*.js --test-coverage-exclude=test/**/*.js \"test/**/*.test.js\"",
-    "test:coverage:check": "cross-env NODE_ENV=test node --test --experimental-test-coverage --test-coverage-include=src/**/*.js --test-coverage-exclude=test/**/*.js --test-coverage-lines=60 --test-coverage-functions=60 --test-coverage-branches=60 \"test/**/*.test.js\"",
-    "docs:validate": "node scripts/validate-spec.js"
+    "test": "cross-env NODE_ENV=test JWT_SECRET=test-secret node --test \"test/**/*.test.js\"",
+    "test:coverage": "cross-env NODE_ENV=test JWT_SECRET=test-secret node --test --experimental-test-coverage --test-coverage-include=src/**/*.js --test-coverage-exclude=test/**/*.js \"test/**/*.test.js\"",
+    "test:coverage:check": "cross-env NODE_ENV=test JWT_SECRET=test-secret node --test --experimental-test-coverage --test-coverage-include=src/**/*.js --test-coverage-exclude=test/**/*.js --test-coverage-lines=60 --test-coverage-functions=60 --test-coverage-branches=60 \"test/**/*.test.js\"",
+    "docs:validate": "node scripts/validate-spec.js",
+    "seed:admin": "node scripts/seed-admin.js"
   },
   "engines": {
     "node": ">=24.16.0",
