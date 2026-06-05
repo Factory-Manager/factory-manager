@@ -6,10 +6,13 @@ import { USER_ROLES } from '../src/domain/users/user.roles.js'
 import { UserModel } from '../src/persistence/mongoose/models/user.model.js'
 import { createPasswordHasher } from '../src/security/password-hasher.js'
 
+const PASSWORD_PATTERN =
+  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
+
 function requireVar(name) {
   const value = process.env[name]
 
-  if (!value) {
+  if (!value || value.trim() === '') {
     console.error(`Missing required environment variable: ${name}`)
     process.exit(1)
   }
@@ -18,15 +21,21 @@ function requireVar(name) {
 }
 
 const mongoUri = requireVar('MONGO_URI')
-const adminEmail = requireVar('ADMIN_EMAIL')
+const adminEmail = requireVar('ADMIN_EMAIL').trim().toLowerCase()
 const adminPassword = requireVar('ADMIN_PASSWORD')
-const adminFirstName = requireVar('ADMIN_FIRST_NAME')
-const adminLastName = requireVar('ADMIN_LAST_NAME')
+const adminFirstName = requireVar('ADMIN_FIRST_NAME').trim()
+const adminLastName = requireVar('ADMIN_LAST_NAME').trim()
 
 async function seedAdmin() {
   await mongoose.connect(mongoUri)
 
   try {
+    if (!PASSWORD_PATTERN.test(adminPassword)) {
+      throw new Error(
+        'ADMIN_PASSWORD must be at least 8 characters and contain one letter, one number, and one special character'
+      )
+    }
+
     const existingAdmin = await UserModel.findOne({
       role: USER_ROLES.ADMIN
     }).exec()
@@ -37,7 +46,7 @@ async function seedAdmin() {
     }
 
     const existingUser = await UserModel.findOne({
-      email: adminEmail.toLowerCase()
+      email: adminEmail
     }).exec()
 
     if (existingUser) {
