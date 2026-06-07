@@ -8,6 +8,7 @@ export class Anomaly {
     public readonly machineId: MachineId,
     public readonly sensorType: SensorType,
     public readonly value: number,
-    public readonly occurredAt: Date
+    public readonly occurredAt: Date,
+    public readonly processedAt: Date
   ) {}
 }
