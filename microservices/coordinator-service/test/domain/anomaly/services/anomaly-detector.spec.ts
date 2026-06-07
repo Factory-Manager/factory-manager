@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest"
-import { AnomalyDetector } from "../../../../src/domain/anomaly/services/anomaly-detector"
-import { TemperaturePolicy } from "../../../../src/domain/anomaly/services/policies/temperature-policy"
-import { TelemetryEvent } from "../../../../src/application/telemetry/dto/telemetry-event"
-import { MachineConfig } from "../../../../src/domain/machine/machine-config"
-import { MACHINE_LIMITS } from "../../../constants/machine-limits"
-import { MACHINE_VALUES } from "../../../constants/machine-values"
-import { fakeConfig } from "../../../utils/fake-config"
+import { AnomalyDetector } from "@/domain/anomaly/services/anomaly-detector"
+import { TemperaturePolicy } from "@/domain/anomaly/services/policies/temperature-policy"
+import { TelemetryEvent } from "@/application/telemetry/dto/telemetry-event"
+import { MachineConfig } from "@/domain/machine/machine-config"
+import { MACHINE_LIMITS } from "@test/constants/machine-limits"
+import { MACHINE_VALUES } from "@test/constants/machine-values"
+import { fakeConfig } from "@test/utils/fake-config"
 
 
 describe('AnomalyDetector', () => {

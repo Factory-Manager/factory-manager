@@ -1,4 +1,4 @@
-import { ComparableValueObject } from '../../shared/value-objects/comparable-value-object'
+import { ComparableValueObject } from '@/domain/shared/value-objects/comparable-value-object'
 
 export class Emission extends ComparableValueObject<number> {
   constructor(value: number) {

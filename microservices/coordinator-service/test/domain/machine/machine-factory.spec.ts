@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MachineFactory } from "../../../src/domain/machine/machine-factory"
+import { MachineFactory } from "@/domain/machine/machine-factory"
 
 describe("MachineFactory", () => {
     it("should create a machine from sensors data", () => {

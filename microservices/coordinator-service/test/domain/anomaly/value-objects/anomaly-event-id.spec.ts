@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
-import { AnomalyEventIdInvalidError } from "../../../../src/domain/anomaly/errors/anomaly-event-id-invalid.error"
-import { AnomalyEventId } from "../../../../src/domain/anomaly/value-objects/anomaly-event-id"
+import { AnomalyEventIdInvalidError } from "@/domain/anomaly/errors/anomaly-event-id-invalid.error"
+import { AnomalyEventId } from "@/domain/anomaly/value-objects/anomaly-event-id"
 
 
 describe("AnomalyEventId", () => {

@@ -1,5 +1,5 @@
 import { vi } from 'vitest'
-import { Logger } from '../../src/application/ports/logger'
+import { Logger } from '@/application/ports/logger'
 
 export const createLoggerMock = (): Logger => ({
   info: vi.fn(),

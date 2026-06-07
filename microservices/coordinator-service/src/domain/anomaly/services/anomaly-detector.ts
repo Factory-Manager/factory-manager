@@ -1,5 +1,5 @@
-import { TelemetryEvent } from '../../../application/telemetry/dto/telemetry-event'
-import { MachineConfig } from '../../machine/machine-config'
+import { TelemetryEvent } from '@/application/telemetry/dto/telemetry-event'
+import { MachineConfig } from '@/domain/machine/machine-config'
 import { Anomaly } from '../anomaly'
 import { AnomalyPolicy } from './policies/anomaly-policy'
 

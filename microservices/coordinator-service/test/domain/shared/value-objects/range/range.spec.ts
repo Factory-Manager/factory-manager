@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
-import { Range } from "../../../../../src/domain/shared/value-objects/range/range"
-import { Temperature } from "../../../../../src/domain/machine/value-objects/temperature"
-import { InvalidRangeError } from "../../../../../src/domain/shared/value-objects/range/invalid-range.error"
+import { Range } from "@/domain/shared/value-objects/range/range"
+import { Temperature } from "@/domain/machine/value-objects/temperature"
+import { InvalidRangeError } from "@/domain/shared/value-objects/range/invalid-range.error"
 
 describe("Range", () => {
 

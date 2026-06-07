@@ -4,9 +4,11 @@
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
-    "types": ["node"]
+    "types": ["node"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@test/*": ["./test/*"]
+    }
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src", "test"]
 }
