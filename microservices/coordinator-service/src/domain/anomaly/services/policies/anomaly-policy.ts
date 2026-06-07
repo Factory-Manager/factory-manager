@@ -3,9 +3,5 @@ import { MachineConfig } from '../../../machine/machine-config'
 import { Anomaly } from '../../anomaly'
 
 export interface AnomalyPolicy {
-  evaluate(
-    event: TelemetryEvent,
-    config: MachineConfig,
-    processedAt: Date
-  ): Anomaly[]
+  evaluate(event: TelemetryEvent, config: MachineConfig): Anomaly[]
 }

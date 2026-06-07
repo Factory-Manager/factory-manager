@@ -9,11 +9,7 @@ import { AnomalyPolicy } from './anomaly-policy'
 import { Temperature } from '../../../machine/value-objects/temperature'
 
 export class TemperaturePolicy implements AnomalyPolicy {
-  evaluate(
-    event: TelemetryEvent,
-    config: MachineConfig,
-    processedAt: Date
-  ): Anomaly[] {
+  evaluate(event: TelemetryEvent, config: MachineConfig): Anomaly[] {
     const anomalies: Anomaly[] = []
     if (
       !config.temperature.contains(new Temperature(event.operatingTemperature))
@@ -24,7 +20,8 @@ export class TemperaturePolicy implements AnomalyPolicy {
           new MachineId(event.machineId),
           SensorType.TEMPERATURE,
           event.operatingTemperature,
-          processedAt
+          event.occurredAt,
+          event.processedAt
         )
       )
     }

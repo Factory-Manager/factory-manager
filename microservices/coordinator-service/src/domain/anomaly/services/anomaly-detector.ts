@@ -7,7 +7,6 @@ export class AnomalyDetector {
   constructor(private readonly policies: AnomalyPolicy[]) {}
 
   detect(event: TelemetryEvent, config: MachineConfig): Anomaly[] {
-    const processedAt: Date = new Date()
-    return this.policies.flatMap((p) => p.evaluate(event, config, processedAt))
+    return this.policies.flatMap((p) => p.evaluate(event, config))
   }
 }
