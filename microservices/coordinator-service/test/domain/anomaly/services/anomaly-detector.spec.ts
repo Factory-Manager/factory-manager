@@ -16,7 +16,8 @@ describe('AnomalyDetector', () => {
 
         const event: TelemetryEvent = {
             machineId: MACHINE_VALUES.ID,
-            occurredAt: new Date(),
+            occurredAt: new Date('2025-12-31T23:59:00.000Z'),
+            processedAt: new Date('2026-01-01T00:00:00Z'),
             operatingTemperature: MACHINE_VALUES.TEMPERATURE.OVER,
             powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
             emissions: MACHINE_VALUES.EMISSION.SAFE,
@@ -41,7 +42,8 @@ describe('AnomalyDetector', () => {
         ])
         const event: TelemetryEvent = {
             machineId: MACHINE_VALUES.ID,
-            occurredAt: new Date(),
+            occurredAt: new Date('2025-12-31T23:59:00.000Z'),
+            processedAt: new Date('2026-01-01T00:00:00Z'),
             operatingTemperature: MACHINE_VALUES.TEMPERATURE.SAFE,
             powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
             emissions: MACHINE_VALUES.EMISSION.SAFE,
