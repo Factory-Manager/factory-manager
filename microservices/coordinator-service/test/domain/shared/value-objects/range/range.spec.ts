@@ -7,6 +7,8 @@ describe("Range", () => {
 
     const MIN = 10
     const MAX = 100
+    const ABOVE_MAX = 150
+    const BELOW_MIN = 5
     const range = new Range(
         new Temperature(MIN),
         new Temperature(MAX)
@@ -24,15 +26,15 @@ describe("Range", () => {
         ).toBe(false)
     })
 
-    it("returns true when value is above or equal to max", () => {
+    it("returns true when value is above max", () => {
         expect(
-            range.isAboveOrEqualMax(new Temperature(MAX))
+            range.isAboveMax(new Temperature(ABOVE_MAX))
         ).toBe(true)
     })
 
-    it("returns true when value is below or equal to min", () => {
+    it("returns true when value is below min", () => {
         expect(
-            range.isBelowOrEqualMin(new Temperature(MIN))
+            range.isBelowMin(new Temperature(BELOW_MIN))
         ).toBe(true)
     })
 
@@ -43,5 +45,26 @@ describe("Range", () => {
                 new Temperature(MIN)
             )
         }).toThrow(InvalidRangeError)
+    })
+
+    it("does not throw error when min is equal to max", () => {
+        expect(() => {
+            new Range(
+                new Temperature(MIN),
+                new Temperature(MIN)
+            )
+        }).not.toThrow()
+    })
+
+    it("contains should return true for value equal to min", () => {
+        expect(
+            range.contains(new Temperature(MIN))
+        ).toBe(true)
+    })
+
+    it("contains should return true for value equal to max", () => {
+        expect(
+            range.contains(new Temperature(MAX))
+        ).toBe(true)
     })
 })
