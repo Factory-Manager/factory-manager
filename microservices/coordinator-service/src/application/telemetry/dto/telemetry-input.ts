@@ -1,8 +1,9 @@
 export type TelemetryInput = {
-  id: string
-  temperature: number
-  powerConsumption: number
-  emissions: number
-  vibration: number
-  pressure: number
+  machineId: string
+  occurredAt: string
+  operatingTemperature: string
+  powerConsumption: string
+  emissions: string
+  vibration: string
+  pressure: string
 }
