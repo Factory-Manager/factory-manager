@@ -6,7 +6,7 @@ export class Range<T extends ComparableValueObject<number>> {
     public readonly min: T,
     public readonly max: T
   ) {
-    if (min.isGreaterThanOrEqual(max)) {
+    if (min.isGreaterThan(max)) {
       throw new InvalidRangeError(min.value, max.value)
     }
   }
@@ -17,11 +17,11 @@ export class Range<T extends ComparableValueObject<number>> {
     )
   }
 
-  isAboveOrEqualMax(value: T): boolean {
-    return value.isGreaterThanOrEqual(this.max)
+  isAboveMax(value: T): boolean {
+    return value.isGreaterThan(this.max)
   }
 
-  isBelowOrEqualMin(value: T): boolean {
-    return value.isLessThanOrEqual(this.min)
+  isBelowMin(value: T): boolean {
+    return value.isLessThan(this.min)
   }
 }
