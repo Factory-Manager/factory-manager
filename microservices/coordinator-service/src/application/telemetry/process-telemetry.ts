@@ -1,5 +1,6 @@
 import { MachineConfig } from '../../domain'
 import { AnomalyDetector } from '../../domain/anomaly/services/anomaly-detector'
+import { Clock } from '../ports/clock'
 import { Logger } from '../ports/logger'
 import { ProcessTelemetryResult } from './dto/process-telemetry-result'
 import { TelemetryEvent } from './dto/telemetry-event'
@@ -8,6 +9,7 @@ import { TelemetryInput } from './dto/telemetry-input'
 export class ProcessTelemetry {
   constructor(
     private readonly anomalyDetector: AnomalyDetector,
+    private readonly clock: Clock,
     private readonly logger: Logger
   ) {}
 
@@ -21,6 +23,7 @@ export class ProcessTelemetry {
     const event: TelemetryEvent = {
       machineId: input.machineId,
       occurredAt: new Date(input.occurredAt),
+      processedAt: this.clock.now(),
       operatingTemperature: Number(input.operatingTemperature),
       powerConsumption: Number(input.powerConsumption),
       emissions: Number(input.emissions),
