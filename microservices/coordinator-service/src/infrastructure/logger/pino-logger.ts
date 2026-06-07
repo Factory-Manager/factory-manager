@@ -2,7 +2,18 @@ import pino from 'pino'
 import { Logger } from '../../application/ports/logger'
 
 export class PinoLogger implements Logger {
-  constructor(private logger = pino()) {}
+  constructor(
+    private logger = pino({
+      transport: {
+        target: 'pino-pretty',
+        options: {
+          colorize: true,
+          translateTime: 'SYS:standard',
+          ignore: 'pid,hostname'
+        }
+      }
+    })
+  ) {}
 
   child(context: object): Logger {
     return new PinoLogger(this.logger.child(context))
