@@ -4,7 +4,6 @@ import { AnomalyEventId } from "../../../src/domain/anomaly/value-objects/anomal
 import { MachineId } from "../../../src/domain/machine/value-objects/machine-id";
 import { SensorType } from "../../../src/domain/anomaly/value-objects/sensor-type";
 import { MACHINE_VALUES } from "../../constants/machine-values";
-import { MACHINE_LIMITS } from "../../constants/machine-limits";
 import { AnomalyEventIdInvalidError } from "../../../src/domain/anomaly/errors/anomaly-event-id-invalid.error";
 
 describe("Anomaly", () => {
