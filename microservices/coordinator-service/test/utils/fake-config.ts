@@ -1,11 +1,11 @@
-import { MachineConfig } from "../../src/domain/machine/machine-config"
-import { Range } from "../../src/domain/shared/value-objects/range/range"
+import { MachineConfig } from "@/domain/machine/machine-config"
+import { Range } from "@/domain/shared/value-objects/range/range"
 
-import { Temperature } from "../../src/domain/machine/value-objects/temperature"
-import { PowerConsumption } from "../../src/domain/machine/value-objects/power-consuption"
-import { Emission } from "../../src/domain/machine/value-objects/emission"
-import { Vibration } from "../../src/domain/machine/value-objects/vibration"
-import { Pressure } from "../../src/domain/machine/value-objects/pressure"
+import { Temperature } from "@/domain/machine/value-objects/temperature"
+import { PowerConsumption } from "@/domain/machine/value-objects/power-consuption"
+import { Emission } from "@/domain/machine/value-objects/emission"
+import { Vibration } from "@/domain/machine/value-objects/vibration"
+import { Pressure } from "@/domain/machine/value-objects/pressure"
 
 import { MACHINE_LIMITS } from "../constants/machine-limits"
 

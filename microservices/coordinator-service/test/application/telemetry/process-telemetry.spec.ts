@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { createAnomalyDetectorMock } from '../../mocks/anomaly-detector.mock'
-import { createLoggerMock } from '../../mocks/logger.mock'
-import { fakeConfig } from '../../utils/fake-config'
-import { ProcessTelemetry } from '../../../src/application/telemetry/process-telemetry'
-import { MACHINE_VALUES } from '../../constants/machine-values'
-import { SensorType } from '../../../src/domain/anomaly/value-objects/sensor-type'
-import { TelemetryInput } from '../../../src/application/telemetry/dto/telemetry-input'
+import { createAnomalyDetectorMock } from '@test/mocks/anomaly-detector.mock'
+import { createLoggerMock } from '@test/mocks/logger.mock'
+import { fakeConfig } from '@test/utils/fake-config'
+import { ProcessTelemetry } from '@/application/telemetry/process-telemetry'
+import { MACHINE_VALUES } from '@test/constants/machine-values'
+import { SensorType } from '@/domain/anomaly/value-objects/sensor-type'
+import { TelemetryInput } from '@/application/telemetry/dto/telemetry-input'
 
 describe('ProcessTelemetry', () => {
   it('should process telemetry correctly', () => {

@@ -1,5 +1,5 @@
 import pino from 'pino'
-import { Logger } from '../../application/ports/logger'
+import { Logger } from '@/application/ports/logger'
 
 export class PinoLogger implements Logger {
   constructor(

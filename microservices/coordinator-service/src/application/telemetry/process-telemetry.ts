@@ -1,5 +1,5 @@
-import { MachineConfig } from '../../domain'
-import { AnomalyDetector } from '../../domain/anomaly/services/anomaly-detector'
+import { MachineConfig } from '@/domain'
+import { AnomalyDetector } from '@/domain/anomaly/services/anomaly-detector'
 import { Clock } from '../ports/clock'
 import { Logger } from '../ports/logger'
 import { ProcessTelemetryResult } from './dto/process-telemetry-result'

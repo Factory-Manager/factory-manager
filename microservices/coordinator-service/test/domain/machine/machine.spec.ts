@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest"
-import { Machine } from "../../../src/domain/machine/machine"
-import { fakeConfig } from "../../utils/fake-config"
-import { MACHINE_VALUES } from "../../constants/machine-values"
-import { MachineConfig } from "../../../src/domain/machine/machine-config"
-import { MACHINE_LIMITS } from "../../constants/machine-limits"
-import { fakeMachine } from "../../utils/fake-machine"
+import { Machine } from "@/domain/machine/machine"
+import { fakeConfig } from "@test/utils/fake-config"
+import { MACHINE_VALUES } from "@test/constants/machine-values"
+import { MachineConfig } from "@/domain/machine/machine-config"
+import { MACHINE_LIMITS } from "@test/constants/machine-limits"
+import { fakeMachine } from "@test/utils/fake-machine"
 
 describe("Machine", () => {
 
