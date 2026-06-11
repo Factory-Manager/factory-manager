@@ -66,6 +66,12 @@ export class AppError extends Error {
     })
   }
 
+  /**
+   * Creates an unauthorized error.
+   *
+   * @param {string} [message='Unauthorized'] Public error message.
+   * @returns {AppError} Unauthorized application error.
+   */
   static unauthorized(message = 'Unauthorized') {
     return new AppError(message, {
       statusCode: 401,
@@ -73,6 +79,12 @@ export class AppError extends Error {
     })
   }
 
+  /**
+   * Creates a forbidden error.
+   *
+   * @param {string} [message='Forbidden'] Public error message.
+   * @returns {AppError} Forbidden application error.
+   */
   static forbidden(message = 'Forbidden') {
     return new AppError(message, {
       statusCode: 403,
