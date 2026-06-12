@@ -7,7 +7,12 @@ const REQUIRED_OPERATIONS = [
   ['get', '/api/users'],
   ['get', '/api/users/{id}'],
   ['patch', '/api/users/{id}'],
-  ['delete', '/api/users/{id}']
+  ['delete', '/api/users/{id}'],
+  ['post', '/api/areas'],
+  ['get', '/api/areas'],
+  ['get', '/api/areas/{id}'],
+  ['patch', '/api/areas/{id}'],
+  ['delete', '/api/areas/{id}']
 ]
 
 let api
