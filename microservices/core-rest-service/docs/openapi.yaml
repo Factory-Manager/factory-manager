@@ -14,6 +14,8 @@ tags:
     description: Authentication
   - name: Users
     description: User management
+  - name: Areas
+    description: Area management
 
 paths:
   /api/auth/login:
@@ -202,6 +204,152 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 
+  /api/areas:
+    post:
+      tags: [Areas]
+      operationId: createArea
+      summary: Create an area
+      description: Requires an authenticated user.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAreaRequest'
+      responses:
+        '201':
+          description: Area created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Area'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    get:
+      tags: [Areas]
+      operationId: listAreas
+      summary: List areas
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: List of areas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Area'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/areas/{id}:
+    parameters:
+      - $ref: '#/components/parameters/AreaId'
+
+    get:
+      tags: [Areas]
+      operationId: getAreaById
+      summary: Get an area by ID
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Area found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Area'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    patch:
+      tags: [Areas]
+      operationId: updateAreaById
+      summary: Update an area by ID
+      description: Requires an authenticated user.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAreaRequest'
+      responses:
+        '200':
+          description: Area updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Area'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    delete:
+      tags: [Areas]
+      operationId: deleteAreaById
+      summary: Delete an area by ID
+      description: Requires an authenticated user.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Area deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Area'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -211,6 +359,16 @@ components:
 
   parameters:
     UserId:
+      name: id
+      in: path
+      required: true
+      description: 24-character hexadecimal MongoDB ObjectId
+      schema:
+        type: string
+        pattern: '^[0-9a-f]{24}$'
+        example: '507f1f77bcf86cd799439011'
+
+    AreaId:
       name: id
       in: path
       required: true
@@ -350,6 +508,51 @@ components:
           enum: [admin, operator]
         isActive:
           type: boolean
+
+    Area:
+      type: object
+      required: [id, name, size, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          example: '507f1f77bcf86cd799439011'
+        name:
+          type: string
+          example: Workshop A
+        size:
+          type: number
+          minimum: 1
+          example: 200
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateAreaRequest:
+      type: object
+      required: [name, size]
+      properties:
+        name:
+          type: string
+          example: Workshop A
+        size:
+          type: number
+          minimum: 1
+          example: 200
+
+    UpdateAreaRequest:
+      type: object
+      minProperties: 1
+      properties:
+        name:
+          type: string
+          example: Workshop A
+        size:
+          type: number
+          minimum: 1
+          example: 200
 
     ErrorResponse:
       type: object
