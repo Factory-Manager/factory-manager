@@ -31,5 +31,18 @@
 
   // Update package.json ranges together with lockfiles.
   // Example: "express": "^5.2.1" -> "express": "^5.2.2"
-  "rangeStrategy": "bump"
+  "rangeStrategy": "bump",
+
+  // Assign specific team members to PRs that match certain criteria.
+  "packageRules": [
+    {
+      "description": "Route core-rest-service dependency PRs",
+      "matchFileNames": [
+        "microservices/core-rest-service/package.json",
+        "microservices/core-rest-service/package-lock.json"
+        // Add more file patterns as needed for other microservices
+      ],
+      "assignees": ["davidcohenDC"]
+    }
+  ]
 }
