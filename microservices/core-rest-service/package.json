@@ -5,6 +5,10 @@
   "description": "Core REST service for the Factory Manager distributed monitoring system.",
   "main": "src/server.js",
   "type": "module",
+  "imports": {
+    "#src/*": "./src/*",
+    "#test/*": "./test/*"
+  },
   "scripts": {
     "start": "node src/server.js",
     "dev": "cross-env NODE_ENV=development nodemon src/server.js",
