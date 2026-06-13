@@ -43,6 +43,14 @@
         // Add more file patterns as needed for other microservices
       ],
       "assignees": ["davidcohenDC"]
+    },
+    {
+      "description": "Route machine-simulator-service dependency PRs",
+      "matchFileNames": [
+        "microservices/machine-simulator-service/package.json",
+        "microservices/machine-simulator-service/package-lock.json"
+      ],
+      "assignees": ["GiuliaNardicchia"]
     }
   ]
 }
