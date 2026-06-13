@@ -38,6 +38,24 @@ export default [
     }
   },
 
+  // {
+  //   files: ['src/**/*.js', 'test/**/*.js', 'scripts/**/*.js'],
+  //   rules: {
+  //     'no-restricted-imports': [
+  //       'error',
+  //       {
+  //         patterns: [
+  //           {
+  //             regex: '^\\.\\.\\/\\.\\.',
+  //             message:
+  //               'Use #src/* or #test/* subpath imports instead of deep relative paths.'
+  //           }
+  //         ]
+  //       }
+  //     ]
+  //   }
+  // },
+
   {
     files: ['src/domain/**/*.js', 'src/application/**/*.js'],
     rules: {
