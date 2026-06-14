@@ -1,5 +1,5 @@
 import pino from 'pino'
-import { env } from '../config/env.js'
+import { env } from '#src/config/env.js'
 
 const transport =
   env.nodeEnv === 'development'

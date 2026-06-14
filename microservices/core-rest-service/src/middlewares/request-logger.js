@@ -1,5 +1,5 @@
 import pinoHttp from 'pino-http'
-import { logger } from '../bootstrap/logger.js'
+import { logger } from '#src/bootstrap/logger.js'
 
 const SKIP_PATHS = new Set(['/', '/api/health', '/api/ready'])
 

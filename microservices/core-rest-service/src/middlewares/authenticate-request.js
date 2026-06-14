@@ -1,4 +1,4 @@
-﻿import { AppError } from '../errors/app-error.js'
+﻿import { AppError } from '#src/errors/app-error.js'
 
 /**
  * Creates middleware that authenticates requests using a Bearer JWT.

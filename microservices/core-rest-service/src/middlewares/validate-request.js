@@ -1,4 +1,4 @@
-import { AppError } from '../errors/app-error.js'
+import { AppError } from '#src/errors/app-error.js'
 
 const INVALID_REQUEST_MESSAGE = 'Invalid request'
 

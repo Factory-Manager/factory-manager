@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-import { AREA_PAGINATION_POLICY } from '../application/areas/area.pagination.js'
+import { AREA_PAGINATION_POLICY } from '#src/application/areas/area.pagination.js'
 
 export const createAreaSchema = Joi.object({
   name: Joi.string().trim().required(),
