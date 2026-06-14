@@ -8,6 +8,10 @@ import { SensorType } from '@/domain/anomaly/value-objects/sensor-type'
 import { TelemetryInput } from '@/application/telemetry/dto/telemetry-input'
 
 describe('ProcessTelemetry', () => {
+
+  const occurredAtDate: Date = new Date('2025-12-31T23:59:00.000Z')
+  const processedAtDate: Date = new Date('2026-01-01T00:00:00.000Z')
+
   it('should process telemetry correctly', () => {
     const logger = createLoggerMock()
     const detector = createAnomalyDetectorMock()
@@ -18,7 +22,7 @@ describe('ProcessTelemetry', () => {
 
     const input: TelemetryInput = {
       machineId: MACHINE_VALUES.ID,
-      occurredAt: new Date('2025-12-31T23:59:00.000Z').toISOString(),
+      occurredAt: occurredAtDate.toISOString(),
       operatingTemperature: MACHINE_VALUES.TEMPERATURE.SAFE.toString(),
       powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE.toString(),
       emissions: MACHINE_VALUES.EMISSION.SAFE.toString(),
@@ -39,15 +43,15 @@ describe('ProcessTelemetry', () => {
     detector.detect.mockReturnValue([{
       sensorType: SensorType.TEMPERATURE,
       value: MACHINE_VALUES.TEMPERATURE.OVER,
-      processedAt: new Date('2026-01-01T00:00:00.000Z')
+      processedAt: processedAtDate
     }])
-    const fakeClock = { now: () => new Date('2026-01-01T00:00:00Z') }
+    const fakeClock = { now: () => processedAtDate }
 
     const useCase = new ProcessTelemetry(detector as any, fakeClock, logger as any)
 
     const input: TelemetryInput = {
       machineId: MACHINE_VALUES.ID,
-      occurredAt: new Date('2025-12-31T23:59:00.000Z').toISOString(),
+      occurredAt: occurredAtDate.toISOString(),
       operatingTemperature: MACHINE_VALUES.TEMPERATURE.OVER.toString(),
       powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE.toString(),
       emissions: MACHINE_VALUES.EMISSION.SAFE.toString(),
@@ -59,12 +63,32 @@ describe('ProcessTelemetry', () => {
 
     expect(result.event.machineId).toBe(MACHINE_VALUES.ID)
     expect(result.event.operatingTemperature).toBe(MACHINE_VALUES.TEMPERATURE.OVER)
-    expect(result.event.occurredAt).toEqual(new Date('2025-12-31T23:59:00.000Z'))
-    expect(result.event.processedAt).toEqual(new Date('2026-01-01T00:00:00.000Z'))
+    expect(result.event.occurredAt).toEqual(occurredAtDate)
+    expect(result.event.processedAt).toEqual(processedAtDate)
     expect(result.anomalies).toHaveLength(1)
     expect(result.anomalies[0].sensorType).toBe(SensorType.TEMPERATURE)
     expect(result.anomalies[0].value).toBe(MACHINE_VALUES.TEMPERATURE.OVER)
-    expect(result.anomalies[0].processedAt).toEqual(new Date('2026-01-01T00:00:00.000Z'))
+    expect(result.anomalies[0].processedAt).toEqual(processedAtDate)
     expect(detector.detect).toHaveBeenCalledTimes(1)
+  })
+
+  it('should throw error for invalid input', () => {
+    const logger = createLoggerMock()
+    const detector = createAnomalyDetectorMock()
+    const fakeClock = { now: () => processedAtDate }
+
+    const useCase = new ProcessTelemetry(detector as any, fakeClock, logger as any)
+
+    const input: TelemetryInput = {
+      machineId: '',
+      occurredAt: occurredAtDate.toISOString(),
+      operatingTemperature: MACHINE_VALUES.TEMPERATURE.SAFE.toString(),
+      powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE.toString(),
+      emissions: MACHINE_VALUES.EMISSION.SAFE.toString(),
+      vibration: MACHINE_VALUES.VIBRATION.SAFE.toString(),
+      pressure: MACHINE_VALUES.PRESSURE.SAFE.toString()
+    }
+
+    expect(() => useCase.execute(input, fakeConfig())).toThrow(Error)
   })
 })
