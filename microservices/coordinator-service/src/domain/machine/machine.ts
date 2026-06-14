@@ -1,6 +1,6 @@
 import type { Emission } from './value-objects/emission'
 import type { MachineConfig } from './machine-config'
-import type { PowerConsumption } from './value-objects/power-consuption'
+import type { PowerConsumption } from './value-objects/power-consumption'
 import type { Pressure } from './value-objects/pressure'
 import type { Temperature } from './value-objects/temperature'
 import type { Vibration } from './value-objects/vibration'
