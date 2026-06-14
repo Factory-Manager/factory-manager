@@ -1,6 +1,6 @@
 import { Emission } from './value-objects/emission'
 import { Machine } from './machine'
-import { PowerConsumption } from './value-objects/power-consuption'
+import { PowerConsumption } from './value-objects/power-consumption'
 import { Pressure } from './value-objects/pressure'
 import { Temperature } from './value-objects/temperature'
 import { Vibration } from './value-objects/vibration'
