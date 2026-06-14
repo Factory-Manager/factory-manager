@@ -1,4 +1,4 @@
-import { USER_ROLES } from '../../src/domain/users/user.roles.js'
+import { USER_ROLES } from '#src/domain/users/user.roles.js'
 
 export const USER_TEST_VALUES = Object.freeze({
   firstName: 'Mario',

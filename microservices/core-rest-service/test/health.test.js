@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import { after, before, describe, it } from 'node:test'
 
-import { app } from '../src/app.js'
-import { closeTestServer, startTestServer } from './utils/server.js'
+import { app } from '#src/app.js'
+import { closeTestServer, startTestServer } from '#test/utils/server.js'
 
 let server
 let baseUrl

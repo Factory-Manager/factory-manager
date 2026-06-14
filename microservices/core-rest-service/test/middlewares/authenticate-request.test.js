@@ -1,9 +1,9 @@
 ﻿import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { createAuthenticateRequest } from '../../src/middlewares/authenticate-request.js'
-import { ERROR_CODES } from '../../src/errors/error-codes.js'
-import { AppError } from '../../src/errors/app-error.js'
+import { createAuthenticateRequest } from '#src/middlewares/authenticate-request.js'
+import { ERROR_CODES } from '#src/errors/error-codes.js'
+import { AppError } from '#src/errors/app-error.js'
 
 const DECODED = Object.freeze({ sub: 'user-id', role: 'operator' })
 

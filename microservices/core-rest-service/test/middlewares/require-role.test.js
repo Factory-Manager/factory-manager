@@ -1,9 +1,9 @@
 ﻿import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { requireRole } from '../../src/middlewares/require-role.js'
-import { AppError } from '../../src/errors/app-error.js'
-import { ERROR_CODES } from '../../src/errors/error-codes.js'
+import { requireRole } from '#src/middlewares/require-role.js'
+import { AppError } from '#src/errors/app-error.js'
+import { ERROR_CODES } from '#src/errors/error-codes.js'
 
 describe('requireRole', () => {
   it('it calls next when role is authorized', () => {

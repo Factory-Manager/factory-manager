@@ -4,7 +4,7 @@ import { describe, it } from 'node:test'
 import {
   AREA_PAGINATION_POLICY,
   normalizeAreaPagination
-} from '../../../src/application/areas/area.pagination.js'
+} from '#src/application/areas/area.pagination.js'
 
 describe('area pagination', () => {
   it('exports the pagination policy and applies it as defaults', () => {

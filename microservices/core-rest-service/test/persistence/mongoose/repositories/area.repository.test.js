@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { createAreaRepository } from '../../../../src/persistence/mongoose/repositories/area.repository.js'
-import { createValidAreaData } from '../../../factories/areas.js'
+import { createAreaRepository } from '#src/persistence/mongoose/repositories/area.repository.js'
+import { createValidAreaData } from '#test/factories/areas.js'
 
 function createQueryResult(result) {
   return {

@@ -3,13 +3,13 @@ import { describe, it } from 'node:test'
 
 import express from 'express'
 
-import { USER_ROLES } from '../../src/domain/users/user.roles.js'
-import { AppError } from '../../src/errors/app-error.js'
-import { ERROR_CODES } from '../../src/errors/error-codes.js'
-import { errorHandler } from '../../src/middlewares/error-handler.js'
-import { notFoundHandler } from '../../src/middlewares/not-found-handler.js'
-import { createAreaRouter } from '../../src/routes/area.router.js'
-import { closeTestServer, startTestServer } from '../utils/server.js'
+import { USER_ROLES } from '#src/domain/users/user.roles.js'
+import { AppError } from '#src/errors/app-error.js'
+import { ERROR_CODES } from '#src/errors/error-codes.js'
+import { errorHandler } from '#src/middlewares/error-handler.js'
+import { notFoundHandler } from '#src/middlewares/not-found-handler.js'
+import { createAreaRouter } from '#src/routes/area.router.js'
+import { closeTestServer, startTestServer } from '#test/utils/server.js'
 
 const VALID_ID = 'a'.repeat(24)
 

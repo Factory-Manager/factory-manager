@@ -4,7 +4,7 @@ import { describe, it } from 'node:test'
 import {
   normalizeUserPagination,
   USER_PAGINATION_POLICY
-} from '../../../src/application/users/user.pagination.js'
+} from '#src/application/users/user.pagination.js'
 
 describe('User pagination', () => {
   it('exports the pagination policy and applies it as defaults', () => {

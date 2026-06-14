@@ -4,7 +4,7 @@ import { describe, it } from 'node:test'
 import {
   toUserOutput,
   toUserOutputList
-} from '../../../src/application/users/user.serializer.js'
+} from '#src/application/users/user.serializer.js'
 
 describe('User mapper', () => {
   it('maps a plain user to public output', () => {

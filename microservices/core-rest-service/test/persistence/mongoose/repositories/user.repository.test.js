@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { createUserRepository } from '../../../../src/persistence/mongoose/repositories/user.repository.js'
-import { createValidUserData } from '../../../factories/users.js'
+import { createUserRepository } from '#src/persistence/mongoose/repositories/user.repository.js'
+import { createValidUserData } from '#test/factories/users.js'
 
 function createQueryResult(result) {
   return {

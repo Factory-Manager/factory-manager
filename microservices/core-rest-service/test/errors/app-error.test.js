@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { AppError } from '../../src/errors/app-error.js'
-import { ERROR_CODES } from '../../src/errors/error-codes.js'
+import { AppError } from '#src/errors/app-error.js'
+import { ERROR_CODES } from '#src/errors/error-codes.js'
 
 describe('AppError', () => {
   it('creates expected application errors', () => {
