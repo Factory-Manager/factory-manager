@@ -2,9 +2,9 @@ import 'dotenv/config'
 
 import mongoose from 'mongoose'
 
-import { USER_ROLES } from '../src/domain/users/user.roles.js'
-import { UserModel } from '../src/persistence/mongoose/models/user.model.js'
-import { createPasswordHasher } from '../src/security/password-hasher.js'
+import { USER_ROLES } from '#src/domain/users/user.roles.js'
+import { UserModel } from '#src/persistence/mongoose/models/user.model.js'
+import { createPasswordHasher } from '#src/security/password-hasher.js'
 
 const PASSWORD_PATTERN =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
