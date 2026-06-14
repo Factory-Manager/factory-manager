@@ -17,18 +17,36 @@ export class ProcessTelemetry {
     input: TelemetryInput,
     machineConfig: MachineConfig
   ): ProcessTelemetryResult {
-    if (!input.machineId) throw new Error('Invalid input')
+    const machineId = input.machineId?.trim()
+    if (!machineId) throw new Error('Invalid input: machineId is required')
+    const occurredAt = new Date(input.occurredAt)
+    if (Number.isNaN(occurredAt.getTime())) {
+      throw new Error('Invalid input: occurredAt must be a valid date')
+    }
+    const toFiniteNumber = (raw: string, field: string): number => {
+      const n = Number(raw)
+      if (!Number.isFinite(n)) {
+        throw new Error(`Invalid input: ${field} must be a finite number`)
+      }
+      return n
+    }
     this.logger.info('Processing telemetry data', input)
 
     const event: TelemetryEvent = {
-      machineId: input.machineId,
-      occurredAt: new Date(input.occurredAt),
+      machineId,
+      occurredAt,
       processedAt: this.clock.now(),
-      operatingTemperature: Number(input.operatingTemperature),
-      powerConsumption: Number(input.powerConsumption),
-      emissions: Number(input.emissions),
-      vibration: Number(input.vibration),
-      pressure: Number(input.pressure)
+      operatingTemperature: toFiniteNumber(
+        input.operatingTemperature,
+        'operatingTemperature'
+      ),
+      powerConsumption: toFiniteNumber(
+        input.powerConsumption,
+        'powerConsumption'
+      ),
+      emissions: toFiniteNumber(input.emissions, 'emissions'),
+      vibration: toFiniteNumber(input.vibration, 'vibration'),
+      pressure: toFiniteNumber(input.pressure, 'pressure')
     }
 
     const anomalies = this.anomalyDetector.detect(event, machineConfig)

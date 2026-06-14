@@ -1,5 +1,5 @@
-import { MachineFactory } from "@/domain/machine/machine-factory"
-import { MACHINE_VALUES } from "@test/constants/machine-values"
+import { MachineFactory } from '@/domain/machine/machine-factory'
+import { MACHINE_VALUES } from '@test/constants/machine-values'
 
 export function fakeMachine(overrides?: {
   id?: string

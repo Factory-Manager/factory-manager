@@ -43,7 +43,7 @@ export class Machine {
    * @returns true if the machine is overheating, false otherwise
    */
   isOverheating(config: MachineConfig): boolean {
-    return this.temperature.isGreaterThanOrEqual(config.temperature.max)
+    return this.temperature.isGreaterThan(config.temperature.max)
   }
 
   /**
@@ -52,7 +52,7 @@ export class Machine {
    * @returns true if the machine is underheating, false otherwise
    */
   isUnderheating(config: MachineConfig): boolean {
-    return this.temperature.isLessThanOrEqual(config.temperature.min)
+    return this.temperature.isLessThan(config.temperature.min)
   }
 
   /**
@@ -61,9 +61,7 @@ export class Machine {
    * @returns true if the machine is overconsuming power, false otherwise
    */
   isOverconsuming(config: MachineConfig): boolean {
-    return this.powerConsumption.isGreaterThanOrEqual(
-      config.powerConsumption.max
-    )
+    return this.powerConsumption.isGreaterThan(config.powerConsumption.max)
   }
 
   /**
@@ -72,7 +70,7 @@ export class Machine {
    * @returns true if the machine is overemitting emissions, false otherwise
    */
   isOveremitting(config: MachineConfig): boolean {
-    return this.emissions.isGreaterThanOrEqual(config.emissions.max)
+    return this.emissions.isGreaterThan(config.emissions.max)
   }
 
   /**
@@ -81,7 +79,7 @@ export class Machine {
    * @returns true if the machine is overvibrating, false otherwise
    */
   isOvervibrating(config: MachineConfig): boolean {
-    return this.vibration.isGreaterThanOrEqual(config.vibration.max)
+    return this.vibration.isGreaterThan(config.vibration.max)
   }
 
   /**
@@ -90,6 +88,6 @@ export class Machine {
    * @returns true if the machine is overpressurized, false otherwise
    */
   isOverpressurized(config: MachineConfig): boolean {
-    return this.pressure.isGreaterThanOrEqual(config.pressure.max)
+    return this.pressure.isGreaterThan(config.pressure.max)
   }
 }
