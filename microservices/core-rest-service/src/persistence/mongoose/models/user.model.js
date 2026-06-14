@@ -1,9 +1,6 @@
 import mongoose from 'mongoose'
 
-import {
-  USER_ROLES,
-  USER_ROLE_VALUES
-} from '../../../domain/users/user.roles.js'
+import { USER_ROLES, USER_ROLE_VALUES } from '#src/domain/users/user.roles.js'
 
 const { Schema, model } = mongoose
 

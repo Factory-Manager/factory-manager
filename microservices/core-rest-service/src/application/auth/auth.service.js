@@ -1,4 +1,4 @@
-import { toUserOutput } from '../users/user.serializer.js'
+import { toUserOutput } from '#src/application/users/user.serializer.js'
 
 /**
  * Creates the auth application service.

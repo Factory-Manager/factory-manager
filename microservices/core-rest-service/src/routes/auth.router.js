@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
-import { AppError } from '../errors/app-error.js'
-import { validateBody } from '../middlewares/validate-request.js'
+import { AppError } from '#src/errors/app-error.js'
+import { validateBody } from '#src/middlewares/validate-request.js'
 import { loginSchema } from './auth.schemas.js'
 
 /**

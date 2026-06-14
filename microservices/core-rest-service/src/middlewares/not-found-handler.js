@@ -1,4 +1,4 @@
-import { ERROR_CODES } from '../errors/error-codes.js'
+import { ERROR_CODES } from '#src/errors/error-codes.js'
 
 /**
  * Handles requests that do not match any registered route.

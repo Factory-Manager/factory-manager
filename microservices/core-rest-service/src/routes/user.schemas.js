@@ -1,7 +1,7 @@
 import Joi from 'joi'
 
-import { USER_PAGINATION_POLICY } from '../application/users/user.pagination.js'
-import { USER_ROLE_VALUES } from '../domain/users/user.roles.js'
+import { USER_PAGINATION_POLICY } from '#src/application/users/user.pagination.js'
+import { USER_ROLE_VALUES } from '#src/domain/users/user.roles.js'
 
 const PASSWORD_REGEX =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/

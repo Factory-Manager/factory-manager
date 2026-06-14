@@ -1,13 +1,13 @@
 import { Router } from 'express'
 
-import { USER_ROLES } from '../domain/users/user.roles.js'
-import { AppError } from '../errors/app-error.js'
-import { requireRole } from '../middlewares/require-role.js'
+import { USER_ROLES } from '#src/domain/users/user.roles.js'
+import { AppError } from '#src/errors/app-error.js'
+import { requireRole } from '#src/middlewares/require-role.js'
 import {
   validateBody,
   validateParams,
   validateQuery
-} from '../middlewares/validate-request.js'
+} from '#src/middlewares/validate-request.js'
 import {
   createUserSchema,
   listUsersQuerySchema,

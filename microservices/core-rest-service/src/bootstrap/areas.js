@@ -1,5 +1,5 @@
-import { createAreaService } from '../application/areas/area.service.js'
-import { createAreaRepository } from '../persistence/mongoose/repositories/area.repository.js'
+import { createAreaService } from '#src/application/areas/area.service.js'
+import { createAreaRepository } from '#src/persistence/mongoose/repositories/area.repository.js'
 
 export function createAreasBootstrap() {
   const areaRepository = createAreaRepository()

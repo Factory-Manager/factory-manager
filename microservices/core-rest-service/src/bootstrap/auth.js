@@ -1,10 +1,10 @@
-import { createAuthService } from '../application/auth/auth.service.js'
-import { env } from '../config/env.js'
-import { createAuthenticateRequest } from '../middlewares/authenticate-request.js'
-import { createUserRepository } from '../persistence/mongoose/repositories/user.repository.js'
-import { createAuthRouter } from '../routes/auth.router.js'
-import { createJwtService } from '../security/jwt.js'
-import { createPasswordHasher } from '../security/password-hasher.js'
+import { createAuthService } from '#src/application/auth/auth.service.js'
+import { env } from '#src/config/env.js'
+import { createAuthenticateRequest } from '#src/middlewares/authenticate-request.js'
+import { createUserRepository } from '#src/persistence/mongoose/repositories/user.repository.js'
+import { createAuthRouter } from '#src/routes/auth.router.js'
+import { createJwtService } from '#src/security/jwt.js'
+import { createPasswordHasher } from '#src/security/password-hasher.js'
 
 export function createAuthBootstrap() {
   const jwtService = createJwtService({
