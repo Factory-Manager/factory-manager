@@ -4,7 +4,10 @@
   "description": "Coordinator service for Factory Manager distributed system.",
   "main": "index.js",
   "scripts": {
-    "build": "echo \"no build yet\"",
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts",
+    "build": "tsc --noEmit",
+    "clean": "rimraf docs coverage",
     "clean:all": "rimraf node_modules package-lock.json docs coverage",
     "lint": "eslint \"src/**/*.ts\"",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",

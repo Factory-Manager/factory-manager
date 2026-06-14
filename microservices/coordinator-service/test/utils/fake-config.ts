@@ -2,7 +2,7 @@ import { MachineConfig } from "@/domain/machine/machine-config"
 import { Range } from "@/domain/shared/value-objects/range/range"
 
 import { Temperature } from "@/domain/machine/value-objects/temperature"
-import { PowerConsumption } from "@/domain/machine/value-objects/power-consuption"
+import { PowerConsumption } from "@/domain/machine/value-objects/power-consumption"
 import { Emission } from "@/domain/machine/value-objects/emission"
 import { Vibration } from "@/domain/machine/value-objects/vibration"
 import { Pressure } from "@/domain/machine/value-objects/pressure"
