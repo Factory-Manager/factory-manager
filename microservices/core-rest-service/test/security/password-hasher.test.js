@@ -4,7 +4,7 @@ import { describe, it } from 'node:test'
 import {
   ARGON2ID_PASSWORD_HASHING_OPTIONS,
   createPasswordHasher
-} from '../../src/security/password-hasher.js'
+} from '#src/security/password-hasher.js'
 
 describe('Password hasher', () => {
   it('hashes passwords using Argon2id options', async () => {

@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { createUserService } from '../../../src/application/users/user.service.js'
+import { createUserService } from '#src/application/users/user.service.js'
 import {
   createValidCreateUserInput,
   USER_TEST_VALUES
-} from '../../factories/users.js'
+} from '#test/factories/users.js'
 
 function createUserServiceTestContext({
   repositoryOptions,

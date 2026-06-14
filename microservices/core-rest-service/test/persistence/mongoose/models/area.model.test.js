@@ -1,11 +1,8 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { AreaModel } from '../../../../src/persistence/mongoose/models/area.model.js'
-import {
-  AREA_TEST_VALUES,
-  createValidAreaData
-} from '../../../factories/areas.js'
+import { AreaModel } from '#src/persistence/mongoose/models/area.model.js'
+import { AREA_TEST_VALUES, createValidAreaData } from '#test/factories/areas.js'
 
 function createArea(overrides = {}) {
   return new AreaModel(createValidAreaData(overrides))

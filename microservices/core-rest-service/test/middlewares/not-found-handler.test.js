@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { ERROR_CODES } from '../../src/errors/error-codes.js'
-import { notFoundHandler } from '../../src/middlewares/not-found-handler.js'
+import { ERROR_CODES } from '#src/errors/error-codes.js'
+import { notFoundHandler } from '#src/middlewares/not-found-handler.js'
 
 function createRes() {
   return {

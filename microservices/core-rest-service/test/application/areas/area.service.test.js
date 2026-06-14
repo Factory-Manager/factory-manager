@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { createAreaService } from '../../../src/application/areas/area.service.js'
+import { createAreaService } from '#src/application/areas/area.service.js'
 import {
   AREA_TEST_VALUES,
   createValidCreateAreaInput
-} from '../../factories/areas.js'
+} from '#test/factories/areas.js'
 
 const AREA_OUTPUT = Object.freeze({
   id: 'area-1',

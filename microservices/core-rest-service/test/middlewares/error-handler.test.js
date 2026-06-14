@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { AppError } from '../../src/errors/app-error.js'
-import { ERROR_CODES } from '../../src/errors/error-codes.js'
-import { errorHandler } from '../../src/middlewares/error-handler.js'
+import { AppError } from '#src/errors/app-error.js'
+import { ERROR_CODES } from '#src/errors/error-codes.js'
+import { errorHandler } from '#src/middlewares/error-handler.js'
 
 function createRes() {
   return {

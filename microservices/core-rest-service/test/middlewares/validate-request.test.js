@@ -3,12 +3,12 @@ import { describe, it } from 'node:test'
 
 import Joi from 'joi'
 
-import { AppError } from '../../src/errors/app-error.js'
-import { ERROR_CODES } from '../../src/errors/error-codes.js'
+import { AppError } from '#src/errors/app-error.js'
+import { ERROR_CODES } from '#src/errors/error-codes.js'
 import {
   validateBody,
   validateQuery
-} from '../../src/middlewares/validate-request.js'
+} from '#src/middlewares/validate-request.js'
 
 function createNext() {
   const calls = []

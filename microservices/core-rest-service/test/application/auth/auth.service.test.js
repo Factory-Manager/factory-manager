@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { createAuthService } from '../../../src/application/auth/auth.service.js'
+import { createAuthService } from '#src/application/auth/auth.service.js'
 
 const USER_ID = 'a'.repeat(24)
 

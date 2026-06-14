@@ -1,12 +1,9 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { USER_ROLES } from '../../../../src/domain/users/user.roles.js'
-import { UserModel } from '../../../../src/persistence/mongoose/models/user.model.js'
-import {
-  createValidUserData,
-  USER_TEST_VALUES
-} from '../../../factories/users.js'
+import { USER_ROLES } from '#src/domain/users/user.roles.js'
+import { UserModel } from '#src/persistence/mongoose/models/user.model.js'
+import { createValidUserData, USER_TEST_VALUES } from '#test/factories/users.js'
 
 function createUser(overrides = {}) {
   return new UserModel(createValidUserData(overrides))

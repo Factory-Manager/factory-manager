@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { createJwtService } from '../../src/security/jwt.js'
+import { createJwtService } from '#src/security/jwt.js'
 
 describe('JWT service', () => {
   it('generates a token with the configured secret and expiration', () => {
