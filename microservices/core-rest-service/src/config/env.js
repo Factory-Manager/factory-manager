@@ -36,5 +36,6 @@ export const env = {
   },
   get jwtSecret() {
     return getRequiredEnv('JWT_SECRET')
-  }
+  },
+  serviceToken: process.env.SERVICE_TOKEN || undefined
 }
