@@ -51,6 +51,14 @@
         "microservices/machine-simulator-service/package-lock.json"
       ],
       "assignees": ["GiuliaNardicchia"]
+    },
+    {
+      "description": "Route coordinator-service dependency PRs",
+      "matchFileNames": [
+        "microservices/coordinator-service/package.json",
+        "microservices/coordinator-service/package-lock.json"
+      ],
+      "assignees": ["GiuliaNardicchia"]
     }
   ]
 }
