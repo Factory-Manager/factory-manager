@@ -60,6 +60,7 @@ paths:
       description: Requires an authenticated admin user.
       security:
         - bearerAuth: []
+        - serviceToke: []
       requestBody:
         required: true
         content:
@@ -356,6 +357,12 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
+    serviceToken:
+      type: apiKey
+      in: header
+      name: X-Service-Token
+      description: Pre-shared token for internal communication
 
   parameters:
     UserId:
