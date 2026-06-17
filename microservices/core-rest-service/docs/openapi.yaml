@@ -16,6 +16,8 @@ tags:
     description: User management
   - name: Areas
     description: Area management
+  - name: Machines
+    description: Machine management
 
 paths:
   /api/auth/login:
@@ -60,7 +62,6 @@ paths:
       description: Requires an authenticated admin user.
       security:
         - bearerAuth: []
-        - serviceToke: []
       requestBody:
         required: true
         content:
@@ -351,6 +352,207 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 
+  /api/machines:
+    post:
+      tags: [Machines]
+      operationId: createMachine
+      summary: Create a machine
+      description: Requires an authenticated user with write role.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMachineRequest'
+      responses:
+        '201':
+          description: Machine created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Machine'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    get:
+      tags: [Machines]
+      operationId: listMachines
+      summary: List machines
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: areaId
+          in: query
+          description: Filter machines by area ID
+          schema:
+            type: string
+            pattern: '^[0-9a-f]{24}$'
+      responses:
+        '200':
+          description: List of machines
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Machine'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/machines/{id}:
+    parameters:
+      - $ref: '#/components/parameters/MachineId'
+
+    get:
+      tags: [Machines]
+      operationId: getMachineById
+      summary: Get a machine by ID
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Machine found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Machine'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    patch:
+      tags: [Machines]
+      operationId: updateMachineById
+      summary: Update a machine by ID
+      description: Requires an authenticated user with write role.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMachineRequest'
+      responses:
+        '200':
+          description: Machine updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Machine'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    delete:
+      tags: [Machines]
+      operationId: deleteMachineById
+      summary: Delete a machine by ID
+      description: Requires an authenticated user with write role.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Machine deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Machine'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/machines/{id}/state:
+    parameters:
+      - $ref: '#/components/parameters/MachineId'
+
+    patch:
+      tags: [Machines]
+      operationId: updateMachineState
+      summary: Update machine state
+      description: >
+        Called by the Coordinator using a service token (`X-Service-Token` header),
+        or manually by an authenticated user with write role.
+        Invalid state transitions return 422.
+      security:
+        - bearerAuth: []
+        - serviceToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMachineStateRequest'
+      responses:
+        '200':
+          description: Machine state updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Machine'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidTransition'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -365,6 +567,16 @@ components:
       description: Pre-shared token for internal communication
 
   parameters:
+    MachineId:
+      name: id
+      in: path
+      required: true
+      description: 24-character hexadecimal MongoDB ObjectId
+      schema:
+        type: string
+        pattern: '^[0-9a-f]{24}$'
+        example: '507f1f77bcf86cd799439011'
+
     UserId:
       name: id
       in: path
@@ -386,6 +598,147 @@ components:
         example: '507f1f77bcf86cd799439011'
 
   schemas:
+    MachineState:
+      type: string
+      enum: [off, operational, anomaly]
+      example: operational
+
+    SensorType:
+      type: string
+      enum:
+        [powerConsumption, emissions, operatingTemperature, vibration, pressure]
+      example: vibration
+
+    SpecificationEntry:
+      type: object
+      required: [measurementUnit, normalRange]
+      properties:
+        measurementUnit:
+          type: string
+          example: kW
+        normalRange:
+          type: object
+          required: [min, max]
+          description: max must be greater than or equal to min
+          properties:
+            min:
+              type: number
+              example: 0
+            max:
+              type: number
+              example: 100
+
+    MachineSpecifications:
+      type: object
+      required:
+        [powerConsumption, emissions, operatingTemperature, vibration, pressure]
+      properties:
+        powerConsumption:
+          $ref: '#/components/schemas/SpecificationEntry'
+        emissions:
+          $ref: '#/components/schemas/SpecificationEntry'
+        operatingTemperature:
+          $ref: '#/components/schemas/SpecificationEntry'
+        vibration:
+          $ref: '#/components/schemas/SpecificationEntry'
+        pressure:
+          $ref: '#/components/schemas/SpecificationEntry'
+
+    Machine:
+      type: object
+      required:
+        [id, serial, name, location, machineState, specifications, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          example: '507f1f77bcf86cd799439011'
+        serial:
+          type: string
+          example: MCH-001
+        name:
+          type: string
+          example: Press Alpha
+        location:
+          type: object
+          required: [areaId]
+          properties:
+            areaId:
+              type: string
+              example: '507f1f77bcf86cd799439011'
+        machineState:
+          type: object
+          required: [currentState, anomalyDetails]
+          properties:
+            currentState:
+              $ref: '#/components/schemas/MachineState'
+            anomalyDetails:
+              type: array
+              items:
+                $ref: '#/components/schemas/SensorType'
+              example: []
+        specifications:
+          $ref: '#/components/schemas/MachineSpecifications'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateMachineRequest:
+      type: object
+      required: [serial, name, location, specifications]
+      properties:
+        serial:
+          type: string
+          example: MCH-001
+        name:
+          type: string
+          example: Press Alpha
+        location:
+          type: object
+          required: [areaId]
+          properties:
+            areaId:
+              type: string
+              pattern: '^[0-9a-f]{24}$'
+              example: '507f1f77bcf86cd799439011'
+        specifications:
+          $ref: '#/components/schemas/MachineSpecifications'
+
+    UpdateMachineRequest:
+      type: object
+      minProperties: 1
+      properties:
+        serial:
+          type: string
+          example: MCH-001
+        name:
+          type: string
+          example: Press Beta
+        location:
+          type: object
+          properties:
+            areaId:
+              type: string
+              pattern: '^[0-9a-f]{24}$'
+        specifications:
+          $ref: '#/components/schemas/MachineSpecifications'
+
+    UpdateMachineStateRequest:
+      type: object
+      required: [currentState]
+      properties:
+        currentState:
+          $ref: '#/components/schemas/MachineState'
+        anomalyDetails:
+          type: array
+          description: >
+            Required and non-empty when currentState is 'anomaly'.
+            Ignored (cleared) when transitioning to any other state.
+          items:
+            $ref: '#/components/schemas/SensorType'
+
     UserName:
       type: object
       required: [first, last]
@@ -574,7 +927,8 @@ components:
               CONFLICT,
               UNAUTHORIZED,
               FORBIDDEN,
-              INTERNAL_ERROR
+              INTERNAL_ERROR,
+              INVALID_TRANSITION
             ]
           example: NOT_FOUND
         message:
@@ -643,6 +997,16 @@ components:
           example:
             code: FORBIDDEN
             message: Insufficient permissions
+
+    InvalidTransition:
+      description: State transition not allowed from the current machine state
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: INVALID_TRANSITION
+            message: "Transition from 'off' to 'anomaly' is not allowed"
 
     InternalError:
       description: Unexpected server error
