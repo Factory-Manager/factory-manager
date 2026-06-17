@@ -91,4 +91,17 @@ export class AppError extends Error {
       code: ERROR_CODES.FORBIDDEN
     })
   }
+
+  /**
+   * Creates an unprocessable entity error, used for invalid state transitions.
+   *
+   * @param {string} [message='Unprocessable entity'] Public error message.
+   * @returns {AppError} Unprocessable entity application error.
+   */
+  static unprocessableEntity(message = 'Unprocessable entity') {
+    return new AppError(message, {
+      statusCode: 422,
+      code: ERROR_CODES.INVALID_TRANSITION
+    })
+  }
 }
