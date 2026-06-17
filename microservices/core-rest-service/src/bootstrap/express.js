@@ -6,10 +6,12 @@ import { errorHandler } from '#src/middlewares/error-handler.js'
 import { notFoundHandler } from '#src/middlewares/not-found-handler.js'
 import { requestLogger } from '#src/middlewares/request-logger.js'
 import { createAreaRouter } from '#src/routes/area.router.js'
+import { createMachineRouter } from '#src/routes/machine.router.js'
 import { createUserRouter } from '#src/routes/user.router.js'
 import { createAreasBootstrap } from './areas.js'
 import { createAuthBootstrap } from './auth.js'
 import { configureDocs } from './docs.js'
+import { createMachinesBootstrap } from './machines.js'
 import { isDatabaseConnected } from './mongoose.js'
 import { createUsersBootstrap } from './users.js'
 
@@ -62,6 +64,16 @@ export function configureExpress(app) {
 
   const { areaService } = createAreasBootstrap()
   app.use('/api/areas', createAreaRouter({ areaService, authenticateRequest }))
+
+  const { machineService, authenticateServiceToken } = createMachinesBootstrap()
+  app.use(
+    '/api/machines',
+    createMachineRouter({
+      machineService,
+      authenticateRequest,
+      authenticateServiceToken
+    })
+  )
 
   app.use(notFoundHandler)
   app.use(errorHandler)
