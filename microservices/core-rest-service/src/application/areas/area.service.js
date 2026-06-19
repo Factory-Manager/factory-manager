@@ -1,3 +1,4 @@
+import { AppError } from '#src/errors/app-error.js'
 import { normalizeAreaPagination } from './area.pagination.js'
 import { toAreaOutput, toAreaOutputList } from './area.serializer.js'
 
@@ -6,11 +7,16 @@ import { toAreaOutput, toAreaOutputList } from './area.serializer.js'
  *
  * @param {Object} serviceDependencies
  * @param {Object} serviceDependencies.areaRepository
+ * @param {Object} serviceDependencies.machineRepository
  * @returns {Readonly<Object>}
  */
-export function createAreaService({ areaRepository }) {
+export function createAreaService({ areaRepository, machineRepository } = {}) {
   if (!areaRepository) {
     throw new TypeError('areaRepository is required')
+  }
+
+  if (!machineRepository) {
+    throw new TypeError('machineRepository is required')
   }
 
   async function createArea(input) {
@@ -40,6 +46,18 @@ export function createAreaService({ areaRepository }) {
   }
 
   async function deleteAreaById(id) {
+    const machines = await machineRepository.findMachines({
+      areaId: id,
+      limit: 1,
+      offset: 0
+    })
+
+    if (machines.length > 0) {
+      throw AppError.conflict(
+        'Area cannot be deleted while machines are assigned to it'
+      )
+    }
+
     const area = await areaRepository.deleteAreaById(id)
 
     return toAreaOutput(area)
