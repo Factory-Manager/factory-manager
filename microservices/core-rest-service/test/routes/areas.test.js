@@ -181,6 +181,27 @@ describe('area routes', () => {
     }
   })
 
+  it('returns 409 when deleting an area with assigned machines', async () => {
+    const { server, baseUrl } = startAreaRoutesTestServer({
+      async deleteAreaById(_id) {
+        throw AppError.conflict(
+          'Area cannot be deleted while machines are assigned to it'
+        )
+      }
+    })
+    try {
+      const response = await fetch(`${baseUrl}/api/areas/${VALID_ID}`, {
+        method: 'DELETE'
+      })
+      const body = await response.json()
+
+      assert.equal(response.status, 409)
+      assert.equal(body.code, ERROR_CODES.CONFLICT)
+    } finally {
+      await closeTestServer(server)
+    }
+  })
+
   it('returns 401 on all routes when not authenticated', async () => {
     const { server, baseUrl } = startAreaRoutesTestServer({}, rejectAuth)
     try {
