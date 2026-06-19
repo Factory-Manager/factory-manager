@@ -390,8 +390,12 @@ paths:
       tags: [Machines]
       operationId: listMachines
       summary: List machines
+      description: >
+        Accessible by authenticated users (JWT)
+        using a service token (`X-Service-Token` header) for bootstrap.
       security:
         - bearerAuth: []
+        - serviceToken: []
       parameters:
         - name: limit
           in: query
@@ -436,8 +440,12 @@ paths:
       tags: [Machines]
       operationId: getMachineById
       summary: Get a machine by ID
+      description: >
+        Accessible by authenticated users (JWT)
+        using a service token (`X-Service-Token` header) to reload specifications.
       security:
         - bearerAuth: []
+        - serviceToken: []
       responses:
         '200':
           description: Machine found
@@ -521,7 +529,7 @@ paths:
       operationId: updateMachineState
       summary: Update machine state
       description: >
-        Called by the Coordinator using a service token (`X-Service-Token` header),
+        Using a service token (`X-Service-Token` header),
         or manually by an authenticated user with write role.
         Invalid state transitions return 422.
       security:
