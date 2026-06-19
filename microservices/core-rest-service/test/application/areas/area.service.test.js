@@ -35,10 +35,20 @@ function createAreaRepositoryDouble() {
   }
 }
 
-function createAreaServiceTestContext() {
+function createMachineRepositoryDouble(overrides = {}) {
+  return {
+    async findMachines(_query) {
+      return []
+    },
+    ...overrides
+  }
+}
+
+function createAreaServiceTestContext(machineOverrides = {}) {
   const areaRepository = createAreaRepositoryDouble()
-  const areaService = createAreaService({ areaRepository })
-  return { areaService, areaRepository }
+  const machineRepository = createMachineRepositoryDouble(machineOverrides)
+  const areaService = createAreaService({ areaRepository, machineRepository })
+  return { areaService, areaRepository, machineRepository }
 }
 
 describe('area service', () => {
@@ -94,5 +104,33 @@ describe('area service', () => {
 
   it('throws if areaRepository is missing', () => {
     assert.throws(() => createAreaService({}), TypeError)
+  })
+
+  it('throws if machineRepository is missing', () => {
+    assert.throws(
+      () => createAreaService({ areaRepository: createAreaRepositoryDouble() }),
+      TypeError
+    )
+  })
+
+  it('deletes an area when no machines are assigned', async () => {
+    const { areaService } = createAreaServiceTestContext()
+
+    const area = await areaService.deleteAreaById('area-1')
+
+    assert.equal(area.id, AREA_OUTPUT.id)
+  })
+
+  it('throws 409 when machines are assigned to the area', async () => {
+    const { areaService } = createAreaServiceTestContext({
+      async findMachines(_query) {
+        return [{ id: 'machine-1' }]
+      }
+    })
+
+    await assert.rejects(
+      () => areaService.deleteAreaById('area-1'),
+      (err) => err.statusCode === 409 && err.code === 'CONFLICT'
+    )
   })
 })
