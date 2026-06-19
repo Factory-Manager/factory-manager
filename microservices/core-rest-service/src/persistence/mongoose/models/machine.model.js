@@ -59,5 +59,6 @@ const machineSchema = new Schema(
 )
 
 machineSchema.index({ serial: 1 }, { unique: true })
+machineSchema.index({ 'location.areaId': 1 })
 
 export const MachineModel = model('Machine', machineSchema)

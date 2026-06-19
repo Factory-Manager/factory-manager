@@ -83,4 +83,10 @@ describe('Machine model', () => {
       })
     )
   })
+
+  it('defines an index on location.areaId', () => {
+    const indexes = MachineModel.schema.indexes()
+
+    assert.ok(indexes.some(([fields]) => fields['location.areaId'] === 1))
+  })
 })
