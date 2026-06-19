@@ -41,6 +41,14 @@ export function createMachineRouter({
   const router = Router()
   const requireWriteRole = requireRole(USER_ROLES.ADMIN, USER_ROLES.OPERATOR)
 
+  // Read endpoints accept either a service token (Coordinator bootstrap) or a JWT.
+  function authenticateReadOrService(req, res, next) {
+    if (req.headers['x-service-token']) {
+      return authenticateServiceToken(req, res, next)
+    }
+    return authenticateRequest(req, res, next)
+  }
+
   // PATCH /state accepts either a service token (Coordinator) or a JWT with write role (manual).
   function authenticateStateUpdate(req, res, next) {
     if (req.headers['x-service-token']) {
@@ -66,7 +74,7 @@ export function createMachineRouter({
 
   router.get(
     '/',
-    authenticateRequest,
+    authenticateReadOrService,
     validateQuery(listMachinesQuerySchema),
     async (req, res) => {
       const machines = await machineService.listMachines(req.query)
@@ -76,7 +84,7 @@ export function createMachineRouter({
 
   router.get(
     '/:id',
-    authenticateRequest,
+    authenticateReadOrService,
     validateParams(machineIdSchema),
     async (req, res) => {
       const machine = await machineService.getMachineById(req.params.id)

@@ -215,6 +215,36 @@ describe('machine routes', () => {
     }
   })
 
+  it('lists machines via service token without JWT', async () => {
+    const { server, baseUrl } = startMachineRoutesTestServer({}, rejectAuth)
+    try {
+      const response = await fetch(`${baseUrl}/api/machines`, {
+        headers: { 'x-service-token': 'test-token' }
+      })
+      const body = await response.json()
+
+      assert.equal(response.status, 200)
+      assert.equal(Array.isArray(body), true)
+    } finally {
+      await closeTestServer(server)
+    }
+  })
+
+  it('gets a machine by id via service token without JWT', async () => {
+    const { server, baseUrl } = startMachineRoutesTestServer({}, rejectAuth)
+    try {
+      const response = await fetch(`${baseUrl}/api/machines/${VALID_ID}`, {
+        headers: { 'x-service-token': 'test-token' }
+      })
+      const body = await response.json()
+
+      assert.equal(response.status, 200)
+      assert.equal(body.id, VALID_MACHINE.id)
+    } finally {
+      await closeTestServer(server)
+    }
+  })
+
   it('lists machines filtered by areaId', async () => {
     const receivedQueries = []
     const { server, baseUrl } = startMachineRoutesTestServer({
