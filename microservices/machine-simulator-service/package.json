@@ -6,9 +6,12 @@
     "lint": "eslint \"src/**/*.ts\"",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
     "format:check": "prettier --check \"{src,test}/**/*.ts\"",
-    "format": "prettier --write \"{src,test}/**/*.ts\""
+    "format": "prettier --write \"{src,test}/**/*.ts\"",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:coverage:reporter": "vitest run --coverage --reporter=html"
   },
-    "repository": {
+  "repository": {
     "type": "git",
     "url": "git+https://github.com/Factory-Manager/factory-manager.git"
   },
@@ -24,11 +27,13 @@
   },
   "homepage": "https://github.com/Factory-Manager/factory-manager#readme",
   "devDependencies": {
-    "@types/node": "^26.0.0"
+    "@types/node": "^26.0.0",
+    "@vitest/coverage-v8": "^4.1.9"
   },
   "dependencies": {
     "prettier": "^3.8.4",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.61.1"
+    "typescript-eslint": "^8.61.1",
+    "vitest": "^4.1.9"
   }
 }
