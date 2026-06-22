@@ -1,5 +1,5 @@
 import { TelemetryConfig } from '../config/env'
-import { TelemetryEvent } from '../types/telemetry'
+import { TelemetryEvent } from '../types/telemetry-event'
 import { random } from '../utils/random'
 
 export function generateTelemetry(config: TelemetryConfig): TelemetryEvent {
