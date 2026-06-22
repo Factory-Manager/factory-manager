@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest'
 import { generateTelemetry } from '../../src/generator/telemetry-generator'
-import { TelemetryEvent } from '../../src/types/telemetry'
+import { TelemetryEvent } from '../../src/types/telemetry-event'
 import { MACHINE_LIMITS } from '../constants/machine-limits'
 
 describe('generateTelemetry', () => {
