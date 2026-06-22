@@ -1,0 +1,17 @@
+services:
+  mqtt-broker:
+    image: eclipse-mosquitto:2
+    container_name: factory-manager-mqtt
+    ports:
+      - "1883:1883"
+    command: mosquitto -c /mosquitto-no-auth.conf
+
+  machine-simulator-1:
+    build:
+      context: ../microservices/machine-simulator-service
+    depends_on:
+      - mqtt-broker
+    environment:
+      MACHINE_ID: machine-1
+      MQTT_URL: mqtt://mqtt-broker:1883
+      MQTT_TOPIC: factory/telemetry
