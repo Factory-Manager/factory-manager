@@ -333,7 +333,9 @@ paths:
       tags: [Areas]
       operationId: deleteAreaById
       summary: Delete an area by ID
-      description: Requires an authenticated user.
+      description: >
+        Requires an authenticated user. Returns 409 if any machines
+        are still assigned to this area.
       security:
         - bearerAuth: []
       responses:
@@ -349,6 +351,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
         '500':
           $ref: '#/components/responses/InternalError'
 
