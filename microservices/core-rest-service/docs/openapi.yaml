@@ -18,6 +18,8 @@ tags:
     description: Area management
   - name: Machines
     description: Machine management
+  - name: Telemetry
+    description: Telemetry ingestion and retrieval
 
 paths:
   /api/auth/login:
@@ -565,6 +567,113 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 
+  /api/telemetry:
+    post:
+      tags: [Telemetry]
+      operationId: createTelemetry
+      summary: Ingest a telemetry event
+      description: >
+        Called by the Coordinator using a service token (`X-Service-Token` header).
+        Duplicate `eventId` values are rejected with 409.
+      security:
+        - serviceToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTelemetryRequest'
+      responses:
+        '201':
+          description: Telemetry event stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Telemetry'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    get:
+      tags: [Telemetry]
+      operationId: listTelemetry
+      summary: List telemetry events
+      description: >
+        Returns a paginated list of telemetry events sorted by `capturedAt` (descending by default).
+        All filters are optional. To retrieve the latest event for a machine, use
+        `?machineId=<id>&limit=1&sort=desc`.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: machineId
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: '^[0-9a-f]{24}$'
+          description: Filter by machine ID
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: Filter events where capturedAt >= from (ISO 8601)
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: Filter events where capturedAt <= to (ISO 8601)
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+          description: Maximum number of events to return
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Number of events to skip
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          description: Sort direction by capturedAt
+      responses:
+        '200':
+          description: List of telemetry events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Telemetry'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -750,6 +859,98 @@ components:
             Ignored (cleared) when transitioning to any other state.
           items:
             $ref: '#/components/schemas/SensorType'
+
+    TelemetryReadings:
+      type: object
+      required:
+        [powerConsumption, emissions, operatingTemperature, vibration, pressure]
+      properties:
+        powerConsumption:
+          type: number
+          example: 42.5
+        emissions:
+          type: number
+          example: 12.3
+        operatingTemperature:
+          type: number
+          example: 76.2
+        vibration:
+          type: number
+          example: 3.1
+        pressure:
+          type: number
+          example: 2.4
+
+    TelemetryAnomaly:
+      type: object
+      required: [isAnomaly]
+      properties:
+        isAnomaly:
+          type: boolean
+          example: true
+        details:
+          type: array
+          description: >
+            Required and non-empty when isAnomaly is true.
+            Omitted or empty when isAnomaly is false; normalized to [] by the service.
+          items:
+            $ref: '#/components/schemas/SensorType'
+
+    Telemetry:
+      type: object
+      required:
+        [id, eventId, machineId, sequenceNumber, capturedAt, readings, anomaly, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          example: '507f1f77bcf86cd799439011'
+        eventId:
+          type: string
+          example: evt-001
+        machineId:
+          type: string
+          example: '507f1f77bcf86cd799439012'
+        sequenceNumber:
+          type: integer
+          minimum: 0
+          example: 42
+        capturedAt:
+          type: string
+          format: date-time
+        readings:
+          $ref: '#/components/schemas/TelemetryReadings'
+        anomaly:
+          $ref: '#/components/schemas/TelemetryAnomaly'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateTelemetryRequest:
+      type: object
+      required:
+        [eventId, machineId, sequenceNumber, capturedAt, readings, anomaly]
+      properties:
+        eventId:
+          type: string
+          example: evt-001
+        machineId:
+          type: string
+          pattern: '^[0-9a-f]{24}$'
+          example: '507f1f77bcf86cd799439012'
+        sequenceNumber:
+          type: integer
+          minimum: 0
+          example: 42
+        capturedAt:
+          type: string
+          format: date-time
+        readings:
+          $ref: '#/components/schemas/TelemetryReadings'
+        anomaly:
+          $ref: '#/components/schemas/TelemetryAnomaly'
 
     UserName:
       type: object
