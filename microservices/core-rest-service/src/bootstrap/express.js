@@ -7,12 +7,14 @@ import { notFoundHandler } from '#src/middlewares/not-found-handler.js'
 import { requestLogger } from '#src/middlewares/request-logger.js'
 import { createAreaRouter } from '#src/routes/area.router.js'
 import { createMachineRouter } from '#src/routes/machine.router.js'
+import { createTelemetryRouter } from '#src/routes/telemetry.router.js'
 import { createUserRouter } from '#src/routes/user.router.js'
 import { createAreasBootstrap } from './areas.js'
 import { createAuthBootstrap } from './auth.js'
 import { configureDocs } from './docs.js'
 import { createMachinesBootstrap } from './machines.js'
 import { isDatabaseConnected } from './mongoose.js'
+import { createTelemetryBootstrap } from './telemetry.js'
 import { createUsersBootstrap } from './users.js'
 
 export function configureExpress(app) {
@@ -70,6 +72,16 @@ export function configureExpress(app) {
     '/api/machines',
     createMachineRouter({
       machineService,
+      authenticateRequest,
+      authenticateServiceToken
+    })
+  )
+
+  const { telemetryService } = createTelemetryBootstrap()
+  app.use(
+    '/api/telemetry',
+    createTelemetryRouter({
+      telemetryService,
       authenticateRequest,
       authenticateServiceToken
     })
