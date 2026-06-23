@@ -18,7 +18,9 @@ const REQUIRED_OPERATIONS = [
   ['get', '/api/machines/{id}'],
   ['patch', '/api/machines/{id}'],
   ['delete', '/api/machines/{id}'],
-  ['patch', '/api/machines/{id}/state']
+  ['patch', '/api/machines/{id}/state'],
+  ['post', '/api/telemetry'],
+  ['get', '/api/telemetry']
 ]
 
 let api
