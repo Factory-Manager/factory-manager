@@ -2,8 +2,10 @@ import { describe, it, expect, beforeAll } from 'vitest'
 import { generateTelemetry } from '../../src/generator/telemetry-generator'
 import { TelemetryEvent } from '../../src/types/telemetry-event'
 import { MACHINE_LIMITS } from '../constants/machine-limits'
+import { SystemClock } from '../../src/infrastructure/time/system-clock'
 
 describe('generateTelemetry', () => {
+  const fakeClock = { now: () => new Date('2026-01-01T00:00:00Z') }
   const testConfig = {
     machineId: 'machine-1',
     operatingTemperature: {
@@ -29,7 +31,10 @@ describe('generateTelemetry', () => {
   }
 
   it('should generate telemetry with correct structure', () => {
-    const telemetryEvent: TelemetryEvent = generateTelemetry(testConfig)
+    const telemetryEvent: TelemetryEvent = generateTelemetry(
+      testConfig,
+      fakeClock
+    )
     expect(telemetryEvent).toHaveProperty('machineId')
     expect(telemetryEvent).toHaveProperty('occurredAt')
     expect(telemetryEvent).toHaveProperty('operatingTemperature')
@@ -40,7 +45,10 @@ describe('generateTelemetry', () => {
   })
 
   it('should generate telemetry with valid values', () => {
-    const telemetryEvent: TelemetryEvent = generateTelemetry(testConfig)
+    const telemetryEvent: TelemetryEvent = generateTelemetry(
+      testConfig,
+      fakeClock
+    )
     expect(telemetryEvent.operatingTemperature).toBeGreaterThanOrEqual(
       testConfig.operatingTemperature.min
     )

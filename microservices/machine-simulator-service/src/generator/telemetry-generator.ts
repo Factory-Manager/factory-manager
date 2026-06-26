@@ -1,14 +1,15 @@
 import { TelemetryConfig } from '../config/env'
+import { SystemClock } from '../infrastructure/time/system-clock'
 import { TelemetryEvent } from '../types/telemetry-event'
 import { random } from '../utils/random'
 
 export function generateTelemetry(
   config: TelemetryConfig,
-  occurredAt: string
+  clock: SystemClock
 ): TelemetryEvent {
   return {
     machineId: config.machineId,
-    occurredAt,
+    occurredAt: clock.now().toISOString(),
     operatingTemperature: random(
       config.operatingTemperature.min,
       config.operatingTemperature.max
