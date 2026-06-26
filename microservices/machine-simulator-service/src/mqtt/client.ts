@@ -13,7 +13,7 @@ export function createMqttClient(url: string, logger: PinoLogger) {
   })
 
   client.on('error', (err) => {
-    logger.error('error', err)
+    logger.error('mqtt client error', { err })
   })
 
   return {
@@ -22,9 +22,10 @@ export function createMqttClient(url: string, logger: PinoLogger) {
       client.publish(topic, message)
     },
 
-    close() {
-      logger.info('closing mqtt client')
-      client.end()
+    close(): Promise<void> {
+      return new Promise((resolve) => {
+        client.end(false, {}, () => resolve())
+      })
     }
   }
 }

@@ -16,5 +16,5 @@ services:
       MQTT_URL: mqtt://mqtt-broker:1883
       MQTT_TOPIC: factory/telemetry
       INTERVAL_MS: 2000
-      MQTT_HEATBEAT_TOPIC: factory/heartbeat
+      MQTT_HEARTBEAT_TOPIC: factory/heartbeat
       HEARTBEAT_INTERVAL_MS: 5000

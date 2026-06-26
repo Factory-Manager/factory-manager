@@ -55,4 +55,4 @@ export function getConfig(): AppConfig {
   }
 }
 
-export { TelemetryConfig }
+export type { TelemetryConfig }
