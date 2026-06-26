@@ -1,4 +1,4 @@
-import { TelemetryConfig } from '../config/env'
+import type { TelemetryConfig } from '../config/env'
 import { SystemClock } from '../infrastructure/time/system-clock'
 import { TelemetryEvent } from '../types/telemetry-event'
 import { random } from '../utils/random'
