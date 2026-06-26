@@ -1,8 +1,7 @@
-import { describe, it, expect, beforeAll } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { generateTelemetry } from '../../src/generator/telemetry-generator'
-import { TelemetryEvent } from '../../src/types/telemetry-event'
+import type { TelemetryEvent } from '../../src/types/telemetry-event'
 import { MACHINE_LIMITS } from '../constants/machine-limits'
-import { SystemClock } from '../../src/infrastructure/time/system-clock'
 
 describe('generateTelemetry', () => {
   const fakeClock = { now: () => new Date('2026-01-01T00:00:00Z') }
