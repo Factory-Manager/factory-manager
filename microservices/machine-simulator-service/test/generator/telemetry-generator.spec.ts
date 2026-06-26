@@ -34,7 +34,6 @@ describe('generateTelemetry', () => {
       testConfig,
       fakeClock
     )
-    const telemetryEvent: TelemetryEvent = generateTelemetry(testConfig)
     expect(telemetryEvent).toHaveProperty('machineId')
     expect(telemetryEvent).toHaveProperty('occurredAt')
     expect(telemetryEvent).toHaveProperty('operatingTemperature')
