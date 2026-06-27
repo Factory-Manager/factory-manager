@@ -49,6 +49,7 @@
     "vitest": "^4.1.9"
   },
   "dependencies": {
+    "mqtt": "^5.15.1",
     "pino": "^10.3.1"
   }
 }
