@@ -6,6 +6,18 @@ services:
       - "1883:1883"
     command: mosquitto -c /mosquitto-no-auth.conf
 
+  coordinator-service:
+    build:
+      context: ../microservices/coordinator-service
+    depends_on:
+      - mqtt-broker
+    environment:
+      MQTT_URL: mqtt://mqtt-broker:1883
+      MQTT_TOPIC: factory/telemetry
+      INTERVAL_MS: 2000
+      MQTT_HEARTBEAT_TOPIC: factory/heartbeat
+      HEARTBEAT_INTERVAL_MS: 5000
+
   machine-simulator-1:
     build:
       context: ../microservices/machine-simulator-service
