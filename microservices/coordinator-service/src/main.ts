@@ -11,13 +11,33 @@ import { Pressure } from './domain/machine/value-objects/pressure'
 import { Vibration } from './domain/machine/value-objects/vibration'
 import { MachineConfig } from './domain/machine/machine-config'
 import { Range } from './domain/shared/value-objects/range/range'
+import { createMqttConsumer } from './infrastructure/mqtt/consumer'
+import { getConfig } from './config/env'
+
+function buildMachineConfig(): MachineConfig {
+  return new MachineConfig(
+    new Range<Temperature>(new Temperature(0), new Temperature(100)),
+    new Range<PowerConsumption>(
+      new PowerConsumption(0),
+      new PowerConsumption(200)
+    ),
+    new Range<Emission>(new Emission(0), new Emission(50)),
+    new Range<Vibration>(new Vibration(0), new Vibration(10)),
+    new Range<Pressure>(new Pressure(0), new Pressure(5))
+  )
+}
 
 function bootstrap() {
   const baseLogger = new PinoLogger()
-
   const logger = baseLogger.child({
     service: 'coordinator-service'
   })
+  const mqttLogger = baseLogger.child({
+    service: 'mqtt'
+  })
+
+  const config = getConfig()
+  const mqtt = createMqttConsumer(config.mqtt.url, mqttLogger)
 
   const policies = [new TemperaturePolicy()]
   const anomalyDetector = new AnomalyDetector(policies)
@@ -28,38 +48,21 @@ function bootstrap() {
     logger
   )
 
-  const sampleInput: TelemetryInput = {
-    machineId: 'machine-123',
-    occurredAt: new Date().toISOString(),
-    operatingTemperature: '85',
-    powerConsumption: '150',
-    emissions: '20',
-    vibration: '5',
-    pressure: '1.2'
-  }
-  const machineConfig: MachineConfig = new MachineConfig(
-    new Range<Temperature>(new Temperature(0), new Temperature(100)),
-    new Range<PowerConsumption>(
-      new PowerConsumption(0),
-      new PowerConsumption(200)
-    ),
-    new Range<Emission>(new Emission(0), new Emission(50)),
-    new Range<Vibration>(new Vibration(0), new Vibration(10)),
-    new Range<Pressure>(new Pressure(0), new Pressure(5))
-  )
-  processTelemetry.execute(sampleInput, machineConfig)
+  const machineConfig = buildMachineConfig()
 
-  const sampleInput2: TelemetryInput = {
-    machineId: 'machine-123',
-    occurredAt: new Date().toISOString(),
-    operatingTemperature: '180',
-    powerConsumption: '150',
-    emissions: '20',
-    vibration: '5',
-    pressure: '1.2'
-  }
+  mqtt.subscribe(`${config.mqtt.topic}/+`)
 
-  processTelemetry.execute(sampleInput2, machineConfig)
+  mqtt.onMessage((topic, message) => {
+    try {
+      if (topic.startsWith(config.mqtt.topic)) {
+        const input: TelemetryInput = JSON.parse(message.toString())
+        processTelemetry.execute(input, machineConfig)
+        return
+      }
+    } catch (err) {
+      logger.error('message processing failed', { err, topic })
+    }
+  })
 }
 
 bootstrap()
