@@ -13,6 +13,10 @@ import { MachineConfig } from './domain/machine/machine-config'
 import { Range } from './domain/shared/value-objects/range/range'
 import { createMqttConsumer } from './infrastructure/mqtt/consumer'
 import { getConfig } from './config/env'
+import { HeartbeatInput } from './application/heartbeat/dto/heartbeat-input'
+import { mapTelemetryMessage } from './application/telemetry/mapper/map-telemetry-message'
+import { ProcessHeartbeat } from './application/heartbeat/process-heartbeat'
+import { mapHeartbeatMessage } from './application/heartbeat/mapper/map-heartbeat-message'
 
 function buildMachineConfig(): MachineConfig {
   return new MachineConfig(
@@ -47,16 +51,24 @@ function bootstrap() {
     new SystemClock(),
     logger
   )
+  const processHeartbeat = new ProcessHeartbeat(new SystemClock(), logger)
 
   const machineConfig = buildMachineConfig()
 
   mqtt.subscribe(`${config.mqtt.topic}/+`)
+  mqtt.subscribe(`${config.mqtt.heartbeatTopic}/+`)
 
   mqtt.onMessage((topic, message) => {
     try {
       if (topic.startsWith(config.mqtt.topic)) {
-        const input: TelemetryInput = JSON.parse(message.toString())
+        const input: TelemetryInput = mapTelemetryMessage(topic, message)
         processTelemetry.execute(input, machineConfig)
+        return
+      }
+
+      if (topic.startsWith(config.mqtt.heartbeatTopic)) {
+        const input: HeartbeatInput = mapHeartbeatMessage(topic, message)
+        processHeartbeat.execute(input)
         return
       }
     } catch (err) {
