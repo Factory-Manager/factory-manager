@@ -2,7 +2,6 @@ import { PinoLogger } from './infrastructure/logger/pino-logger'
 import { ProcessTelemetry } from './application/telemetry/process-telemetry'
 import { AnomalyDetector } from './domain/anomaly/services/anomaly-detector'
 import { TemperaturePolicy } from './domain/anomaly/services/policies/temperature-policy'
-import { TelemetryInput } from './application/telemetry/dto/telemetry-input'
 import { SystemClock } from './infrastructure/time/system-clock'
 import { Temperature } from './domain/machine/value-objects/temperature'
 import { Emission } from './domain/machine/value-objects/emission'
@@ -13,10 +12,12 @@ import { MachineConfig } from './domain/machine/machine-config'
 import { Range } from './domain/shared/value-objects/range/range'
 import { createMqttConsumer } from './infrastructure/mqtt/consumer'
 import { getConfig } from './config/env'
-import { HeartbeatInput } from './application/heartbeat/dto/heartbeat-input'
-import { mapTelemetryMessage } from './application/telemetry/mapper/map-telemetry-message'
 import { ProcessHeartbeat } from './application/heartbeat/process-heartbeat'
-import { mapHeartbeatMessage } from './application/heartbeat/mapper/map-heartbeat-message'
+import { TelemetryProcessor } from './application/messaging/processor/telemetry-processor'
+import { CoordinatorMessageConsumer } from './application/messaging/coordinator-message-consumer'
+import { HeartbeatProcessor } from './application/messaging/processor/heartbeat-processor'
+import { TelemetryMessageMapper } from './application/telemetry/mapper/map-telemetry-message'
+import { HeartbeatMessageMapper } from './application/heartbeat/mapper/map-heartbeat-message'
 
 function buildMachineConfig(): MachineConfig {
   return new MachineConfig(
@@ -45,35 +46,34 @@ function bootstrap() {
 
   const policies = [new TemperaturePolicy()]
   const anomalyDetector = new AnomalyDetector(policies)
-
   const processTelemetry = new ProcessTelemetry(
     anomalyDetector,
     new SystemClock(),
     logger
   )
   const processHeartbeat = new ProcessHeartbeat(new SystemClock(), logger)
-
   const machineConfig = buildMachineConfig()
 
   mqtt.subscribe(`${config.mqtt.topic}/+`)
   mqtt.subscribe(`${config.mqtt.heartbeatTopic}/+`)
 
   mqtt.onMessage((topic, message) => {
-    try {
-      if (topic.startsWith(config.mqtt.topic)) {
-        const input: TelemetryInput = mapTelemetryMessage(topic, message)
-        processTelemetry.execute(input, machineConfig)
-        return
-      }
-
-      if (topic.startsWith(config.mqtt.heartbeatTopic)) {
-        const input: HeartbeatInput = mapHeartbeatMessage(topic, message)
-        processHeartbeat.execute(input)
-        return
-      }
-    } catch (err) {
-      logger.error('message processing failed', { err, topic })
-    }
+    new CoordinatorMessageConsumer(
+      [
+        new TelemetryProcessor(
+          processTelemetry,
+          machineConfig,
+          new TelemetryMessageMapper(),
+          config.mqtt.topic
+        ),
+        new HeartbeatProcessor(
+          processHeartbeat,
+          new HeartbeatMessageMapper(),
+          config.mqtt.heartbeatTopic
+        )
+      ],
+      logger
+    ).handle(topic, message)
   })
 }
 
