@@ -12,11 +12,11 @@ export class ProcessHeartbeat {
   execute(input: HeartbeatInput): HeartbeatEvent {
     const machineId = input.machineId?.trim()
     if (!machineId) {
-      throw new Error('Invalid heartbeat topic')
+      throw new Error('Invalid input: machineId is required')
     }
     const occurredAt = new Date(input.timestamp)
     if (Number.isNaN(occurredAt.getTime())) {
-      throw new Error('Invalid heartbeat timestamp')
+      throw new Error('Invalid input: timestamp must be a valid date')
     }
     const event: HeartbeatEvent = {
       machineId,

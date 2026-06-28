@@ -11,7 +11,10 @@ export class HeartbeatProcessor implements MessageProcessor {
   ) {}
 
   canHandle(topic: string): boolean {
-    return topic.startsWith(this.heartbeatTopicPrefix)
+    const prefix = this.heartbeatTopicPrefix.endsWith('/')
+      ? this.heartbeatTopicPrefix
+      : `${this.heartbeatTopicPrefix}/`
+    return topic.startsWith(prefix)
   }
 
   process(topic: string, message: Buffer): void {
