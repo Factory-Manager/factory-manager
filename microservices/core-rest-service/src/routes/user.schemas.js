@@ -1,10 +1,8 @@
 import Joi from 'joi'
 
 import { USER_PAGINATION_POLICY } from '#src/application/users/user.pagination.js'
+import { PASSWORD_REGEX } from '#src/domain/users/password-policy.js'
 import { USER_ROLE_VALUES } from '#src/domain/users/user.roles.js'
-
-const PASSWORD_REGEX =
-  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
 
 const emailSchema = Joi.string().trim().email()
 
