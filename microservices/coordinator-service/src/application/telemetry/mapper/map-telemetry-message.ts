@@ -1,11 +1,12 @@
+import { MessageMapper } from '@/application/messaging/message-mapper'
 import { TelemetryInput } from '../dto/telemetry-input'
 
-export function mapTelemetryMessage(
-  topic: string,
-  message: Buffer
-): TelemetryInput {
-  return {
-    machineId: topic.split('/').pop(),
-    ...JSON.parse(message.toString())
+export class TelemetryMessageMapper implements MessageMapper<TelemetryInput> {
+  map(topic: string, message: Buffer): TelemetryInput {
+    const payload = JSON.parse(message.toString())
+    return {
+      machineId: topic.split('/').pop(),
+      ...payload
+    }
   }
 }

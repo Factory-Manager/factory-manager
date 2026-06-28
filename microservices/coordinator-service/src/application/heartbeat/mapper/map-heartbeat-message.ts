@@ -1,11 +1,12 @@
+import { MessageMapper } from '@/application/messaging/message-mapper'
 import { HeartbeatInput } from '../dto/heartbeat-input'
 
-export function mapHeartbeatMessage(
-  topic: string,
-  message: Buffer
-): HeartbeatInput {
-  return {
-    machineId: topic.split('/').pop(),
-    ...JSON.parse(message.toString())
+export class HeartbeatMessageMapper implements MessageMapper<HeartbeatInput> {
+  map(topic: string, message: Buffer): HeartbeatInput {
+    const payload = JSON.parse(message.toString())
+    return {
+      machineId: topic.split('/').pop(),
+      ...payload
+    }
   }
 }
