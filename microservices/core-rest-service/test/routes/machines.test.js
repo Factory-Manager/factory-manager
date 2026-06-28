@@ -370,6 +370,49 @@ describe('machine routes', () => {
     }
   })
 
+  it('returns 400 when state is anomaly but anomalyDetails is missing', async () => {
+    const { server, baseUrl } = startMachineRoutesTestServer()
+    try {
+      const response = await fetch(
+        `${baseUrl}/api/machines/${VALID_ID}/state`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ currentState: MACHINE_STATES.ANOMALY })
+        }
+      )
+      const body = await response.json()
+
+      assert.equal(response.status, 400)
+      assert.equal(body.code, ERROR_CODES.VALIDATION_ERROR)
+    } finally {
+      await closeTestServer(server)
+    }
+  })
+
+  it('returns 400 when state is anomaly but anomalyDetails is empty array', async () => {
+    const { server, baseUrl } = startMachineRoutesTestServer()
+    try {
+      const response = await fetch(
+        `${baseUrl}/api/machines/${VALID_ID}/state`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            currentState: MACHINE_STATES.ANOMALY,
+            anomalyDetails: []
+          })
+        }
+      )
+      const body = await response.json()
+
+      assert.equal(response.status, 400)
+      assert.equal(body.code, ERROR_CODES.VALIDATION_ERROR)
+    } finally {
+      await closeTestServer(server)
+    }
+  })
+
   it('returns 422 for an invalid state transition', async () => {
     const { server, baseUrl } = startMachineRoutesTestServer({
       async updateMachineState(_id, _input) {
