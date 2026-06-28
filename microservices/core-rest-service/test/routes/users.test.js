@@ -126,6 +126,28 @@ describe('user routes', () => {
     }
   })
 
+  it('rejects create user with invalid password format', async () => {
+    const { server, baseUrl } = startUserRoutesTestServer()
+
+    try {
+      const response = await fetch(`${baseUrl}/api/users`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: { first: 'Mario', last: 'Rossi' },
+          email: 'mario@fm.com',
+          password: 'weakpassword'
+        })
+      })
+      const body = await response.json()
+
+      assert.equal(response.status, 400)
+      assert.equal(body.code, ERROR_CODES.VALIDATION_ERROR)
+    } finally {
+      await closeTestServer(server)
+    }
+  })
+
   it('lists users', async () => {
     const { server, baseUrl } = startUserRoutesTestServer()
 
