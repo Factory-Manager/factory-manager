@@ -2,12 +2,10 @@ import 'dotenv/config'
 
 import mongoose from 'mongoose'
 
+import { PASSWORD_REGEX } from '#src/domain/users/password-policy.js'
 import { USER_ROLES } from '#src/domain/users/user.roles.js'
 import { UserModel } from '#src/persistence/mongoose/models/user.model.js'
 import { createPasswordHasher } from '#src/security/password-hasher.js'
-
-const PASSWORD_PATTERN =
-  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
 
 function requireVar(name) {
   const value = process.env[name]
@@ -30,7 +28,7 @@ async function seedAdmin() {
   await mongoose.connect(mongoUri)
 
   try {
-    if (!PASSWORD_PATTERN.test(adminPassword)) {
+    if (!PASSWORD_REGEX.test(adminPassword)) {
       throw new Error(
         'ADMIN_PASSWORD must be at least 8 characters and contain one letter, one number, and one special character'
       )
