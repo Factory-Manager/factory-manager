@@ -57,7 +57,14 @@ export const updateMachineStateSchema = Joi.object({
   currentState: Joi.string()
     .valid(...MACHINE_STATE_VALUES)
     .required(),
-  anomalyDetails: Joi.array().items(Joi.string().valid(...SENSOR_TYPE_VALUES))
+  anomalyDetails: Joi.when('currentState', {
+    is: 'anomaly',
+    then: Joi.array()
+      .items(Joi.string().valid(...SENSOR_TYPE_VALUES))
+      .min(1)
+      .required(),
+    otherwise: Joi.array().items(Joi.string().valid(...SENSOR_TYPE_VALUES))
+  })
 })
 
 export const machineIdSchema = Joi.object({

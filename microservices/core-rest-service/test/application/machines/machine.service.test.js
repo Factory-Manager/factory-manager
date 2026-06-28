@@ -249,6 +249,28 @@ describe('machine service', () => {
     )
   })
 
+  it('throws 400 when anomalyDetails is empty array on anomaly transition', async () => {
+    const { machineService } = createServiceTestContext({
+      async findMachineById(_id) {
+        return {
+          machineState: {
+            currentState: MACHINE_STATES.OPERATIONAL,
+            anomalyDetails: []
+          }
+        }
+      }
+    })
+
+    await assert.rejects(
+      () =>
+        machineService.updateMachineState('machine-1', {
+          currentState: MACHINE_STATES.ANOMALY,
+          anomalyDetails: []
+        }),
+      (err) => err.statusCode === 400
+    )
+  })
+
   it('sets anomalyDetails when transitioning to anomaly', async () => {
     const updateCalls = []
     const { machineService } = createServiceTestContext({
