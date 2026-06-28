@@ -9,7 +9,7 @@ export function createMqttClient(url: string, logger: PinoLogger) {
   })
 
   client.on('reconnect', () => {
-    logger.info(`simulator reconnecting...`)
+    logger.info(`reconnecting...`)
   })
 
   client.on('error', (err) => {
@@ -17,9 +17,9 @@ export function createMqttClient(url: string, logger: PinoLogger) {
   })
 
   return {
-    publish(topic: string, message: string) {
+    publish(topic: string, message: string, options?: { qos: 0 | 1 | 2 }) {
       logger.info(`published message to topic ${topic}`, { message })
-      client.publish(topic, message)
+      client.publish(topic, message, options)
     },
 
     close(): Promise<void> {

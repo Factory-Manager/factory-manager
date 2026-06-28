@@ -71,8 +71,8 @@ function bootstrap() {
     logger
   )
 
-  mqtt.subscribe(`${config.mqtt.topic}/+`)
-  mqtt.subscribe(`${config.mqtt.heartbeatTopic}/+`)
+  mqtt.subscribe(`${config.mqtt.topic}/+`, { qos: 1 })
+  mqtt.subscribe(`${config.mqtt.heartbeatTopic}/+`, { qos: 0 })
 
   mqtt.onMessage((topic, message) => {
     consumer.handle(topic, message)

@@ -16,7 +16,7 @@ const telemetryInterval = setInterval(() => {
   const event = generateTelemetry(config.telemetry, clock)
   const topic = `${config.mqtt.topic}/${config.telemetry.machineId}`
 
-  mqtt.publish(topic, JSON.stringify(event))
+  mqtt.publish(topic, JSON.stringify(event), { qos: 1 })
   logger.info('published', { event })
 }, config.intervalMs)
 
@@ -25,7 +25,8 @@ const heartbeatInterval = setInterval(() => {
   const heartbeatTopic = `${config.mqtt.heartbeatTopic}/${config.telemetry.machineId}`
   mqtt.publish(
     heartbeatTopic,
-    JSON.stringify({ timestamp: clock.now().toISOString() })
+    JSON.stringify({ timestamp: clock.now().toISOString() }),
+    { qos: 0 }
   )
 }, config.heartbeatIntervalMs)
 
