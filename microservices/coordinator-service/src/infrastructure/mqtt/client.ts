@@ -9,7 +9,7 @@ export function createMqttClient(url: string, logger: Logger) {
   })
 
   client.on('reconnect', () => {
-    logger.info(`simulator reconnecting...`)
+    logger.info(`reconnecting...`)
   })
 
   client.on('error', (err) => {

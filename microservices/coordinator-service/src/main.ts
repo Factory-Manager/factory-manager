@@ -54,26 +54,28 @@ function bootstrap() {
   const processHeartbeat = new ProcessHeartbeat(new SystemClock(), logger)
   const machineConfig = buildMachineConfig()
 
+  const consumer = new CoordinatorMessageConsumer(
+    [
+      new TelemetryProcessor(
+        processTelemetry,
+        machineConfig,
+        new TelemetryMessageMapper(),
+        config.mqtt.topic
+      ),
+      new HeartbeatProcessor(
+        processHeartbeat,
+        new HeartbeatMessageMapper(),
+        config.mqtt.heartbeatTopic
+      )
+    ],
+    logger
+  )
+
   mqtt.subscribe(`${config.mqtt.topic}/+`)
   mqtt.subscribe(`${config.mqtt.heartbeatTopic}/+`)
 
   mqtt.onMessage((topic, message) => {
-    new CoordinatorMessageConsumer(
-      [
-        new TelemetryProcessor(
-          processTelemetry,
-          machineConfig,
-          new TelemetryMessageMapper(),
-          config.mqtt.topic
-        ),
-        new HeartbeatProcessor(
-          processHeartbeat,
-          new HeartbeatMessageMapper(),
-          config.mqtt.heartbeatTopic
-        )
-      ],
-      logger
-    ).handle(topic, message)
+    consumer.handle(topic, message)
   })
 }
 

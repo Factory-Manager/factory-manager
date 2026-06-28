@@ -13,7 +13,10 @@ export class TelemetryProcessor implements MessageProcessor {
   ) {}
 
   canHandle(topic: string): boolean {
-    return topic.startsWith(this.telemetryTopicPrefix)
+    const prefix = this.telemetryTopicPrefix.endsWith('/')
+      ? this.telemetryTopicPrefix
+      : `${this.telemetryTopicPrefix}/`
+    return topic.startsWith(prefix)
   }
 
   process(topic: string, message: Buffer): void {
