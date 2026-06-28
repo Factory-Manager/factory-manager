@@ -1,3 +1,4 @@
+// sort is specific to telemetry: time-series data is meaningfully ordered by capturedAt
 export const TELEMETRY_PAGINATION_POLICY = Object.freeze({
   defaultLimit: 50,
   defaultOffset: 0,
