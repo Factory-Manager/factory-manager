@@ -9,7 +9,14 @@ function buildCreateUserData(input, passwordHash) {
     },
     email: input.email,
     passwordHash,
-    ...(input.role === undefined ? {} : { role: input.role })
+    phoneNumber: input.phoneNumber,
+    ...(input.role === undefined ? {} : { role: input.role }),
+    ...(input.preferences === undefined
+      ? {}
+      : { preferences: input.preferences }),
+    ...(input.accessibility === undefined
+      ? {}
+      : { accessibility: input.accessibility })
   }
 }
 
@@ -29,6 +36,15 @@ async function buildUpdateUserData(input = {}, passwordHasher) {
     ...(input.email === undefined ? {} : { email: input.email }),
     ...(input.role === undefined ? {} : { role: input.role }),
     ...(input.isActive === undefined ? {} : { isActive: input.isActive }),
+    ...(input.phoneNumber === undefined
+      ? {}
+      : { phoneNumber: input.phoneNumber }),
+    ...(input.preferences === undefined
+      ? {}
+      : { preferences: input.preferences }),
+    ...(input.accessibility === undefined
+      ? {}
+      : { accessibility: input.accessibility }),
     ...buildNameUpdate(input.name)
   }
 
