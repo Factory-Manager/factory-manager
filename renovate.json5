@@ -24,7 +24,7 @@
   "labels": ["dependencies"],
 
   // Maximum number of Renovate PRs open at the same time.
-  "prConcurrentLimit": 3,
+  "prConcurrentLimit": 6,
 
   // Maximum number of Renovate PRs created per hour.
   "prHourlyLimit": 2,
@@ -32,6 +32,12 @@
   // Update package.json ranges together with lockfiles.
   // Example: "express": "^5.2.1" -> "express": "^5.2.2"
   "rangeStrategy": "bump",
+
+  // Split per microservizio, non per singolo file.
+  "additionalBranchPrefix": "{{#if (containsString packageFile 'core-rest-service')}}core-rest-service-{{else}}{{#if (containsString packageFile 'machine-simulator-service')}}machine-simulator-service-{{else}}{{#if (containsString packageFile 'coordinator-service')}}coordinator-service-{{else}}{{parentDir}}-{{/if}}{{/if}}{{/if}}",
+
+  // Use strict branch naming to avoid conflicts and ensure clarity.
+  "branchNameStrict": true,
 
   // Assign specific team members to PRs that match certain criteria.
   "packageRules": [
