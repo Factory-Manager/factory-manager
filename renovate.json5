@@ -45,8 +45,9 @@
       "description": "Route core-rest-service dependency PRs",
       "matchFileNames": [
         "microservices/core-rest-service/package.json",
-        "microservices/core-rest-service/package-lock.json"
-        // Add more file patterns as needed for other microservices
+        "microservices/core-rest-service/package-lock.json",
+        "microservices/core-rest-service/Dockerfile",
+        ".github/workflows/core-rest-service.yml"
       ],
       "assignees": ["davidcohenDC"]
     },
@@ -54,7 +55,9 @@
       "description": "Route machine-simulator-service dependency PRs",
       "matchFileNames": [
         "microservices/machine-simulator-service/package.json",
-        "microservices/machine-simulator-service/package-lock.json"
+        "microservices/machine-simulator-service/package-lock.json",
+        "microservices/machine-simulator-service/Dockerfile",
+        ".github/workflows/machine-simulator-service.yml"
       ],
       "assignees": ["GiuliaNardicchia"]
     },
@@ -62,7 +65,9 @@
       "description": "Route coordinator-service dependency PRs",
       "matchFileNames": [
         "microservices/coordinator-service/package.json",
-        "microservices/coordinator-service/package-lock.json"
+        "microservices/coordinator-service/package-lock.json",
+        "microservices/coordinator-service/Dockerfile",
+        ".github/workflows/coordinator-service.yml"
       ],
       "assignees": ["GiuliaNardicchia"]
     }
