@@ -166,7 +166,8 @@ describe('User service', () => {
       id: 'created-user',
       name: input.name,
       email: input.email,
-      role: input.role
+      role: input.role,
+      phoneNumber: input.phoneNumber
     })
   })
 
@@ -207,6 +208,15 @@ describe('User service', () => {
         isActive: false
       }
     })
+  })
+
+  it('passes phoneNumber through on update', async () => {
+    const { userService, userRepository } = createUserServiceTestContext()
+    const phoneNumber = { prefix: '+39', number: '3334567890' }
+
+    await userService.updateUserById('user-id', { phoneNumber })
+
+    assert.deepEqual(userRepository.calls[0].updateData, { phoneNumber })
   })
 
   it('deletes a user and returns public output', async () => {

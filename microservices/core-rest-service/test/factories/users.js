@@ -11,7 +11,8 @@ export const USER_TEST_VALUES = Object.freeze({
   passwordHash: 'hashed-password',
   role: USER_ROLES.OPERATOR,
   invalidRole: 'moderator',
-  fullName: 'Mario Rossi'
+  fullName: 'Mario Rossi',
+  phoneNumber: Object.freeze({ prefix: '+39', number: '3334567890' })
 })
 
 export function createValidUserData(overrides = {}) {
@@ -26,6 +27,7 @@ export function createValidUserData(overrides = {}) {
     email: USER_TEST_VALUES.email,
     passwordHash: USER_TEST_VALUES.passwordHash,
     role: USER_TEST_VALUES.role,
+    phoneNumber: USER_TEST_VALUES.phoneNumber,
     ...otherOverrides
   }
 }
@@ -42,6 +44,7 @@ export function createValidCreateUserInput(overrides = {}) {
     email: USER_TEST_VALUES.email,
     password: USER_TEST_VALUES.password,
     role: USER_TEST_VALUES.role,
+    phoneNumber: USER_TEST_VALUES.phoneNumber,
     ...otherOverrides
   }
 }

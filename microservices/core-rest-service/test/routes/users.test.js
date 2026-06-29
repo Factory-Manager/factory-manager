@@ -20,6 +20,9 @@ const VALID_USER = Object.freeze({
   role: USER_ROLES.OPERATOR,
   isActive: true,
   lastLoginAt: null,
+  phoneNumber: { prefix: '+39', number: '3334567890' },
+  preferences: { theme: 'light' },
+  accessibility: { colorFilter: 'normal' },
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
   fullName: 'Mario Rossi'
@@ -28,7 +31,8 @@ const VALID_USER = Object.freeze({
 const VALID_CREATE_BODY = Object.freeze({
   name: { first: 'Mario', last: 'Rossi' },
   email: 'operator@fm.com',
-  password: 'Password123!'
+  password: 'Password123!',
+  phoneNumber: { prefix: '+39', number: '3334567890' }
 })
 
 function createFakeAuthenticate(role = USER_ROLES.ADMIN) {
@@ -297,6 +301,93 @@ describe('user routes', () => {
 
       for (const response of cases) {
         assert.equal(response.status, 401)
+      }
+    } finally {
+      await closeTestServer(server)
+    }
+  })
+
+  it('rejects create user without phoneNumber', async () => {
+    const { server, baseUrl } = startUserRoutesTestServer()
+
+    try {
+      const response = await fetch(`${baseUrl}/api/users`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: { first: 'Mario', last: 'Rossi' },
+          email: 'operator@fm.com',
+          password: 'Password123!'
+        })
+      })
+      const body = await response.json()
+
+      assert.equal(response.status, 400)
+      assert.equal(body.code, ERROR_CODES.VALIDATION_ERROR)
+    } finally {
+      await closeTestServer(server)
+    }
+  })
+
+  it('accepts update with valid phoneNumber', async () => {
+    const { server, baseUrl } = startUserRoutesTestServer()
+
+    try {
+      const response = await fetch(`${baseUrl}/api/users/${VALID_ID}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phoneNumber: { prefix: '+44', number: '7911123456' }
+        })
+      })
+      const body = await response.json()
+
+      assert.equal(response.status, 200)
+      assert.equal(body.id, VALID_USER.id)
+    } finally {
+      await closeTestServer(server)
+    }
+  })
+
+  it('rejects update with invalid phoneNumber', async () => {
+    const { server, baseUrl } = startUserRoutesTestServer()
+
+    try {
+      const response = await fetch(`${baseUrl}/api/users/${VALID_ID}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phoneNumber: { prefix: 'badprefix', number: '123' }
+        })
+      })
+      const body = await response.json()
+
+      assert.equal(response.status, 400)
+      assert.equal(body.code, ERROR_CODES.VALIDATION_ERROR)
+    } finally {
+      await closeTestServer(server)
+    }
+  })
+
+  it('rejects update with invalid preferences or accessibility', async () => {
+    const { server, baseUrl } = startUserRoutesTestServer()
+
+    try {
+      const cases = await Promise.all([
+        fetch(`${baseUrl}/api/users/${VALID_ID}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ preferences: { theme: 'purple' } })
+        }),
+        fetch(`${baseUrl}/api/users/${VALID_ID}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ accessibility: { colorFilter: 'invisible' } })
+        })
+      ])
+
+      for (const response of cases) {
+        assert.equal(response.status, 400)
       }
     } finally {
       await closeTestServer(server)

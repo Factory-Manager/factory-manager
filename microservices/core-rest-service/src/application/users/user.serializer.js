@@ -52,6 +52,9 @@ export function toUserOutput(user) {
     role: plainUser.role,
     isActive: plainUser.isActive,
     lastLoginAt: plainUser.lastLoginAt,
+    phoneNumber: plainUser.phoneNumber,
+    preferences: plainUser.preferences,
+    accessibility: plainUser.accessibility,
     createdAt: plainUser.createdAt,
     updatedAt: plainUser.updatedAt,
     fullName: plainUser.fullName
