@@ -6,10 +6,10 @@ import { load } from 'js-yaml'
 import swaggerUi from 'swagger-ui-express'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const spec = load(
-  readFileSync(join(__dirname, '../../docs/openapi.yaml'), 'utf8')
-)
 
 export function configureDocs(app) {
+  const spec = load(
+    readFileSync(join(__dirname, '../../docs/openapi.yaml'), 'utf8')
+  )
   app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(spec))
 }
