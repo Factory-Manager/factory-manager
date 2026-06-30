@@ -963,9 +963,40 @@ components:
           type: string
           example: Rossi
 
+    PhoneNumber:
+      type: object
+      required: [prefix, number]
+      properties:
+        prefix:
+          type: string
+          pattern: '^[+][0-9]{1,4}$'
+          example: '+39'
+        number:
+          type: string
+          pattern: '^[0-9 -]{6,12}$'
+          example: '3334567890'
+
+    UserPreferences:
+      type: object
+      properties:
+        theme:
+          type: string
+          enum: [light, dark]
+          default: light
+          example: light
+
+    UserAccessibility:
+      type: object
+      properties:
+        colorFilter:
+          type: string
+          enum: [normal, protanopia, deuteranopia, tritanopia]
+          default: normal
+          example: normal
+
     User:
       type: object
-      required: [id, name, email, role, isActive, lastLoginAt, createdAt, updatedAt, fullName]
+      required: [id, name, email, role, isActive, lastLoginAt, phoneNumber, preferences, accessibility, createdAt, updatedAt, fullName]
       properties:
         id:
           type: string
@@ -988,6 +1019,12 @@ components:
           format: date-time
           nullable: true
           example: null
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumber'
+        preferences:
+          $ref: '#/components/schemas/UserPreferences'
+        accessibility:
+          $ref: '#/components/schemas/UserAccessibility'
         createdAt:
           type: string
           format: date-time
@@ -1029,7 +1066,7 @@ components:
 
     CreateUserRequest:
       type: object
-      required: [name, email, password]
+      required: [name, email, password, phoneNumber]
       properties:
         name:
           $ref: '#/components/schemas/UserName'
@@ -1050,6 +1087,12 @@ components:
           type: string
           enum: [admin, operator]
           example: operator
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumber'
+        preferences:
+          $ref: '#/components/schemas/UserPreferences'
+        accessibility:
+          $ref: '#/components/schemas/UserAccessibility'
 
     UpdateUserRequest:
       type: object
@@ -1081,7 +1124,12 @@ components:
           enum: [admin, operator]
         isActive:
           type: boolean
-
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumber'
+        preferences:
+          $ref: '#/components/schemas/UserPreferences'
+        accessibility:
+          $ref: '#/components/schemas/UserAccessibility'
     Area:
       type: object
       required: [id, name, size, createdAt, updatedAt]
