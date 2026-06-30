@@ -24,7 +24,7 @@
   },
   "engines": {
     "node": ">=24.18.0",
-    "npm": ">=10.9.8"
+    "npm": ">=11.18.0"
   },
   "contributors": [
     "David Cohen",
