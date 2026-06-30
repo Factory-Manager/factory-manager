@@ -23,6 +23,8 @@ const adminEmail = requireVar('ADMIN_EMAIL').trim().toLowerCase()
 const adminPassword = requireVar('ADMIN_PASSWORD')
 const adminFirstName = requireVar('ADMIN_FIRST_NAME').trim()
 const adminLastName = requireVar('ADMIN_LAST_NAME').trim()
+const adminPhonePrefix = requireVar('ADMIN_PHONE_PREFIX').trim()
+const adminPhoneNumber = requireVar('ADMIN_PHONE_NUMBER').trim()
 
 async function seedAdmin() {
   await mongoose.connect(mongoUri)
@@ -61,7 +63,8 @@ async function seedAdmin() {
       email: adminEmail,
       passwordHash,
       role: USER_ROLES.ADMIN,
-      isActive: true
+      isActive: true,
+      phoneNumber: { prefix: adminPhonePrefix, number: adminPhoneNumber }
     })
 
     console.log(`Admin user created: ${adminEmail}`)
