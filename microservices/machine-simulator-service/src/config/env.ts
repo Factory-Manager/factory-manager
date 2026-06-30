@@ -11,6 +11,7 @@ export type AppConfig = {
   }
   intervalMs: number
   heartbeatIntervalMs: number
+  outboxDbPath: string
   telemetry: TelemetryConfig
 }
 
@@ -23,7 +24,7 @@ export function getConfig(): AppConfig {
     },
     intervalMs: Number(process.env.INTERVAL_MS!),
     heartbeatIntervalMs: Number(process.env.HEARTBEAT_INTERVAL_MS!),
-
+    outboxDbPath: process.env.OUTBOX_DB_PATH!,
     telemetry: {
       machineId: process.env.MACHINE_ID!,
 
