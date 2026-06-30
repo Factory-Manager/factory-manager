@@ -1,22 +1,40 @@
+import { randomUUID } from 'crypto'
 import { getConfig } from './config/env'
 import { generateTelemetry } from './generator/telemetry-generator'
 import { PinoLogger } from './infrastructure/logger/pino-logger'
+import { createSqliteDatabase } from './infrastructure/persistence/sqlite/create-sqlite-database'
+import { SqliteOutboxRepository } from './infrastructure/persistence/sqlite/sqlite-outbox.repository'
 import { SystemClock } from './infrastructure/time/system-clock'
 import { createMqttClient } from './mqtt/client'
+import { OutboxMessage, OutboxStatus } from './messaging/outbox/outbox-message'
+import { TelemetryEvent } from './types/telemetry-event'
 
 const config = getConfig()
 const logger = new PinoLogger()
 const clock = new SystemClock()
 
 const mqtt = createMqttClient(config.mqtt.url, logger)
+const db = createSqliteDatabase(config.outboxDbPath)
+const outbox = new SqliteOutboxRepository(db)
 
 logger.info('simulator started')
 
 const telemetryInterval = setInterval(() => {
-  const event = generateTelemetry(config.telemetry, clock)
+  const event: TelemetryEvent = generateTelemetry(config.telemetry, clock)
   const topic = `${config.mqtt.topic}/${config.telemetry.machineId}`
 
-  mqtt.publish(topic, JSON.stringify(event), { qos: 1 })
+  const outboxMessage: OutboxMessage = {
+    eventId: randomUUID(),
+    topic,
+    payload: JSON.stringify(event),
+    status: OutboxStatus.PENDING,
+    createdAt: clock.now(),
+    attempts: 0
+  }
+
+  outbox.save(outboxMessage)
+
+  mqtt.publish(topic, outboxMessage.payload, { qos: 1 })
   logger.info('published', { event })
 }, config.intervalMs)
 
@@ -35,6 +53,7 @@ async function shutdown(signal: string) {
   clearInterval(telemetryInterval)
   clearInterval(heartbeatInterval)
   await mqtt.close()
+  db.close()
   process.exit(0)
 }
 
