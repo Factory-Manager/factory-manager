@@ -12,6 +12,7 @@ services:
     depends_on:
       - mqtt-broker
     environment:
+      NODE_ENV: development
       MQTT_URL: mqtt://mqtt-broker:1883
       MQTT_TOPIC: factory/telemetry
       INTERVAL_MS: 2000
@@ -24,6 +25,7 @@ services:
     depends_on:
       - mqtt-broker
     environment:
+      NODE_ENV: development
       MACHINE_ID: machine-1
       MQTT_URL: mqtt://mqtt-broker:1883
       MQTT_TOPIC: factory/telemetry
