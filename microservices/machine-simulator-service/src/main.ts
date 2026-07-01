@@ -10,7 +10,7 @@ import { OutboxMessage, OutboxStatus } from './messaging/outbox/outbox-message'
 import { TelemetryEvent } from './types/telemetry-event'
 
 const config = getConfig()
-const logger = new PinoLogger()
+const logger = new PinoLogger(config.nodeEnv)
 const clock = new SystemClock()
 
 const mqtt = createMqttClient(config.mqtt.url, logger)

@@ -33,7 +33,8 @@ function buildMachineConfig(): MachineConfig {
 }
 
 function bootstrap() {
-  const baseLogger = new PinoLogger()
+  const config = getConfig()
+  const baseLogger = new PinoLogger(config.nodeEnv)
   const logger = baseLogger.child({
     service: 'coordinator-service'
   })
@@ -41,7 +42,6 @@ function bootstrap() {
     service: 'mqtt'
   })
 
-  const config = getConfig()
   const mqtt = createMqttConsumer(config.mqtt.url, mqttLogger)
 
   const policies = [new TemperaturePolicy()]
