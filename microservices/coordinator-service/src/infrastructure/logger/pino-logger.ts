@@ -1,22 +1,28 @@
 import pino from 'pino'
 import { Logger } from '@/application/ports/logger'
+import { NodeEnv } from '@/config/env'
 
 export class PinoLogger implements Logger {
-  constructor(
-    private logger = pino({
-      transport: {
-        target: 'pino-pretty',
-        options: {
-          colorize: true,
-          translateTime: 'SYS:standard',
-          ignore: 'pid,hostname'
-        }
-      }
-    })
-  ) {}
+  private readonly logger: pino.Logger
 
-  child(context: object): Logger {
-    return new PinoLogger(this.logger.child(context))
+  constructor(nodeEnv: NodeEnv) {
+    this.logger =
+      nodeEnv === 'development'
+        ? pino({
+            transport: {
+              target: 'pino-pretty',
+              options: {
+                colorize: true,
+                translateTime: 'SYS:standard',
+                ignore: 'pid,hostname'
+              }
+            }
+          })
+        : pino()
+  }
+
+  child(context: object): pino.Logger {
+    return this.logger.child(context)
   }
   info(message: string, metadata?: object): void {
     this.logger.info(metadata ?? {}, message)
