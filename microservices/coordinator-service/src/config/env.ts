@@ -2,7 +2,15 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
+export type NodeEnv = 'development' | 'production'
+
+function toNodeEnv(value?: string): NodeEnv {
+  if (value === 'production') return 'production'
+  return 'development'
+}
+
 export type AppConfig = {
+  nodeEnv: NodeEnv
   mqtt: {
     url: string
     topic: string
@@ -14,6 +22,7 @@ export type AppConfig = {
 
 export function getConfig(): AppConfig {
   return {
+    nodeEnv: toNodeEnv(process.env.NODE_ENV),
     mqtt: {
       url: process.env.MQTT_URL!,
       topic: process.env.MQTT_TOPIC!,
