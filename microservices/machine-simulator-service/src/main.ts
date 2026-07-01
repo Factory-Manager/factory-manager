@@ -19,7 +19,7 @@ const outbox = new SqliteOutboxRepository(db)
 
 logger.info('simulator started')
 
-const telemetryInterval = setInterval(() => {
+const telemetryInterval = setInterval(async () => {
   const event: TelemetryEvent = generateTelemetry(config.telemetry, clock)
   const topic = `${config.mqtt.topic}/${config.telemetry.machineId}`
 
@@ -34,8 +34,12 @@ const telemetryInterval = setInterval(() => {
 
   outbox.save(outboxMessage)
 
-  mqtt.publish(topic, outboxMessage.payload, { qos: 1 })
-  logger.info('published', { event })
+  try {
+    await mqtt.publish(topic, outboxMessage.payload, { qos: 1 })
+    logger.info('published', { event })
+  } catch (err) {
+    logger.error('failed to publish', { err, event })
+  }
 }, config.intervalMs)
 
 const heartbeatInterval = setInterval(() => {
