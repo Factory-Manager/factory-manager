@@ -11,7 +11,7 @@ export class SqliteOutboxRepository implements OutboxRepository {
                 event_id, 
                 topic, 
                 payload, 
-                status, 
+                status,
                 created_at, 
                 attempts
             )
@@ -25,6 +25,16 @@ export class SqliteOutboxRepository implements OutboxRepository {
       message.createdAt.toISOString(),
       message.attempts
     ]
+    this.db.prepare(query).run(params)
+  }
+
+  updateStatus(eventId: string, status: string, attempts: number): void {
+    const query = `
+            UPDATE machine_simulator_outbox
+            SET status = ?, attempts = ?
+            WHERE event_id = ?
+        `
+    const params = [status, attempts, eventId]
     this.db.prepare(query).run(params)
   }
 }
