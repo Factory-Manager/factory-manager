@@ -36,8 +36,18 @@ const telemetryInterval = setInterval(async () => {
 
   try {
     await mqtt.publish(topic, outboxMessage.payload, { qos: 1 })
+    outbox.updateStatus(
+      outboxMessage.eventId,
+      OutboxStatus.SENT,
+      outboxMessage.attempts + 1
+    )
     logger.info('published', { event })
   } catch (err) {
+    outbox.updateStatus(
+      outboxMessage.eventId,
+      OutboxStatus.FAILED,
+      outboxMessage.attempts + 1
+    )
     logger.error('failed to publish', { err, event })
   }
 }, config.intervalMs)
