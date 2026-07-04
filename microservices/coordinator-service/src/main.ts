@@ -14,10 +14,12 @@ import { createMqttConsumer } from './infrastructure/mqtt/consumer'
 import { getConfig } from './config/env'
 import { ProcessHeartbeat } from './application/heartbeat/process-heartbeat'
 import { TelemetryProcessor } from './application/messaging/processor/telemetry-processor'
-import { CoordinatorMessageConsumer } from './application/messaging/coordinator-message-consumer'
+import { MqttMessageDispatcher } from './application/messaging/mqtt-message-dispatcher'
 import { HeartbeatProcessor } from './application/messaging/processor/heartbeat-processor'
 import { TelemetryMessageMapper } from './application/telemetry/mapper/map-telemetry-message'
 import { HeartbeatMessageMapper } from './application/heartbeat/mapper/map-heartbeat-message'
+import { SqliteInboxRepository } from './infrastructure/persistence/sqlite/sqlite-inbox.repository'
+import { createSqliteDatabase } from './infrastructure/persistence/sqlite/create-sqlite-database'
 
 function buildMachineConfig(): MachineConfig {
   return new MachineConfig(
@@ -34,27 +36,26 @@ function buildMachineConfig(): MachineConfig {
 
 function bootstrap() {
   const config = getConfig()
+  const clock = new SystemClock()
   const baseLogger = new PinoLogger(config.nodeEnv)
   const logger = baseLogger.child({
     service: 'coordinator-service'
   })
-  const mqttLogger = baseLogger.child({
-    service: 'mqtt'
-  })
 
-  const mqtt = createMqttConsumer(config.mqtt.url, mqttLogger)
+  const mqtt = createMqttConsumer(
+    config.mqtt.url,
+    baseLogger.child({ service: 'mqtt' })
+  )
+  const db = createSqliteDatabase(config.inboxDbPath)
+  const inboxRepository = new SqliteInboxRepository(db)
 
   const policies = [new TemperaturePolicy()]
   const anomalyDetector = new AnomalyDetector(policies)
-  const processTelemetry = new ProcessTelemetry(
-    anomalyDetector,
-    new SystemClock(),
-    logger
-  )
-  const processHeartbeat = new ProcessHeartbeat(new SystemClock(), logger)
+  const processTelemetry = new ProcessTelemetry(anomalyDetector, clock, logger)
+  const processHeartbeat = new ProcessHeartbeat(clock, logger)
   const machineConfig = buildMachineConfig()
 
-  const consumer = new CoordinatorMessageConsumer(
+  const dispatcher = new MqttMessageDispatcher(
     [
       new TelemetryProcessor(
         processTelemetry,
@@ -68,6 +69,8 @@ function bootstrap() {
         config.mqtt.heartbeatTopic
       )
     ],
+    inboxRepository,
+    clock,
     logger
   )
 
@@ -75,7 +78,7 @@ function bootstrap() {
   mqtt.subscribe(`${config.mqtt.heartbeatTopic}/+`, { qos: 0 })
 
   mqtt.onMessage((topic, message) => {
-    consumer.handle(topic, message)
+    dispatcher.handle(topic, message)
   })
 }
 
