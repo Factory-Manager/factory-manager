@@ -18,6 +18,7 @@ export type AppConfig = {
   }
   intervalMs: number
   heartbeatIntervalMs: number
+  inboxDbPath: string
 }
 
 export function getConfig(): AppConfig {
@@ -29,6 +30,7 @@ export function getConfig(): AppConfig {
       heartbeatTopic: process.env.MQTT_HEARTBEAT_TOPIC!
     },
     intervalMs: Number(process.env.INTERVAL_MS),
-    heartbeatIntervalMs: Number(process.env.HEARTBEAT_INTERVAL_MS)
+    heartbeatIntervalMs: Number(process.env.HEARTBEAT_INTERVAL_MS),
+    inboxDbPath: process.env.INBOX_DB_PATH!
   }
 }
