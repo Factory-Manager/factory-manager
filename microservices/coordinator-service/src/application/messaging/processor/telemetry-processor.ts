@@ -3,6 +3,7 @@ import { MachineConfig } from '@/domain/machine/machine-config'
 import { ProcessTelemetry } from '../../telemetry/process-telemetry'
 import { TelemetryInput } from '../../telemetry/dto/telemetry-input'
 import { TelemetryMessageMapper } from '../../telemetry/mapper/map-telemetry-message'
+import { IncomingMessage } from '../incoming-message'
 
 export class TelemetryProcessor implements MessageProcessor {
   constructor(
@@ -19,10 +20,10 @@ export class TelemetryProcessor implements MessageProcessor {
     return topic.startsWith(prefix)
   }
 
-  process(topic: string, message: Buffer): void {
+  process(incomingMessage: IncomingMessage): void {
     const input: TelemetryInput = this.telemetryMessageMapper.map(
-      topic,
-      message
+      incomingMessage.topic,
+      incomingMessage.payload
     )
     this.processTelemetry.execute(input, this.machineConfig)
   }
