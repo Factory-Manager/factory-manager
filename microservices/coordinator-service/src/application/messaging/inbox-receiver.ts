@@ -1,0 +1,24 @@
+import { Logger } from '../ports/logger'
+import { InboxRepository } from '../ports/inbox.repository'
+import { InboxStatus } from '@/infrastructure/persistence/sqlite/models/inbox-message'
+import { IncomingMessage } from './incoming-message'
+
+export class InboxReceiver {
+  constructor(
+    private readonly inboxRepository: InboxRepository,
+    private readonly logger: Logger
+  ) {}
+
+  receive(incomingMessage: IncomingMessage): void {
+    const inboxMessage = {
+      eventId: incomingMessage.id,
+      topic: incomingMessage.topic,
+      payload: JSON.stringify(incomingMessage.payload),
+      status: InboxStatus.PENDING,
+      receivedAt: incomingMessage.receivedAt,
+      processedAt: null
+    }
+    this.inboxRepository.save(inboxMessage)
+    this.logger.info('message saved to inbox', { inboxMessage })
+  }
+}
