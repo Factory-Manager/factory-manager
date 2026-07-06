@@ -28,12 +28,12 @@
   "homepage": "https://github.com/Factory-Manager/factory-manager#readme",
   "devDependencies": {
     "@types/node": "^26.1.0",
-    "@vitest/coverage-v8": "^4.1.9",
+    "@vitest/coverage-v8": "^4.1.10",
     "eslint": "^10.6.0",
     "prettier": "^3.9.4",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.62.1",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.10"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
