@@ -1,13 +1,11 @@
 import { MessageProcessor } from '@/application/messaging/message-processor'
 import { ProcessHeartbeat } from '../../heartbeat/process-heartbeat'
 import { HeartbeatInput } from '../../heartbeat/dto/heartbeat-input'
-import { HeartbeatMessageMapper } from '../../heartbeat/mapper/map-heartbeat-message'
 import { IncomingMessage } from '../incoming-message'
 
 export class HeartbeatProcessor implements MessageProcessor {
   constructor(
     private readonly processHeartbeat: ProcessHeartbeat,
-    private readonly heartbeatMessageMapper: HeartbeatMessageMapper,
     private readonly heartbeatTopicPrefix: string
   ) {}
 
@@ -19,10 +17,10 @@ export class HeartbeatProcessor implements MessageProcessor {
   }
 
   process(incomingMessage: IncomingMessage): void {
-    const input: HeartbeatInput = this.heartbeatMessageMapper.map(
-      incomingMessage.topic,
-      incomingMessage.payload
-    )
+    const input: HeartbeatInput = {
+      machineId: incomingMessage.topic.split('/').pop(),
+      ...JSON.parse(incomingMessage.payload.toString())
+    }
     this.processHeartbeat.execute(input)
   }
 }
