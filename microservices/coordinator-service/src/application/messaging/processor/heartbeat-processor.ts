@@ -1,7 +1,7 @@
 import { MessageProcessor } from '@/application/messaging/message-processor'
 import { ProcessHeartbeat } from '../../heartbeat/process-heartbeat'
 import { HeartbeatInput } from '../../heartbeat/dto/heartbeat-input'
-import { IncomingMessage } from '../incoming-message'
+import { InboxMessage } from '@/infrastructure/persistence/sqlite/models/inbox-message'
 
 export class HeartbeatProcessor implements MessageProcessor {
   constructor(
@@ -16,10 +16,10 @@ export class HeartbeatProcessor implements MessageProcessor {
     return topic.startsWith(prefix)
   }
 
-  process(incomingMessage: IncomingMessage): void {
+  process(inboxMessage: InboxMessage): void {
     const input: HeartbeatInput = {
-      machineId: incomingMessage.topic.split('/').pop(),
-      ...JSON.parse(incomingMessage.payload.toString())
+      machineId: inboxMessage.topic.split('/').pop(),
+      ...JSON.parse(inboxMessage.payload.toString())
     }
     this.processHeartbeat.execute(input)
   }

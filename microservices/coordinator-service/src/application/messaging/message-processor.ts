@@ -1,4 +1,4 @@
-import { IncomingMessage } from './incoming-message'
+import { InboxMessage } from '@/infrastructure/persistence/sqlite/models/inbox-message'
 
 /**
  * Interface for processing messages based on their topic.
@@ -13,7 +13,7 @@ export interface MessageProcessor {
 
   /**
    * Processes the incoming message.
-   * @param incomingMessage  The incoming message to be processed.
+   * @param inboxMessage  The inbox message to be processed.
    */
-  process(incomingMessage: IncomingMessage): void
+  process(inboxMessage: InboxMessage): void
 }

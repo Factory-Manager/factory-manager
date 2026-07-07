@@ -2,7 +2,7 @@ import { MessageProcessor } from '@/application/messaging/message-processor'
 import { MachineConfig } from '@/domain/machine/machine-config'
 import { ProcessTelemetry } from '../../telemetry/process-telemetry'
 import { TelemetryInput } from '../../telemetry/dto/telemetry-input'
-import { IncomingMessage } from '../incoming-message'
+import { InboxMessage } from '@/infrastructure/persistence/sqlite/models/inbox-message'
 
 export class TelemetryProcessor implements MessageProcessor {
   constructor(
@@ -18,10 +18,10 @@ export class TelemetryProcessor implements MessageProcessor {
     return topic.startsWith(prefix)
   }
 
-  process(incomingMessage: IncomingMessage): void {
+  process(inboxMessage: InboxMessage): void {
     const input: TelemetryInput = {
-      machineId: incomingMessage.topic.split('/').pop(),
-      ...JSON.parse(incomingMessage.payload.toString())
+      machineId: inboxMessage.topic.split('/').pop(),
+      ...JSON.parse(inboxMessage.payload.toString())
     }
     this.processTelemetry.execute(input, this.machineConfig)
   }
