@@ -2,4 +2,5 @@ import { InboxMessage } from '../../infrastructure/persistence/sqlite/models/inb
 
 export interface InboxRepository {
   save(message: InboxMessage): void
+  findPending(): InboxMessage[]
 }
