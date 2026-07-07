@@ -13,7 +13,7 @@ export class InboxReceiver {
     const inboxMessage = {
       eventId: incomingMessage.id,
       topic: incomingMessage.topic,
-      payload: JSON.stringify(incomingMessage.payload),
+      payload: incomingMessage.payload.toString(),
       status: InboxStatus.PENDING,
       receivedAt: incomingMessage.receivedAt,
       processedAt: null
