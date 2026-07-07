@@ -14,12 +14,13 @@ import { createMqttConsumer } from './infrastructure/mqtt/consumer'
 import { getConfig } from './config/env'
 import { ProcessHeartbeat } from './application/heartbeat/process-heartbeat'
 import { TelemetryProcessor } from './application/messaging/processor/telemetry-processor'
-import { MqttMessageDispatcher } from './application/messaging/mqtt-message-dispatcher'
+import { InboxReceiver } from './application/messaging/inbox-receiver'
 import { HeartbeatProcessor } from './application/messaging/processor/heartbeat-processor'
-import { TelemetryMessageMapper } from './application/telemetry/mapper/map-telemetry-message'
-import { HeartbeatMessageMapper } from './application/heartbeat/mapper/map-heartbeat-message'
 import { SqliteInboxRepository } from './infrastructure/persistence/sqlite/sqlite-inbox.repository'
 import { createSqliteDatabase } from './infrastructure/persistence/sqlite/create-sqlite-database'
+import { randomUUID } from 'crypto'
+import { IncomingMessage } from './application/messaging/incoming-message'
+import { InboxWorker } from './application/messaging/inbox-worker'
 
 function buildMachineConfig(): MachineConfig {
   return new MachineConfig(
@@ -55,22 +56,18 @@ function bootstrap() {
   const processHeartbeat = new ProcessHeartbeat(clock, logger)
   const machineConfig = buildMachineConfig()
 
-  const dispatcher = new MqttMessageDispatcher(
+  const inboxReceiver = new InboxReceiver(inboxRepository, logger)
+
+  const inboxWorker = new InboxWorker(
     [
       new TelemetryProcessor(
         processTelemetry,
         machineConfig,
-        new TelemetryMessageMapper(),
         config.mqtt.topic
       ),
-      new HeartbeatProcessor(
-        processHeartbeat,
-        new HeartbeatMessageMapper(),
-        config.mqtt.heartbeatTopic
-      )
+      new HeartbeatProcessor(processHeartbeat, config.mqtt.heartbeatTopic)
     ],
     inboxRepository,
-    clock,
     logger
   )
 
@@ -78,8 +75,18 @@ function bootstrap() {
   mqtt.subscribe(`${config.mqtt.heartbeatTopic}/+`, { qos: 0 })
 
   mqtt.onMessage((topic, message) => {
-    dispatcher.handle(topic, message)
+    const incomingMessage: IncomingMessage = {
+      id: randomUUID(),
+      topic,
+      payload: message,
+      receivedAt: clock.now()
+    }
+    inboxReceiver.receive(incomingMessage)
   })
+
+  setInterval(() => {
+    inboxWorker.run()
+  }, 1000)
 }
 
 bootstrap()
