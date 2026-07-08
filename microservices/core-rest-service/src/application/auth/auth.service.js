@@ -12,7 +12,7 @@ export function createAuthService({
   userRepository,
   passwordHasher,
   jwtService
-}) {
+} = {}) {
   if (!userRepository) throw new TypeError('userRepository is required')
   if (!passwordHasher) throw new TypeError('passwordHasher is required')
   if (!jwtService) throw new TypeError('jwtService is required')
