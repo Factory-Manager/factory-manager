@@ -28,7 +28,7 @@ export function createAreaRepository({ areaModel = defaultAreaModel } = {}) {
   }
 
   async function findAreas({ limit, offset }) {
-    return areaModel.find().skip(offset).limit(limit).exec()
+    return areaModel.find().sort({ _id: 1 }).skip(offset).limit(limit).exec()
   }
 
   return Object.freeze({

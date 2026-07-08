@@ -29,10 +29,6 @@ export function createUserRepository({ userModel = defaultUserModel } = {}) {
     return userModel.create(userData)
   }
 
-  async function findUserByEmail(email) {
-    return userModel.findOne({ email }).exec()
-  }
-
   async function findUserByEmailForAuth(email) {
     return userModel.findOne({ email }).select('+passwordHash').exec()
   }
@@ -58,12 +54,11 @@ export function createUserRepository({ userModel = defaultUserModel } = {}) {
   }
 
   async function findUsers({ limit, offset }) {
-    return userModel.find().skip(offset).limit(limit).exec()
+    return userModel.find().sort({ _id: 1 }).skip(offset).limit(limit).exec()
   }
 
   return Object.freeze({
     createUser,
-    findUserByEmail,
     findUserByEmailForAuth,
     findUserById,
     updateUserById,
