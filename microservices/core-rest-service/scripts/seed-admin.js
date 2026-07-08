@@ -1,5 +1,7 @@
 import 'dotenv/config'
 
+import readline from 'node:readline'
+
 import mongoose from 'mongoose'
 
 import { PASSWORD_REGEX } from '#src/domain/users/password-policy.js'
@@ -18,6 +20,20 @@ function requireVar(name) {
   return value
 }
 
+function confirm(question) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  })
+
+  return new Promise((resolve) => {
+    rl.question(question, (answer) => {
+      rl.close()
+      resolve(answer.trim().toLowerCase() === 'y')
+    })
+  })
+}
+
 const mongoUri = requireVar('MONGO_URI')
 const adminEmail = requireVar('ADMIN_EMAIL').trim().toLowerCase()
 const adminPassword = requireVar('ADMIN_PASSWORD')
@@ -27,27 +43,59 @@ const adminPhonePrefix = requireVar('ADMIN_PHONE_PREFIX').trim()
 const adminPhoneNumber = requireVar('ADMIN_PHONE_NUMBER').trim()
 
 async function seedAdmin() {
+  if (!PASSWORD_REGEX.test(adminPassword)) {
+    console.error(
+      'ADMIN_PASSWORD must be at least 8 characters and contain one letter, one number, and one special character'
+    )
+    process.exit(1)
+  }
+
   await mongoose.connect(mongoUri)
 
   try {
-    if (!PASSWORD_REGEX.test(adminPassword)) {
-      throw new Error(
-        'ADMIN_PASSWORD must be at least 8 characters and contain one letter, one number, and one special character'
-      )
-    }
-
     const existingAdmin = await UserModel.findOne({
       role: USER_ROLES.ADMIN
     }).exec()
 
     if (existingAdmin) {
-      console.log('Admin user already exists. Skipping.')
+      const confirmed = await confirm(
+        `Admin user already exists (${existingAdmin.email}).\nUpdate with current environment variables? [y/N] `
+      )
+
+      if (!confirmed) {
+        console.log('Skipping.')
+        return
+      }
+
+      const passwordHasher = createPasswordHasher()
+      const passwordHash = await passwordHasher.hashPassword(adminPassword)
+
+      try {
+        await UserModel.findByIdAndUpdate(
+          existingAdmin._id,
+          {
+            name: { first: adminFirstName, last: adminLastName },
+            email: adminEmail,
+            passwordHash,
+            phoneNumber: { prefix: adminPhonePrefix, number: adminPhoneNumber }
+          },
+          { runValidators: true }
+        ).exec()
+      } catch (err) {
+        if (err.code === 11000) {
+          throw new Error(
+            `Cannot update admin email to ${adminEmail}: that address is already in use by another user`,
+            { cause: err }
+          )
+        }
+        throw err
+      }
+
+      console.log(`Admin user updated: ${adminEmail}`)
       return
     }
 
-    const existingUser = await UserModel.findOne({
-      email: adminEmail
-    }).exec()
+    const existingUser = await UserModel.findOne({ email: adminEmail }).exec()
 
     if (existingUser) {
       throw new Error(
