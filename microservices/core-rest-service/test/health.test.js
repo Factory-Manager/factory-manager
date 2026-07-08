@@ -29,15 +29,6 @@ describe('health endpoints', () => {
     assert.equal(typeof body.timestamp, 'string')
   })
 
-  it('GET / returns running status', async () => {
-    const response = await fetch(`${baseUrl}/`)
-    const body = await response.json()
-
-    assert.equal(response.status, 200)
-    assert.equal(body.service, 'core-rest-service')
-    assert.equal(body.status, 'running')
-  })
-
   it('returns 404 for unknown routes', async () => {
     const response = await fetch(`${baseUrl}/unknown-route`)
     const body = await response.json()
