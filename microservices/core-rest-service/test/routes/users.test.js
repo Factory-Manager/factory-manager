@@ -270,10 +270,8 @@ describe('user routes', () => {
       const response = await fetch(`${baseUrl}/api/users/${VALID_ID}`, {
         method: 'DELETE'
       })
-      const body = await response.json()
 
-      assert.equal(response.status, 200)
-      assert.equal(body.id, VALID_USER.id)
+      assert.equal(response.status, 204)
     } finally {
       await closeTestServer(server)
     }

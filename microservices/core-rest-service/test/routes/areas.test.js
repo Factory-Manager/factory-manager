@@ -172,10 +172,8 @@ describe('area routes', () => {
       const response = await fetch(`${baseUrl}/api/areas/${VALID_ID}`, {
         method: 'DELETE'
       })
-      const body = await response.json()
 
-      assert.equal(response.status, 200)
-      assert.equal(body.id, VALID_AREA.id)
+      assert.equal(response.status, 204)
     } finally {
       await closeTestServer(server)
     }

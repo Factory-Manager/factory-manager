@@ -84,7 +84,8 @@ export function createUserRouter({ userService, authenticateRequest }) {
     validateParams(userIdSchema),
     async (req, res) => {
       const user = await userService.deleteUserById(req.params.id)
-      res.json(ensureUserFound(user))
+      ensureUserFound(user)
+      res.sendStatus(204)
     }
   )
 
