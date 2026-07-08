@@ -59,7 +59,7 @@ export function createMachineService({
   }
 
   async function updateMachineById(id, input) {
-    if (input.location?.areaId) {
+    if (input.location?.areaId !== undefined) {
       await validateAreaExists(input.location.areaId)
     }
 
