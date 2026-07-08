@@ -66,7 +66,7 @@ async function buildUpdateUserData(input = {}, passwordHasher) {
  * @param {Object} serviceDependencies.passwordHasher Password hasher.
  * @returns {Readonly<Object>} User application service.
  */
-export function createUserService({ userRepository, passwordHasher }) {
+export function createUserService({ userRepository, passwordHasher } = {}) {
   if (!userRepository) {
     throw new TypeError('userRepository is required')
   }
