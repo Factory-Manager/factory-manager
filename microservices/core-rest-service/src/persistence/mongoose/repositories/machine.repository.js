@@ -31,7 +31,12 @@ export function createMachineRepository({
 
   async function findMachines({ limit, offset, areaId } = {}) {
     const filter = areaId ? { 'location.areaId': areaId } : {}
-    return machineModel.find(filter).skip(offset).limit(limit).exec()
+    return machineModel
+      .find(filter)
+      .sort({ _id: 1 })
+      .skip(offset)
+      .limit(limit)
+      .exec()
   }
 
   return Object.freeze({

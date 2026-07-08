@@ -10,12 +10,19 @@ function createQueryResult(result) {
 
 function createFindMachinesQueryResult(result, calls) {
   return {
-    skip(offset) {
-      calls.push({ method: 'skip', offset })
+    sort(sort) {
+      calls.push({ method: 'sort', sort })
+
       return {
-        limit(limit) {
-          calls.push({ method: 'limit', limit })
-          return createQueryResult(result)
+        skip(offset) {
+          calls.push({ method: 'skip', offset })
+
+          return {
+            limit(limit) {
+              calls.push({ method: 'limit', limit })
+              return createQueryResult(result)
+            }
+          }
         }
       }
     }
@@ -121,6 +128,7 @@ describe('Machine repository', () => {
     assert.deepEqual(result, [{ id: 'machine-1' }])
     assert.deepEqual(machineModel.calls, [
       { method: 'find', filter: {} },
+      { method: 'sort', sort: { _id: 1 } },
       { method: 'skip', offset: 20 },
       { method: 'limit', limit: 10 }
     ])

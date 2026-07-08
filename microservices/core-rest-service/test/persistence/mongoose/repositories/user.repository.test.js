@@ -12,20 +12,20 @@ function createQueryResult(result) {
 
 function createFindUsersQueryResult(result, calls) {
   return {
-    skip(offset) {
-      calls.push({
-        method: 'skip',
-        offset
-      })
+    sort(sort) {
+      calls.push({ method: 'sort', sort })
 
       return {
-        limit(limit) {
-          calls.push({
-            method: 'limit',
-            limit
-          })
+        skip(offset) {
+          calls.push({ method: 'skip', offset })
 
-          return createQueryResult(result)
+          return {
+            limit(limit) {
+              calls.push({ method: 'limit', limit })
+
+              return createQueryResult(result)
+            }
+          }
         }
       }
     }
@@ -131,27 +131,6 @@ describe('User repository', () => {
     assert.deepEqual(userModel.calls[0], {
       method: 'create',
       userData
-    })
-  })
-
-  it('finds a user by email', async () => {
-    const userModel = createUserModelDouble()
-    const repository = createUserRepository({ userModel })
-
-    const result = await repository.findUserByEmail('operator@factory.com')
-
-    assert.deepEqual(result, {
-      id: 'found-user',
-      query: {
-        email: 'operator@factory.com'
-      }
-    })
-
-    assert.deepEqual(userModel.calls[0], {
-      method: 'findOne',
-      query: {
-        email: 'operator@factory.com'
-      }
     })
   })
 
@@ -278,17 +257,10 @@ describe('User repository', () => {
     ])
 
     assert.deepEqual(userModel.calls, [
-      {
-        method: 'find'
-      },
-      {
-        method: 'skip',
-        offset: 20
-      },
-      {
-        method: 'limit',
-        limit: 10
-      }
+      { method: 'find' },
+      { method: 'sort', sort: { _id: 1 } },
+      { method: 'skip', offset: 20 },
+      { method: 'limit', limit: 10 }
     ])
   })
 

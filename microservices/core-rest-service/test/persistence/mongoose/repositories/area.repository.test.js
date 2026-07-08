@@ -12,14 +12,20 @@ function createQueryResult(result) {
 
 function createFindAreasQueryResult(result, calls) {
   return {
-    skip(offset) {
-      calls.push({ method: 'skip', offset })
+    sort(sort) {
+      calls.push({ method: 'sort', sort })
 
       return {
-        limit(limit) {
-          calls.push({ method: 'limit', limit })
+        skip(offset) {
+          calls.push({ method: 'skip', offset })
 
-          return createQueryResult(result)
+          return {
+            limit(limit) {
+              calls.push({ method: 'limit', limit })
+
+              return createQueryResult(result)
+            }
+          }
         }
       }
     }
@@ -118,6 +124,7 @@ describe('Area repository', () => {
     assert.deepEqual(result, [{ id: 'area-1' }])
     assert.deepEqual(areaModel.calls, [
       { method: 'find' },
+      { method: 'sort', sort: { _id: 1 } },
       { method: 'skip', offset: 20 },
       { method: 'limit', limit: 10 }
     ])
