@@ -318,10 +318,8 @@ describe('machine routes', () => {
       const response = await fetch(`${baseUrl}/api/machines/${VALID_ID}`, {
         method: 'DELETE'
       })
-      const body = await response.json()
 
-      assert.equal(response.status, 200)
-      assert.equal(body.id, VALID_MACHINE.id)
+      assert.equal(response.status, 204)
     } finally {
       await closeTestServer(server)
     }

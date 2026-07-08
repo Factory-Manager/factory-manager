@@ -84,7 +84,8 @@ export function createAreaRouter({ areaService, authenticateRequest }) {
     validateParams(areaIdSchema),
     async (req, res) => {
       const area = await areaService.deleteAreaById(req.params.id)
-      res.json(ensureAreaFound(area))
+      ensureAreaFound(area)
+      res.sendStatus(204)
     }
   )
 

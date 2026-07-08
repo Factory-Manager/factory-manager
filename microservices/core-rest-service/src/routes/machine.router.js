@@ -114,7 +114,8 @@ export function createMachineRouter({
     validateParams(machineIdSchema),
     async (req, res) => {
       const machine = await machineService.deleteMachineById(req.params.id)
-      res.json(ensureMachineFound(machine))
+      ensureMachineFound(machine)
+      res.sendStatus(204)
     }
   )
 
