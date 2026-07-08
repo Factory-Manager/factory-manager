@@ -12,9 +12,12 @@ services:
   core-rest-service:
     build:
       context: ../microservices/core-rest-service
+      target: development
     container_name: factory-manager-core-rest
     ports:
       - "3000:3000"
+    env_file:
+      - ../microservices/core-rest-service/.env
     environment:
       NODE_ENV: development
       PORT: 3000
