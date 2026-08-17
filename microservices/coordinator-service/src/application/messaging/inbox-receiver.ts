@@ -1,6 +1,9 @@
 import { Logger } from '../ports/logger'
 import { InboxRepository } from '../ports/inbox.repository'
-import { InboxStatus } from '@/infrastructure/persistence/sqlite/models/inbox-message'
+import {
+  InboxMessage,
+  InboxStatus
+} from '@/infrastructure/persistence/sqlite/models/inbox-message'
 import { IncomingMessage } from './incoming-message'
 
 export class InboxReceiver {
@@ -10,11 +13,12 @@ export class InboxReceiver {
   ) {}
 
   receive(incomingMessage: IncomingMessage): void {
-    const inboxMessage = {
+    const inboxMessage: InboxMessage = {
       eventId: incomingMessage.id,
       topic: incomingMessage.topic,
       payload: incomingMessage.payload.toString(),
       status: InboxStatus.PENDING,
+      attempts: 0,
       receivedAt: incomingMessage.receivedAt,
       processedAt: null
     }

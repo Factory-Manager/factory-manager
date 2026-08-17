@@ -1,11 +1,14 @@
 import { MessageProcessor } from './message-processor'
 import { Logger } from '../ports/logger'
 import { InboxRepository } from '../ports/inbox.repository'
+import { InboxStatus } from '@/infrastructure/persistence/sqlite/models/inbox-message'
+import { SystemClock } from '@/infrastructure/time/system-clock'
 
 export class InboxWorker {
   constructor(
     private readonly processors: MessageProcessor[],
     private readonly inboxRepository: InboxRepository,
+    private readonly clock: SystemClock,
     private readonly logger: Logger
   ) {}
 
@@ -14,13 +17,40 @@ export class InboxWorker {
     const messages = this.inboxRepository.findPending()
 
     for (const msg of messages) {
+      const processor = this.processors.find((h) => h.canHandle(msg.topic))
+
+      if (!processor) {
+        this.inboxRepository.updateStatus(
+          msg.eventId,
+          InboxStatus.UNSUPPORTED,
+          msg.attempts,
+          this.clock.now()
+        )
+
+        this.logger.warn('No processor found for message', { msg })
+        continue
+      }
+
       try {
-        const processor = this.processors.find((h) => h.canHandle(msg.topic))
-        if (!processor) continue
         processor.process(msg)
-        this.logger.info('message processed successfully', { msg })
+
+        this.inboxRepository.updateStatus(
+          msg.eventId,
+          InboxStatus.PROCESSED,
+          msg.attempts + 1,
+          this.clock.now()
+        )
+
+        this.logger.info('Message processed successfully', { msg })
       } catch (err) {
-        this.logger.error('message processing failed', { err, msg })
+        this.inboxRepository.updateStatus(
+          msg.eventId,
+          InboxStatus.FAILED,
+          msg.attempts + 1,
+          this.clock.now()
+        )
+
+        this.logger.error('Message processing failed', { err, msg })
       }
     }
   }

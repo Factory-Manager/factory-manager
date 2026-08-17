@@ -68,6 +68,7 @@ function bootstrap() {
       new HeartbeatProcessor(processHeartbeat, config.mqtt.heartbeatTopic)
     ],
     inboxRepository,
+    clock,
     logger
   )
 
