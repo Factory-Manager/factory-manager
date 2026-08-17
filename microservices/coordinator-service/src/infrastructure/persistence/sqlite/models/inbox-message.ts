@@ -1,7 +1,8 @@
 export enum InboxStatus {
   PENDING = 'PENDING',
   PROCESSED = 'PROCESSED',
-  FAILED = 'FAILED'
+  FAILED = 'FAILED',
+  UNSUPPORTED = 'UNSUPPORTED'
 }
 
 export type InboxMessage = {
@@ -9,6 +10,7 @@ export type InboxMessage = {
   topic: string
   payload: string
   status: InboxStatus
+  attempts: number
   receivedAt: Date
   processedAt: Date | null
 }

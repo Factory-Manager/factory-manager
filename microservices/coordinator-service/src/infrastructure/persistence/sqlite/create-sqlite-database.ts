@@ -13,6 +13,7 @@ export function createSqliteDatabase(inboxDbPath: string): Database.Database {
         topic TEXT NOT NULL,
         payload TEXT NOT NULL,
         status TEXT NOT NULL,
+        attempts INTEGER NOT NULL,
         received_at TEXT NOT NULL,
         processed_at TEXT
     )`)

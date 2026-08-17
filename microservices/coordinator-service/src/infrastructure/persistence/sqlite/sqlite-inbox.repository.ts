@@ -11,18 +11,40 @@ export class SqliteInboxRepository implements InboxRepository {
         topic, 
         payload,
         status,
+        attempts,
         received_at,
         processed_at
       )
-      VALUES (?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `
     const params = [
       message.eventId,
       message.topic,
       message.payload,
       message.status,
+      message.attempts,
       message.receivedAt.toISOString(),
       message.processedAt ? message.processedAt.toISOString() : null
+    ]
+    this.db.prepare(query).run(params)
+  }
+
+  updateStatus(
+    eventId: string,
+    status: string,
+    attempts: number,
+    processedAt: Date | null
+  ): void {
+    const query = `
+      UPDATE coordinator_inbox
+      SET status = ?, attempts = ?, processed_at = ?
+      WHERE event_id = ?
+    `
+    const params = [
+      status,
+      attempts,
+      processedAt ? processedAt.toISOString() : null,
+      eventId
     ]
     this.db.prepare(query).run(params)
   }
@@ -34,6 +56,7 @@ export class SqliteInboxRepository implements InboxRepository {
         topic,
         payload,
         status,
+        attempts,
         received_at,
         processed_at
       FROM coordinator_inbox
@@ -47,6 +70,7 @@ export class SqliteInboxRepository implements InboxRepository {
       topic: row.topic,
       payload: row.payload,
       status: row.status as InboxMessage['status'],
+      attempts: row.attempts,
       receivedAt: new Date(row.receivedAt),
       processedAt: row.processedAt ? new Date(row.processedAt) : null
     }))
