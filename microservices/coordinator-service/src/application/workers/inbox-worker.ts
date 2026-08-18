@@ -1,4 +1,4 @@
-import { MessageProcessor } from './message-processor'
+import { MessageProcessor } from '../messaging/message-processor'
 import { Logger } from '../ports/logger'
 import { InboxRepository } from '../ports/inbox.repository'
 import { InboxStatus } from '@/infrastructure/persistence/sqlite/models/inbox-message'

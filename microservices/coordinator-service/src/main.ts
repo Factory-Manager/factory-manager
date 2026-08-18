@@ -20,7 +20,7 @@ import { SqliteInboxRepository } from './infrastructure/persistence/sqlite/sqlit
 import { createSqliteDatabase } from './infrastructure/persistence/sqlite/create-sqlite-database'
 import { randomUUID } from 'crypto'
 import { IncomingMessage } from './application/messaging/incoming-message'
-import { InboxWorker } from './application/messaging/inbox-worker'
+import { InboxWorker } from './application/workers/inbox-worker'
 
 function buildMachineConfig(): MachineConfig {
   return new MachineConfig(
