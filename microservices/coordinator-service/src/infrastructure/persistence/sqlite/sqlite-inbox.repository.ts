@@ -1,4 +1,7 @@
-import { InboxMessage } from '@/infrastructure/persistence/sqlite/models/inbox-message'
+import {
+  InboxMessage,
+  InboxStatus
+} from '@/infrastructure/persistence/sqlite/models/inbox-message'
 import { InboxRepository } from '@/application/ports/inbox.repository'
 import { Database } from 'better-sqlite3'
 
@@ -51,28 +54,37 @@ export class SqliteInboxRepository implements InboxRepository {
 
   findPending(): InboxMessage[] {
     const query = `
-      SELECT 
-        event_id,
-        topic,
-        payload,
-        status,
-        attempts,
-        received_at,
-        processed_at
-      FROM coordinator_inbox
-      WHERE status = 'PENDING'
-      ORDER BY received_at ASC
-    `
-    const rows = this.db.prepare(query).all() as InboxMessage[]
+    SELECT 
+      event_id,
+      topic,
+      payload,
+      status,
+      attempts,
+      received_at,
+      processed_at
+    FROM coordinator_inbox
+    WHERE status = 'PENDING'
+    ORDER BY received_at ASC
+  `
+
+    const rows = this.db.prepare(query).all() as {
+      event_id: string
+      topic: string
+      payload: string
+      status: InboxStatus
+      attempts: number
+      received_at: string
+      processed_at: string | null
+    }[]
 
     return rows.map((row) => ({
-      eventId: row.eventId,
+      eventId: row.event_id,
       topic: row.topic,
       payload: row.payload,
-      status: row.status as InboxMessage['status'],
+      status: row.status,
       attempts: row.attempts,
-      receivedAt: new Date(row.receivedAt),
-      processedAt: row.processedAt ? new Date(row.processedAt) : null
+      receivedAt: new Date(row.received_at),
+      processedAt: row.processed_at ? new Date(row.processed_at) : null
     }))
   }
 }
