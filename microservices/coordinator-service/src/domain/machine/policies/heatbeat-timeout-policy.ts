@@ -7,10 +7,8 @@ export class HeartbeatTimeoutPolicy implements MachineStatusPolicy {
   evaluate(lastHeartbeatAt: Date, now: Date): MachineStatus {
     const elapsed = now.getTime() - lastHeartbeatAt.getTime()
 
-    if (elapsed >= this.timeoutMs) {
-      return MachineStatus.OFFLINE
-    }
-
-    return MachineStatus.ONLINE
+    return elapsed >= this.timeoutMs
+      ? MachineStatus.OFFLINE
+      : MachineStatus.ONLINE
   }
 }
