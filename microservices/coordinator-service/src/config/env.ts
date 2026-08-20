@@ -18,6 +18,7 @@ export type AppConfig = {
   }
   intervalMs: number
   heartbeatIntervalMs: number
+  heartbeatTimeoutMs: number
   inboxDbPath: string
 }
 
@@ -31,6 +32,7 @@ export function getConfig(): AppConfig {
     },
     intervalMs: Number(process.env.INTERVAL_MS),
     heartbeatIntervalMs: Number(process.env.HEARTBEAT_INTERVAL_MS),
+    heartbeatTimeoutMs: Number(process.env.HEARTBEAT_TIMEOUT_MS),
     inboxDbPath: process.env.INBOX_DB_PATH!
   }
 }
