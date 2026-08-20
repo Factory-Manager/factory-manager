@@ -2,17 +2,17 @@ import { MessageProcessor } from '../messaging/message-processor'
 import { Logger } from '../ports/logger'
 import { InboxRepository } from '../ports/inbox.repository'
 import { InboxStatus } from '@/infrastructure/persistence/sqlite/models/inbox-message'
-import { SystemClock } from '@/infrastructure/time/system-clock'
+import { Clock } from '../ports/clock'
 
 export class InboxWorker {
   constructor(
     private readonly processors: MessageProcessor[],
     private readonly inboxRepository: InboxRepository,
-    private readonly clock: SystemClock,
+    private readonly clock: Clock,
     private readonly logger: Logger
   ) {}
 
-  run() {
+  run(): void {
     this.logger.info('Inbox worker started')
     const messages = this.inboxRepository.findPending()
 
