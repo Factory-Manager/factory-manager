@@ -5,9 +5,13 @@ import { NodeEnv } from '@/config/env'
 export class PinoLogger implements Logger {
   private readonly logger: pino.Logger
 
-  constructor(nodeEnv: NodeEnv) {
+  constructor(
+    private readonly nodeEnv: NodeEnv,
+    logger?: pino.Logger
+  ) {
     this.logger =
-      nodeEnv === 'development'
+      logger ??
+      (nodeEnv === 'development'
         ? pino({
             transport: {
               target: 'pino-pretty',
@@ -16,13 +20,14 @@ export class PinoLogger implements Logger {
                 translateTime: 'SYS:standard',
                 ignore: 'pid,hostname'
               }
-            }
+            },
+            level: 'info'
           })
-        : pino()
+        : pino())
   }
 
-  child(context: object): pino.Logger {
-    return this.logger.child(context)
+  child(context: object): Logger {
+    return new PinoLogger(this.nodeEnv, this.logger.child(context))
   }
   info(message: string, metadata?: object): void {
     this.logger.info(metadata ?? {}, message)
