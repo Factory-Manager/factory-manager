@@ -21,6 +21,9 @@ import { createSqliteDatabase } from './infrastructure/persistence/sqlite/create
 import { randomUUID } from 'crypto'
 import { IncomingMessage } from './application/messaging/incoming-message'
 import { InboxWorker } from './application/workers/inbox-worker'
+import { SqliteHeartbeatRepository } from './infrastructure/persistence/sqlite/sqlite-heartbeat.repository'
+import { HeartbeatTimeoutPolicy } from './domain/machine/policies/heatbeat-timeout-policy'
+import { HeartbeatMonitor } from './application/workers/heartbeat-monitor'
 
 function buildMachineConfig(): MachineConfig {
   return new MachineConfig(
@@ -49,6 +52,7 @@ function bootstrap() {
   )
   const db = createSqliteDatabase(config.inboxDbPath)
   const inboxRepository = new SqliteInboxRepository(db)
+  const heartbeatRepository = new SqliteHeartbeatRepository(db)
 
   const policies = [new TemperaturePolicy()]
   const anomalyDetector = new AnomalyDetector(policies)
@@ -69,7 +73,14 @@ function bootstrap() {
     ],
     inboxRepository,
     clock,
-    logger
+    baseLogger.child({ service: 'inbox-worker' })
+  )
+  const heartbeatMonitor = new HeartbeatMonitor(
+    heartbeatRepository,
+    new HeartbeatTimeoutPolicy(config.heartbeatTimeoutMs),
+    config.mqtt.heartbeatTopic,
+    clock,
+    baseLogger.child({ service: 'heartbeat-monitor' })
   )
 
   mqtt.subscribe(`${config.mqtt.topic}/+`, { qos: 1 })
@@ -88,6 +99,10 @@ function bootstrap() {
   setInterval(() => {
     inboxWorker.run()
   }, 1000)
+
+  setInterval(() => {
+    heartbeatMonitor.run()
+  }, 3000)
 }
 
 bootstrap()
