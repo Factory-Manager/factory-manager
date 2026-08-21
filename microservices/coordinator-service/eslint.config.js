@@ -14,7 +14,18 @@ export default [
       sourceType: 'module'
     },
     rules: {
-      '@typescript-eslint/no-unused-vars': 'warn'
+      '@typescript-eslint/no-unused-vars': 'warn',
+    }
+  },
+  
+  {
+    files: ['test/**/*.ts'],
+    languageOptions: {
+      ecmaVersion: 2024,
+      sourceType: 'module'
+    },
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off'
     }
   }
 ]
