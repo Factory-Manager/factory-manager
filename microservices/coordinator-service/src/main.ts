@@ -24,9 +24,11 @@ import { InboxWorker } from './application/workers/inbox-worker'
 import { SqliteHeartbeatRepository } from './infrastructure/persistence/sqlite/sqlite-heartbeat.repository'
 import { HeartbeatTimeoutPolicy } from './domain/machine/policies/heatbeat-timeout-policy'
 import { HeartbeatMonitor } from './application/workers/heartbeat-monitor'
+import { MachineId } from './domain/machine/value-objects/machine-id'
 
 function buildMachineConfig(): MachineConfig {
   return new MachineConfig(
+    new MachineId('6a8771c13ec0b58b0b1ac2af'),
     new Range<Temperature>(new Temperature(0), new Temperature(100)),
     new Range<PowerConsumption>(
       new PowerConsumption(0),
