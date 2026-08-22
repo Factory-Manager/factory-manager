@@ -7,7 +7,7 @@ import { InboxMessage } from '@/infrastructure/persistence/sqlite/models/inbox-m
 export class TelemetryProcessor implements MessageProcessor {
   constructor(
     private readonly processTelemetry: ProcessTelemetry,
-    private readonly machineConfig: MachineConfig,
+    private readonly machineConfigs: Map<string, MachineConfig>,
     private readonly telemetryTopicPrefix: string
   ) {}
 
@@ -23,6 +23,10 @@ export class TelemetryProcessor implements MessageProcessor {
       machineId: inboxMessage.topic.split('/').pop(),
       ...JSON.parse(inboxMessage.payload.toString())
     }
-    this.processTelemetry.execute(input, this.machineConfig)
+    const machineConfig = this.machineConfigs.get(input.machineId)
+    if (!machineConfig) {
+      throw new Error(`No configuration found for machine: ${input.machineId}`)
+    }
+    this.processTelemetry.execute(input, machineConfig)
   }
 }
