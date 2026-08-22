@@ -26,7 +26,7 @@ services:
       - mqtt-broker
     environment:
       NODE_ENV: development
-      MACHINE_ID: machine-1
+      MACHINE_ID: 6a8771c13ec0b58b0b1ac2af
       MQTT_URL: mqtt://mqtt-broker:1883
       MQTT_TOPIC: factory/telemetry
       INTERVAL_MS: 2000
