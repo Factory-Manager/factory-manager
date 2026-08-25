@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import Database from 'better-sqlite3'
-import path from 'path/win32'
+import path from 'node:path'
 
 export function createSqliteDatabase(outboxDbPath: string): Database.Database {
   const dataDir = path.resolve('data')
