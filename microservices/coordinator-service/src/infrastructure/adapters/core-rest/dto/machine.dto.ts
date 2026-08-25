@@ -9,7 +9,7 @@ export interface MachineDto {
 
   machineState: {
     currentState: 'operational' | 'off' | 'anomaly'
-    anomalyDetails: unknown[]
+    anomalyDetails: string[]
   }
 
   specifications: {
