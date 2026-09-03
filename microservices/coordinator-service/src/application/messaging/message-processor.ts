@@ -15,5 +15,5 @@ export interface MessageProcessor {
    * Processes the incoming message.
    * @param inboxMessage  The inbox message to be processed.
    */
-  process(inboxMessage: InboxMessage): void
+  process(inboxMessage: InboxMessage): Promise<void>
 }

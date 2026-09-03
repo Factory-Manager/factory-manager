@@ -12,8 +12,9 @@ export class InboxWorker {
     private readonly logger: Logger
   ) {}
 
-  run(): void {
+  async run(): Promise<void> {
     this.logger.info('Inbox worker started')
+
     const messages = this.inboxRepository.findPending()
 
     for (const msg of messages) {
@@ -32,7 +33,7 @@ export class InboxWorker {
       }
 
       try {
-        processor.process(msg)
+        await processor.process(msg)
 
         this.inboxRepository.updateStatus(
           msg.eventId,
@@ -45,7 +46,7 @@ export class InboxWorker {
       } catch (err) {
         this.inboxRepository.updateStatus(
           msg.eventId,
-          InboxStatus.FAILED,
+          InboxStatus.PENDING,
           msg.attempts + 1,
           this.clock.now()
         )

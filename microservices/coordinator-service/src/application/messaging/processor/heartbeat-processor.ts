@@ -16,7 +16,7 @@ export class HeartbeatProcessor implements MessageProcessor {
     return topic.startsWith(prefix)
   }
 
-  process(inboxMessage: InboxMessage): void {
+  async process(inboxMessage: InboxMessage): Promise<void> {
     const input: HeartbeatInput = {
       machineId: inboxMessage.topic.split('/').pop(),
       ...JSON.parse(inboxMessage.payload.toString())
