@@ -61,7 +61,8 @@ async function bootstrap() {
       new TelemetryProcessor(
         processTelemetry,
         configsByMachineId,
-        config.mqtt.topic
+        config.mqtt.topic,
+        coreRestService
       ),
       new HeartbeatProcessor(processHeartbeat, config.mqtt.heartbeatTopic)
     ],
