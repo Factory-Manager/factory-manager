@@ -1,4 +1,5 @@
 import { MachineConfig } from '@/domain/machine/machine-config'
+import { ProcessTelemetryResult } from '../telemetry/dto/process-telemetry-result'
 
 /**
  * Defines the interface for the core REST service.
@@ -13,4 +14,10 @@ export interface CoreRestService {
     limit: number
     offset: number
   }): Promise<MachineConfig[]>
+
+  /**
+   * Publishes telemetry data to the core REST API.
+   * @param telemetryData The telemetry data to publish.
+   */
+  publishTelemetry(telemetryData: ProcessTelemetryResult): Promise<void>
 }
