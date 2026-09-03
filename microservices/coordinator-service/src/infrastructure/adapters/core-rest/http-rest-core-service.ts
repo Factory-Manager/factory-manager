@@ -3,6 +3,8 @@ import { Logger } from '@/application/ports/logger'
 import { MachineConfig } from '@/domain'
 import { toMachineConfig } from './mapper/machine-config.mapper'
 import { MachineDto } from './dto/machine.dto'
+import { ProcessTelemetryResult } from '@/application/telemetry/dto/process-telemetry-result'
+import { toTelemetryDto } from './mapper/telemetry.mapper'
 
 export class HttpCoreRestService implements CoreRestService {
   constructor(
@@ -38,5 +40,27 @@ export class HttpCoreRestService implements CoreRestService {
 
     const data: MachineDto[] = await response.json()
     return data.map(toMachineConfig)
+  }
+
+  async publishTelemetry(telemetryData: ProcessTelemetryResult): Promise<void> {
+    const url = `${this.baseUrl}/api/telemetry`
+
+    this.logger.info(`Publishing telemetry data via Core REST API at ${url}`)
+
+    const dto = toTelemetryDto(telemetryData)
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Service-Token': this.serviceToken
+      },
+      body: JSON.stringify(dto)
+    })
+
+    if (!response.ok) {
+      const body = await response.text()
+      throw new Error(`Core REST returned ${response.status}: ${body}`)
+    }
   }
 }
