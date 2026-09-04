@@ -74,6 +74,7 @@ async function bootstrap() {
     heartbeatRepository,
     new HeartbeatTimeoutPolicy(config.heartbeatTimeoutMs),
     config.mqtt.heartbeatTopic,
+    coreRestService,
     clock,
     baseLogger.child({ service: 'heartbeat-monitor' })
   )
