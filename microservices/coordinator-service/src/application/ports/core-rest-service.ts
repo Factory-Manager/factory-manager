@@ -20,4 +20,16 @@ export interface CoreRestService {
    * @param telemetryData The telemetry data to publish.
    */
   publishTelemetry(telemetryData: ProcessTelemetryResult): Promise<void>
+
+  /**
+   * Updates the state of a machine in the core REST API.
+   * @param machineId The ID of the machine to update.
+   * @param currentState The new state of the machine.
+   * @param anomalyDetails Optional details about any anomalies detected.
+   */
+  updateMachineState(
+    machineId: string,
+    currentState: string,
+    anomalyDetails?: string[]
+  ): Promise<MachineConfig>
 }
