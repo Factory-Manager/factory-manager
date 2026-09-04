@@ -63,4 +63,36 @@ export class HttpCoreRestService implements CoreRestService {
       throw new Error(`Core REST returned ${response.status}: ${body}`)
     }
   }
+
+  async updateMachineState(
+    machineId: string,
+    currentState: string,
+    anomalyDetails: string[] = []
+  ): Promise<MachineConfig> {
+    const url = `${this.baseUrl}/api/machines/${machineId}/state`
+
+    this.logger.info(
+      `Updating machine state for machine ${machineId} to ${currentState} via Core REST API at ${url}`
+    )
+
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Service-Token': this.serviceToken
+      },
+      body: JSON.stringify({
+        currentState,
+        anomalyDetails
+      })
+    })
+
+    if (!response.ok) {
+      const body = await response.text()
+      throw new Error(`Core REST returned ${response.status}: ${body}`)
+    }
+
+    const data: MachineDto = await response.json()
+    return toMachineConfig(data)
+  }
 }
