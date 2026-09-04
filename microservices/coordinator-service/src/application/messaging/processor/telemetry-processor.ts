@@ -31,5 +31,18 @@ export class TelemetryProcessor implements MessageProcessor {
     }
     const result = this.processTelemetry.execute(input, machineConfig)
     await this.coreRestService.publishTelemetry(result)
+
+    if (result.anomalies.length > 0) {
+      await this.coreRestService.updateMachineState(
+        input.machineId,
+        'anomaly',
+        result.anomalies.map((anomaly) => anomaly.sensorType)
+      )
+    } else {
+      await this.coreRestService.updateMachineState(
+        input.machineId,
+        'operational'
+      )
+    }
   }
 }
