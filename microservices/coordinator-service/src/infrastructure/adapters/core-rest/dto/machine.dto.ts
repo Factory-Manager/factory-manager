@@ -8,7 +8,7 @@ export interface MachineDto {
   }
 
   machineState: {
-    currentState: 'operational' | 'off' | 'anomaly'
+    currentState: string
     anomalyDetails: string[]
   }
 
