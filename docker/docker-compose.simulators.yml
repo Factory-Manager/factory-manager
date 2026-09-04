@@ -11,12 +11,16 @@ services:
       context: ../microservices/coordinator-service
     depends_on:
       - mqtt-broker
+      - core-rest-service
     environment:
+      NODE_ENV: development
       MQTT_URL: mqtt://mqtt-broker:1883
       MQTT_TOPIC: factory/telemetry
       INTERVAL_MS: 2000
       MQTT_HEARTBEAT_TOPIC: factory/heartbeat
       HEARTBEAT_INTERVAL_MS: 5000
+    volumes:
+      - coordinator_data:/app/data
 
   machine-simulator-1:
     build:
@@ -24,9 +28,16 @@ services:
     depends_on:
       - mqtt-broker
     environment:
-      MACHINE_ID: machine-1
+      NODE_ENV: development
+      MACHINE_ID: 6a8771c13ec0b58b0b1ac2af
       MQTT_URL: mqtt://mqtt-broker:1883
       MQTT_TOPIC: factory/telemetry
       INTERVAL_MS: 2000
       MQTT_HEARTBEAT_TOPIC: factory/heartbeat
       HEARTBEAT_INTERVAL_MS: 5000
+    volumes:
+      - simulator_data:/app/data
+
+volumes:
+  coordinator_data:
+  simulator_data:

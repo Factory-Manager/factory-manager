@@ -1,0 +1,98 @@
+import { CoreRestService } from '@/application/ports/core-rest-service'
+import { Logger } from '@/application/ports/logger'
+import { MachineConfig } from '@/domain'
+import { toMachineConfig } from './mapper/machine-config.mapper'
+import { MachineDto } from './dto/machine.dto'
+import { ProcessTelemetryResult } from '@/application/telemetry/dto/process-telemetry-result'
+import { toTelemetryDto } from './mapper/telemetry.mapper'
+
+export class HttpCoreRestService implements CoreRestService {
+  constructor(
+    private readonly baseUrl: string,
+    private readonly serviceToken: string,
+    private readonly logger: Logger
+  ) {}
+
+  async getMachineConfigs(params: {
+    limit: number
+    offset: number
+  }): Promise<MachineConfig[]> {
+    const searchParams = new URLSearchParams({
+      limit: params.limit.toString(),
+      offset: params.offset.toString()
+    })
+    const url = `${this.baseUrl}/api/machines?${searchParams.toString()}`
+
+    this.logger.info(`Getting machine configs via Core REST API at ${url}`)
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Service-Token': this.serviceToken
+      }
+    })
+
+    if (!response.ok) {
+      const body = await response.text()
+      throw new Error(`Core REST returned ${response.status}: ${body}`)
+    }
+
+    const data: MachineDto[] = await response.json()
+    return data.map(toMachineConfig)
+  }
+
+  async publishTelemetry(telemetryData: ProcessTelemetryResult): Promise<void> {
+    const url = `${this.baseUrl}/api/telemetry`
+
+    this.logger.info(`Publishing telemetry data via Core REST API at ${url}`)
+
+    const dto = toTelemetryDto(telemetryData)
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Service-Token': this.serviceToken
+      },
+      body: JSON.stringify(dto)
+    })
+
+    if (!response.ok) {
+      const body = await response.text()
+      throw new Error(`Core REST returned ${response.status}: ${body}`)
+    }
+  }
+
+  async updateMachineState(
+    machineId: string,
+    currentState: string,
+    anomalyDetails: string[] = []
+  ): Promise<MachineConfig> {
+    const url = `${this.baseUrl}/api/machines/${machineId}/state`
+
+    this.logger.info(
+      `Updating machine state for machine ${machineId} to ${currentState} via Core REST API at ${url}`
+    )
+
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Service-Token': this.serviceToken
+      },
+      body: JSON.stringify({
+        currentState,
+        anomalyDetails
+      })
+    })
+
+    if (!response.ok) {
+      const body = await response.text()
+      throw new Error(`Core REST returned ${response.status}: ${body}`)
+    }
+
+    const data: MachineDto = await response.json()
+    return toMachineConfig(data)
+  }
+}

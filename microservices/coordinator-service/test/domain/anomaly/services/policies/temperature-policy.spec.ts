@@ -11,7 +11,9 @@ describe('TemperaturePolicy', () => {
   it('should return an anomaly with correct details when temperature is over the maximum limit', () => {
     const policy = new TemperaturePolicy()
     const event: TelemetryEvent = {
+      eventId: 'test-event-id',
       machineId: MACHINE_VALUES.ID,
+      sequenceNumber: MACHINE_VALUES.SEQUENCE_NUMBER,
       occurredAt: new Date('2025-12-31T23:59:00.000Z'),
       processedAt: new Date('2026-01-01T00:00:00.000Z'),
       operatingTemperature: MACHINE_VALUES.TEMPERATURE.OVER,
@@ -35,7 +37,9 @@ describe('TemperaturePolicy', () => {
   it('should detect temperature anomalies under the minimum limit', () => {
     const policy = new TemperaturePolicy()
     const event: TelemetryEvent = {
+      eventId: 'test-event-id',
       machineId: MACHINE_VALUES.ID,
+      sequenceNumber: MACHINE_VALUES.SEQUENCE_NUMBER,
       occurredAt: new Date('2025-12-31T23:59:00.000Z'),
       processedAt: new Date('2026-01-01T00:00:00.000Z'),
       operatingTemperature: MACHINE_VALUES.TEMPERATURE.UNDER,
@@ -59,7 +63,9 @@ describe('TemperaturePolicy', () => {
   it('should not detect any anomaly when temperature is within limits', () => {
     const policy = new TemperaturePolicy()
     const event: TelemetryEvent = {
+      eventId: 'test-event-id',
       machineId: MACHINE_VALUES.ID,
+      sequenceNumber: MACHINE_VALUES.SEQUENCE_NUMBER,
       occurredAt: new Date('2025-12-31T23:59:00.000Z'),
       processedAt: new Date('2026-01-01T00:00:00.000Z'),
       operatingTemperature: MACHINE_VALUES.TEMPERATURE.SAFE,

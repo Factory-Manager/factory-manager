@@ -1,5 +1,6 @@
 export type TelemetryInput = {
   machineId: string
+  sequenceNumber: number
   occurredAt: string
   operatingTemperature: string
   powerConsumption: string

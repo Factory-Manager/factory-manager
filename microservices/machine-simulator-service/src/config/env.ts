@@ -3,7 +3,15 @@ import type { TelemetryConfig } from '../types/telemetry-config'
 
 dotenv.config()
 
+export type NodeEnv = 'development' | 'production'
+
+function toNodeEnv(value?: string): NodeEnv {
+  if (value === 'production') return 'production'
+  return 'development'
+}
+
 export type AppConfig = {
+  nodeEnv: NodeEnv
   mqtt: {
     url: string
     topic: string
@@ -11,11 +19,13 @@ export type AppConfig = {
   }
   intervalMs: number
   heartbeatIntervalMs: number
+  outboxDbPath: string
   telemetry: TelemetryConfig
 }
 
 export function getConfig(): AppConfig {
   return {
+    nodeEnv: toNodeEnv(process.env.NODE_ENV),
     mqtt: {
       url: process.env.MQTT_URL!,
       topic: process.env.MQTT_TOPIC!,
@@ -23,7 +33,7 @@ export function getConfig(): AppConfig {
     },
     intervalMs: Number(process.env.INTERVAL_MS!),
     heartbeatIntervalMs: Number(process.env.HEARTBEAT_INTERVAL_MS!),
-
+    outboxDbPath: process.env.OUTBOX_DB_PATH!,
     telemetry: {
       machineId: process.env.MACHINE_ID!,
 

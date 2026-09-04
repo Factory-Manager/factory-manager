@@ -3,12 +3,17 @@ import { SystemClock } from '../infrastructure/time/system-clock'
 import type { TelemetryEvent } from '../types/telemetry-event'
 import { random } from '../utils/random'
 
+let sequenceNumber: number = 0
+
 export function generateTelemetry(
   config: TelemetryConfig,
   clock: SystemClock
 ): TelemetryEvent {
+  sequenceNumber++
+
   return {
     machineId: config.machineId,
+    sequenceNumber,
     occurredAt: clock.now().toISOString(),
     operatingTemperature: random(
       config.operatingTemperature.min,

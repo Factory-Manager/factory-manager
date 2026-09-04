@@ -8,9 +8,12 @@ import { Vibration } from '@/domain/machine/value-objects/vibration'
 import { Pressure } from '@/domain/machine/value-objects/pressure'
 
 import { MACHINE_LIMITS } from '../constants/machine-limits'
+import { MachineId } from '@/domain/machine/value-objects/machine-id'
 
 export function fakeConfig(overrides?: any): MachineConfig {
   return new MachineConfig(
+    new MachineId(overrides?.machineId ?? 'fake-machine-id'),
+
     new Range(
       new Temperature(
         overrides?.temperature?.min ?? MACHINE_LIMITS.TEMPERATURE.MIN
