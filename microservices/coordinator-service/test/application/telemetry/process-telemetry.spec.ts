@@ -25,6 +25,7 @@ describe('ProcessTelemetry', () => {
 
     const input: TelemetryInput = {
       machineId: MACHINE_VALUES.ID,
+      sequenceNumber: MACHINE_VALUES.SEQUENCE_NUMBER,
       occurredAt: occurredAtDate.toISOString(),
       operatingTemperature: MACHINE_VALUES.TEMPERATURE.SAFE.toString(),
       powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE.toString(),
@@ -62,6 +63,7 @@ describe('ProcessTelemetry', () => {
 
     const input: TelemetryInput = {
       machineId: MACHINE_VALUES.ID,
+      sequenceNumber: MACHINE_VALUES.SEQUENCE_NUMBER,
       occurredAt: occurredAtDate.toISOString(),
       operatingTemperature: MACHINE_VALUES.TEMPERATURE.OVER.toString(),
       powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE.toString(),
@@ -98,6 +100,7 @@ describe('ProcessTelemetry', () => {
 
     const input: TelemetryInput = {
       machineId: '',
+      sequenceNumber: MACHINE_VALUES.SEQUENCE_NUMBER,
       occurredAt: occurredAtDate.toISOString(),
       operatingTemperature: MACHINE_VALUES.TEMPERATURE.SAFE.toString(),
       powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE.toString(),
@@ -122,6 +125,7 @@ describe('ProcessTelemetry', () => {
 
     const input: TelemetryInput = {
       machineId: MACHINE_VALUES.ID,
+      sequenceNumber: MACHINE_VALUES.SEQUENCE_NUMBER,
       occurredAt: 'invalid-date',
       operatingTemperature: MACHINE_VALUES.TEMPERATURE.SAFE.toString(),
       powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE.toString(),
@@ -146,6 +150,7 @@ describe('ProcessTelemetry', () => {
 
     const input: TelemetryInput = {
       machineId: MACHINE_VALUES.ID,
+      sequenceNumber: MACHINE_VALUES.SEQUENCE_NUMBER,
       occurredAt: occurredAtDate.toISOString(),
       operatingTemperature: 'NaN',
       powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE.toString(),
