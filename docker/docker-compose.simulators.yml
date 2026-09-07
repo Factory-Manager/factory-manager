@@ -35,6 +35,7 @@ services:
       INTERVAL_MS: 2000
       MQTT_HEARTBEAT_TOPIC: factory/heartbeat
       HEARTBEAT_INTERVAL_MS: 5000
+      ANOMALIES: ${ANOMALIES:-}
     volumes:
       - simulator_data:/app/data
 
