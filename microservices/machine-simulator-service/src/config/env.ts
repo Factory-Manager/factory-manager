@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import type { TelemetryConfig } from '../types/telemetry-config'
+import type { AnomalyType, TelemetryConfig } from '../types/telemetry-config'
 
 dotenv.config()
 
@@ -8,6 +8,30 @@ export type NodeEnv = 'development' | 'production'
 function toNodeEnv(value?: string): NodeEnv {
   if (value === 'production') return 'production'
   return 'development'
+}
+
+function parseAnomalies(value?: string): AnomalyType[] {
+  if (!value) return []
+
+  const validAnomalies: AnomalyType[] = [
+    'temperature',
+    'vibration',
+    'pressure',
+    'powerConsumption',
+    'emissions'
+  ]
+
+  const anomalies = value
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean)
+
+  for (const anomaly of anomalies) {
+    if (!validAnomalies.includes(anomaly as AnomalyType)) {
+      throw new Error(`Invalid anomaly type: ${anomaly}`)
+    }
+  }
+  return anomalies as AnomalyType[]
 }
 
 export type AppConfig = {
@@ -60,7 +84,9 @@ export function getConfig(): AppConfig {
       pressure: {
         min: Number(process.env.PRESSURE_MIN!),
         max: Number(process.env.PRESSURE_MAX!)
-      }
+      },
+
+      anomalies: parseAnomalies(process.env.ANOMALIES)
     }
   }
 }
