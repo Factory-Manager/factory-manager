@@ -21,6 +21,7 @@ import { HttpCoreRestService } from './infrastructure/adapters/core-rest/http-re
 import { VibrationPolicy } from './domain/anomaly/services/policies/vibration-policy'
 import { PressurePolicy } from './domain/anomaly/services/policies/pressure-policy'
 import { EmissionPolicy } from './domain/anomaly/services/policies/emission-policy'
+import { PowerConsumptionPolicy } from './domain/anomaly/services/policies/power-consumption-policy'
 
 async function bootstrap() {
   const config = getConfig()
@@ -48,7 +49,8 @@ async function bootstrap() {
     new TemperaturePolicy(),
     new VibrationPolicy(),
     new PressurePolicy(),
-    new EmissionPolicy()
+    new EmissionPolicy(),
+    new PowerConsumptionPolicy()
   ]
   const anomalyDetector = new AnomalyDetector(policies)
   const processTelemetry = new ProcessTelemetry(anomalyDetector, clock, logger)
