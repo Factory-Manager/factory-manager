@@ -93,4 +93,19 @@ describe('generateTelemetry', () => {
       testConfig.operatingTemperature.max
     )
   })
+
+  it('should generate telemetry with multiple anomalies if specified', () => {
+    const testConfigWithAnomalies = {
+      ...testConfig,
+      anomalies: ['operatingTemperature', 'vibration'] as AnomalyType[]
+    }
+    const telemetryEvent: TelemetryEvent = generateTelemetry(
+      testConfigWithAnomalies,
+      fakeClock
+    )
+    expect(telemetryEvent.operatingTemperature).toBeGreaterThan(
+      testConfig.operatingTemperature.max
+    )
+    expect(telemetryEvent.vibration).toBeGreaterThan(testConfig.vibration.max)
+  })
 })
