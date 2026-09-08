@@ -19,6 +19,7 @@ import { HeartbeatTimeoutPolicy } from './domain/machine/policies/heatbeat-timeo
 import { HeartbeatMonitor } from './application/workers/heartbeat-monitor'
 import { HttpCoreRestService } from './infrastructure/adapters/core-rest/http-rest-core-service'
 import { VibrationPolicy } from './domain/anomaly/services/policies/vibration-policy'
+import { PressurePolicy } from './domain/anomaly/services/policies/pressure-policy'
 
 async function bootstrap() {
   const config = getConfig()
@@ -42,7 +43,11 @@ async function bootstrap() {
     baseLogger.child({ service: 'http-core-rest-service' })
   )
 
-  const policies = [new TemperaturePolicy(), new VibrationPolicy()]
+  const policies = [
+    new TemperaturePolicy(),
+    new VibrationPolicy(),
+    new PressurePolicy()
+  ]
   const anomalyDetector = new AnomalyDetector(policies)
   const processTelemetry = new ProcessTelemetry(anomalyDetector, clock, logger)
   const processHeartbeat = new ProcessHeartbeat(clock, logger)
