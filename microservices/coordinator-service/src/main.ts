@@ -20,7 +20,7 @@ import { HeartbeatMonitor } from './application/workers/heartbeat-monitor'
 import { HttpCoreRestService } from './infrastructure/adapters/core-rest/http-rest-core-service'
 import { VibrationPolicy } from './domain/anomaly/services/policies/vibration-policy'
 import { PressurePolicy } from './domain/anomaly/services/policies/pressure-policy'
-import { EmissionPolicy } from './domain/anomaly/services/policies/emissions-policy'
+import { EmissionPolicy } from './domain/anomaly/services/policies/emission-policy'
 
 async function bootstrap() {
   const config = getConfig()
