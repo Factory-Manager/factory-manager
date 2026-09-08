@@ -18,6 +18,7 @@ import { SqliteHeartbeatRepository } from './infrastructure/persistence/sqlite/s
 import { HeartbeatTimeoutPolicy } from './domain/machine/policies/heatbeat-timeout-policy'
 import { HeartbeatMonitor } from './application/workers/heartbeat-monitor'
 import { HttpCoreRestService } from './infrastructure/adapters/core-rest/http-rest-core-service'
+import { VibrationPolicy } from './domain/anomaly/services/policies/vibration-policy'
 
 async function bootstrap() {
   const config = getConfig()
@@ -41,7 +42,7 @@ async function bootstrap() {
     baseLogger.child({ service: 'http-core-rest-service' })
   )
 
-  const policies = [new TemperaturePolicy()]
+  const policies = [new TemperaturePolicy(), new VibrationPolicy()]
   const anomalyDetector = new AnomalyDetector(policies)
   const processTelemetry = new ProcessTelemetry(anomalyDetector, clock, logger)
   const processHeartbeat = new ProcessHeartbeat(clock, logger)
