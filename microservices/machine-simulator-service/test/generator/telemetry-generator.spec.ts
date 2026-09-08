@@ -83,7 +83,7 @@ describe('generateTelemetry', () => {
   it('should generate telemetry with anomalies if specified', () => {
     const testConfigWithAnomalies = {
       ...testConfig,
-      anomalies: ['temperature'] as AnomalyType[]
+      anomalies: ['operatingTemperature'] as AnomalyType[]
     }
     const telemetryEvent: TelemetryEvent = generateTelemetry(
       testConfigWithAnomalies,
