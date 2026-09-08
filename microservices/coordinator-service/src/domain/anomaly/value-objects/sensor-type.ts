@@ -1,7 +1,7 @@
 export enum SensorType {
-  TEMPERATURE = 'TEMPERATURE',
-  VIBRATION = 'VIBRATION',
-  PRESSURE = 'PRESSURE',
-  EMISSIONS = 'EMISSIONS',
-  POWER_CONSUMPTION = 'POWER_CONSUMPTION'
+  TEMPERATURE = 'operatingTemperature',
+  VIBRATION = 'vibration',
+  PRESSURE = 'pressure',
+  EMISSIONS = 'emissions',
+  POWER_CONSUMPTION = 'powerConsumption'
 }

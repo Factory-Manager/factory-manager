@@ -12,7 +12,9 @@ describe('AnomalyDetector', () => {
     const detector = new AnomalyDetector([new TemperaturePolicy()])
 
     const event: TelemetryEvent = {
+      eventId: 'event-1',
       machineId: MACHINE_VALUES.ID,
+      sequenceNumber: 1,
       occurredAt: new Date('2025-12-31T23:59:00.000Z'),
       processedAt: new Date('2026-01-01T00:00:00Z'),
       operatingTemperature: MACHINE_VALUES.TEMPERATURE.OVER,
@@ -29,14 +31,16 @@ describe('AnomalyDetector', () => {
     })
     const anomalies = detector.detect(event, config)
     expect(anomalies).toHaveLength(1)
-    expect(anomalies[0].sensorType).toBe('TEMPERATURE')
+    expect(anomalies[0].sensorType).toBe('operatingTemperature')
     expect(anomalies[0].value).toBe(event.operatingTemperature)
   })
 
   it('should return an empty array when no policies detect anomalies', () => {
     const detector = new AnomalyDetector([new TemperaturePolicy()])
     const event: TelemetryEvent = {
+      eventId: 'event-1',
       machineId: MACHINE_VALUES.ID,
+      sequenceNumber: 1,
       occurredAt: new Date('2025-12-31T23:59:00.000Z'),
       processedAt: new Date('2026-01-01T00:00:00Z'),
       operatingTemperature: MACHINE_VALUES.TEMPERATURE.SAFE,

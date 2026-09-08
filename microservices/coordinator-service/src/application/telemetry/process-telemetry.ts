@@ -5,6 +5,7 @@ import { Logger } from '../ports/logger'
 import { ProcessTelemetryResult } from './dto/process-telemetry-result'
 import { TelemetryEvent } from './dto/telemetry-event'
 import { TelemetryInput } from './dto/telemetry-input'
+import { randomUUID } from 'crypto'
 
 export class ProcessTelemetry {
   constructor(
@@ -33,7 +34,9 @@ export class ProcessTelemetry {
     this.logger.info('Processing telemetry data', input)
 
     const event: TelemetryEvent = {
+      eventId: randomUUID(),
       machineId,
+      sequenceNumber: input.sequenceNumber,
       occurredAt,
       processedAt: this.clock.now(),
       operatingTemperature: toFiniteNumber(

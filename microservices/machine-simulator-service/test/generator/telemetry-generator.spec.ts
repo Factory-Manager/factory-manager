@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { generateTelemetry } from '../../src/generator/telemetry-generator'
 import type { TelemetryEvent } from '../../src/types/telemetry-event'
 import { MACHINE_LIMITS } from '../constants/machine-limits'
+import { AnomalyType } from '../../src/types/telemetry-config'
 
 describe('generateTelemetry', () => {
   const fakeClock = { now: () => new Date('2026-01-01T00:00:00Z') }
@@ -26,7 +27,8 @@ describe('generateTelemetry', () => {
     pressure: {
       min: MACHINE_LIMITS.PRESSURE.MIN,
       max: MACHINE_LIMITS.PRESSURE.MAX
-    }
+    },
+    anomalies: []
   }
 
   it('should generate telemetry with correct structure', () => {
@@ -76,5 +78,34 @@ describe('generateTelemetry', () => {
       testConfig.pressure.min
     )
     expect(telemetryEvent.pressure).toBeLessThanOrEqual(testConfig.pressure.max)
+  })
+
+  it('should generate telemetry with anomalies if specified', () => {
+    const testConfigWithAnomalies = {
+      ...testConfig,
+      anomalies: ['operatingTemperature'] as AnomalyType[]
+    }
+    const telemetryEvent: TelemetryEvent = generateTelemetry(
+      testConfigWithAnomalies,
+      fakeClock
+    )
+    expect(telemetryEvent.operatingTemperature).toBeGreaterThan(
+      testConfig.operatingTemperature.max
+    )
+  })
+
+  it('should generate telemetry with multiple anomalies if specified', () => {
+    const testConfigWithAnomalies = {
+      ...testConfig,
+      anomalies: ['operatingTemperature', 'vibration'] as AnomalyType[]
+    }
+    const telemetryEvent: TelemetryEvent = generateTelemetry(
+      testConfigWithAnomalies,
+      fakeClock
+    )
+    expect(telemetryEvent.operatingTemperature).toBeGreaterThan(
+      testConfig.operatingTemperature.max
+    )
+    expect(telemetryEvent.vibration).toBeGreaterThan(testConfig.vibration.max)
   })
 })

@@ -5,8 +5,8 @@ export function createMqttConsumer(url: string, logger: Logger) {
   const base = createMqttClient(url, logger)
 
   return {
-    subscribe(topic: string) {
-      base.client.subscribe(topic, (err) => {
+    subscribe(topic: string, options?: { qos: 0 | 1 | 2 }) {
+      base.client.subscribe(topic, options, (err) => {
         if (err) {
           logger.error('subscribe failed', { topic, err })
           return

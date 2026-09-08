@@ -182,3 +182,5 @@ dist
 **/docs/
 **/html/
 **/coverage/
+
+**/data/*.db

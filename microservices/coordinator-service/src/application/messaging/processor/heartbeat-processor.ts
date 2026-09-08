@@ -1,12 +1,11 @@
 import { MessageProcessor } from '@/application/messaging/message-processor'
 import { ProcessHeartbeat } from '../../heartbeat/process-heartbeat'
 import { HeartbeatInput } from '../../heartbeat/dto/heartbeat-input'
-import { HeartbeatMessageMapper } from '../../heartbeat/mapper/map-heartbeat-message'
+import { InboxMessage } from '@/infrastructure/persistence/sqlite/models/inbox-message'
 
 export class HeartbeatProcessor implements MessageProcessor {
   constructor(
     private readonly processHeartbeat: ProcessHeartbeat,
-    private readonly heartbeatMessageMapper: HeartbeatMessageMapper,
     private readonly heartbeatTopicPrefix: string
   ) {}
 
@@ -17,11 +16,11 @@ export class HeartbeatProcessor implements MessageProcessor {
     return topic.startsWith(prefix)
   }
 
-  process(topic: string, message: Buffer): void {
-    const input: HeartbeatInput = this.heartbeatMessageMapper.map(
-      topic,
-      message
-    )
+  async process(inboxMessage: InboxMessage): Promise<void> {
+    const input: HeartbeatInput = {
+      machineId: inboxMessage.topic.split('/').pop(),
+      ...JSON.parse(inboxMessage.payload.toString())
+    }
     this.processHeartbeat.execute(input)
   }
 }
