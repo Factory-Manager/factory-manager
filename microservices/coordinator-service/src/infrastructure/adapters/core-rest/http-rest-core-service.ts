@@ -5,6 +5,7 @@ import { toMachineConfig } from './mapper/machine-config.mapper'
 import { MachineDto } from './dto/machine.dto'
 import { ProcessTelemetryResult } from '@/application/telemetry/dto/process-telemetry-result'
 import { toTelemetryDto } from './mapper/telemetry.mapper'
+import { MachineNotFoundError } from '@/application/errors/machine-not-found.error'
 
 export class HttpCoreRestService implements CoreRestService {
   constructor(
@@ -86,6 +87,10 @@ export class HttpCoreRestService implements CoreRestService {
         anomalyDetails
       })
     })
+
+    if (response.status === 404) {
+      throw new MachineNotFoundError(machineId)
+    }
 
     if (!response.ok) {
       const body = await response.text()
