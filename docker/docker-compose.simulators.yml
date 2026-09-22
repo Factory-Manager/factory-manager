@@ -22,14 +22,14 @@ services:
     volumes:
       - coordinator_data:/app/data
 
-  machine-simulator-1:
+  machine-simulator:
     build:
       context: ../microservices/machine-simulator-service
     depends_on:
       - mqtt-broker
     environment:
       NODE_ENV: development
-      MACHINE_ID: 6a8771c13ec0b58b0b1ac2af
+      MACHINE_ID: ${MACHINE_ID}
       MQTT_URL: mqtt://mqtt-broker:1883
       MQTT_TOPIC: factory/telemetry
       INTERVAL_MS: 2000
