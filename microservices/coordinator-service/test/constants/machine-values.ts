@@ -1,5 +1,10 @@
+export const MACHINE_IDS = {
+  DEFAULT: '6a8771c13ec0b58b0b1ac2af',
+  SECOND: '7a8771a63ec0b58b0b1ac2ae'
+} as const
+
 export const MACHINE_VALUES = {
-  ID: 'M1',
+  ID: MACHINE_IDS.DEFAULT,
 
   SEQUENCE_NUMBER: 1,
 

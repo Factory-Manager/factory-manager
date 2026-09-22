@@ -9,10 +9,11 @@ import { Pressure } from '@/domain/machine/value-objects/pressure'
 
 import { MACHINE_LIMITS } from '../constants/machine-limits'
 import { MachineId } from '@/domain/machine/value-objects/machine-id'
+import { MACHINE_IDS } from '@test/constants/machine-values'
 
 export function fakeConfig(overrides?: any): MachineConfig {
   return new MachineConfig(
-    new MachineId(overrides?.machineId ?? 'fake-machine-id'),
+    new MachineId(overrides?.machineId ?? MACHINE_IDS.DEFAULT),
 
     new Range(
       new Temperature(
