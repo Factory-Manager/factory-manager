@@ -4,6 +4,8 @@ import { ProcessTelemetry } from '../../telemetry/process-telemetry'
 import { TelemetryInput } from '../../telemetry/dto/telemetry-input'
 import { InboxMessage } from '@/infrastructure/persistence/sqlite/models/inbox-message'
 import { CoreRestService } from '@/application/ports/core-rest-service'
+import { ConfigurationNotFoundError } from '@/application/errors/configuration-not-found.error'
+import { MachineId } from '@/domain/machine/value-objects/machine-id'
 
 export class TelemetryProcessor implements MessageProcessor {
   constructor(
@@ -21,13 +23,16 @@ export class TelemetryProcessor implements MessageProcessor {
   }
 
   async process(inboxMessage: InboxMessage): Promise<void> {
+    const machineId = inboxMessage.topic.split('/').pop()
+    const payload = JSON.parse(inboxMessage.payload.toString())
     const input: TelemetryInput = {
-      machineId: inboxMessage.topic.split('/').pop(),
-      ...JSON.parse(inboxMessage.payload.toString())
+      machineId,
+      ...payload
     }
-    const machineConfig = this.machineConfigs.get(input.machineId)
+    const machineIdVO = new MachineId(input.machineId)
+    const machineConfig = this.machineConfigs.get(machineIdVO.value)
     if (!machineConfig) {
-      throw new Error(`No configuration found for machine: ${input.machineId}`)
+      throw new ConfigurationNotFoundError(machineIdVO.value)
     }
     const result = this.processTelemetry.execute(input, machineConfig)
     await this.coreRestService.publishTelemetry(result)

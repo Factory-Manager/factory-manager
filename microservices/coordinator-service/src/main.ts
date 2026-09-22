@@ -74,7 +74,11 @@ async function bootstrap() {
         config.mqtt.topic,
         coreRestService
       ),
-      new HeartbeatProcessor(processHeartbeat, config.mqtt.heartbeatTopic)
+      new HeartbeatProcessor(
+        processHeartbeat,
+        configsByMachineId,
+        config.mqtt.heartbeatTopic
+      )
     ],
     inboxRepository,
     clock,
@@ -103,11 +107,15 @@ async function bootstrap() {
   })
 
   setInterval(() => {
-    inboxWorker.run()
+    inboxWorker.run().catch((error) => {
+      logger.error('Telemetry processing failed', { error })
+    })
   }, 1000)
 
   setInterval(() => {
-    heartbeatMonitor.run()
+    heartbeatMonitor.run().catch((error) => {
+      logger.error('Heartbeat monitor failed', { error })
+    })
   }, 3000)
 }
 

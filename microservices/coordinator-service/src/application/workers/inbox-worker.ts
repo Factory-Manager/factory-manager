@@ -3,6 +3,8 @@ import { Logger } from '../ports/logger'
 import { InboxRepository } from '../ports/inbox.repository'
 import { InboxStatus } from '@/infrastructure/persistence/sqlite/models/inbox-message'
 import { Clock } from '../ports/clock'
+import { ConfigurationNotFoundError } from '../errors/configuration-not-found.error'
+import { InvalidMachineIdError } from '@/domain/machine/errors/invalid-machine-id.error'
 
 export class InboxWorker {
   constructor(
@@ -19,6 +21,11 @@ export class InboxWorker {
 
     for (const msg of messages) {
       const processor = this.processors.find((h) => h.canHandle(msg.topic))
+
+      this.logger.info('Processing message', {
+        eventId: msg.eventId,
+        topic: msg.topic
+      })
 
       if (!processor) {
         this.inboxRepository.updateStatus(
@@ -44,14 +51,30 @@ export class InboxWorker {
 
         this.logger.info('Message processed successfully', { msg })
       } catch (err) {
-        this.inboxRepository.updateStatus(
-          msg.eventId,
-          InboxStatus.PENDING,
-          msg.attempts + 1,
-          this.clock.now()
-        )
+        if (
+          err instanceof ConfigurationNotFoundError ||
+          err instanceof InvalidMachineIdError
+        ) {
+          this.inboxRepository.updateStatus(
+            msg.eventId,
+            InboxStatus.FAILED,
+            msg.attempts + 1,
+            this.clock.now()
+          )
+          this.logger.error('Configuration not found or invalid machine ID', {
+            err,
+            msg
+          })
+        } else {
+          this.inboxRepository.updateStatus(
+            msg.eventId,
+            InboxStatus.PENDING,
+            msg.attempts + 1,
+            this.clock.now()
+          )
 
-        this.logger.error('Message processing failed', { err, msg })
+          this.logger.error('Message processing failed', { err, msg })
+        }
       }
     }
   }
