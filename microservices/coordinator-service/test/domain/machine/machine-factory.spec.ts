@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { MachineFactory } from '@/domain/machine/machine-factory'
+import { MACHINE_IDS } from '@test/constants/machine-values'
 
 describe('MachineFactory', () => {
   it('should create a machine from sensors data', () => {
     const telemetryInput = {
-      id: 'M1',
+      id: MACHINE_IDS.DEFAULT,
       temperature: 50,
       powerConsumption: 100,
       emissions: 20,
@@ -22,7 +23,7 @@ describe('MachineFactory', () => {
     )
 
     expect(machine).toMatchObject({
-      id: expect.objectContaining({ value: 'M1' }),
+      id: expect.objectContaining({ value: MACHINE_IDS.DEFAULT }),
       temperature: expect.objectContaining({ value: 50 }),
       powerConsumption: expect.objectContaining({ value: 100 }),
       emissions: expect.objectContaining({ value: 20 }),

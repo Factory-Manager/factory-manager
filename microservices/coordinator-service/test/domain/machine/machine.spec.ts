@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { Machine } from '@/domain/machine/machine'
 import { fakeConfig } from '@test/utils/fake-config'
-import { MACHINE_VALUES } from '@test/constants/machine-values'
+import { MACHINE_IDS, MACHINE_VALUES } from '@test/constants/machine-values'
 import { MachineConfig } from '@/domain/machine/machine-config'
 import { MACHINE_LIMITS } from '@test/constants/machine-limits'
 import { fakeMachine } from '@test/utils/fake-machine'
@@ -9,7 +9,7 @@ import { fakeMachine } from '@test/utils/fake-machine'
 describe('Machine', () => {
   it('is equal to another machine with the same id', () => {
     const machine1 = fakeMachine({
-      id: 'M1',
+      id: MACHINE_VALUES.ID,
       temperature: MACHINE_VALUES.TEMPERATURE.SAFE,
       powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
       emissions: MACHINE_VALUES.EMISSION.SAFE,
@@ -17,7 +17,7 @@ describe('Machine', () => {
       pressure: MACHINE_VALUES.PRESSURE.SAFE
     })
     const machine2 = fakeMachine({
-      id: 'M1',
+      id: MACHINE_VALUES.ID,
       temperature: MACHINE_VALUES.TEMPERATURE.OVER,
       powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.OVER,
       emissions: MACHINE_VALUES.EMISSION.OVER,
@@ -28,8 +28,8 @@ describe('Machine', () => {
   })
 
   it('is not equal to another machine with different id', () => {
-    const machine1 = fakeMachine({ id: 'M1' })
-    const machine2 = fakeMachine({ id: 'M2' })
+    const machine1 = fakeMachine({ id: MACHINE_IDS.DEFAULT })
+    const machine2 = fakeMachine({ id: MACHINE_IDS.SECOND })
     expect(machine1.isEqual(machine2)).toBe(false)
   })
 
