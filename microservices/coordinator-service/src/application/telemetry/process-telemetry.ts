@@ -1,4 +1,4 @@
-import { MachineConfig } from '@/domain'
+import { MachineConfig, MachineFactory } from '@/domain'
 import { AnomalyDetector } from '@/domain/anomaly/services/anomaly-detector'
 import { Clock } from '../ports/clock'
 import { Logger } from '../ports/logger'
@@ -33,26 +33,41 @@ export class ProcessTelemetry {
     }
     this.logger.info('Processing telemetry data', input)
 
+    const operatingTemperature = toFiniteNumber(
+      input.operatingTemperature,
+      'operatingTemperature'
+    )
+    const powerConsumption = toFiniteNumber(
+      input.powerConsumption,
+      'powerConsumption'
+    )
+    const emissions = toFiniteNumber(input.emissions, 'emissions')
+    const vibration = toFiniteNumber(input.vibration, 'vibration')
+    const pressure = toFiniteNumber(input.pressure, 'pressure')
+
+    const machine = MachineFactory.createFromSensors(
+      machineId,
+      operatingTemperature,
+      powerConsumption,
+      emissions,
+      vibration,
+      pressure
+    )
+
     const event: TelemetryEvent = {
       eventId: randomUUID(),
       machineId,
       sequenceNumber: input.sequenceNumber,
       occurredAt,
       processedAt: this.clock.now(),
-      operatingTemperature: toFiniteNumber(
-        input.operatingTemperature,
-        'operatingTemperature'
-      ),
-      powerConsumption: toFiniteNumber(
-        input.powerConsumption,
-        'powerConsumption'
-      ),
-      emissions: toFiniteNumber(input.emissions, 'emissions'),
-      vibration: toFiniteNumber(input.vibration, 'vibration'),
-      pressure: toFiniteNumber(input.pressure, 'pressure')
+      operatingTemperature,
+      powerConsumption,
+      emissions,
+      vibration,
+      pressure
     }
 
-    const anomalies = this.anomalyDetector.detect(event, machineConfig)
+    const anomalies = this.anomalyDetector.detect(machine, machineConfig)
     if (anomalies.length > 0) {
       this.logger.warn('Anomalies detected', {
         machineId: event.machineId,

@@ -1,7 +1,7 @@
-import { TelemetryEvent } from '@/application/telemetry/dto/telemetry-event'
 import { MachineConfig } from '@/domain/machine/machine-config'
 import { Anomaly } from '@/domain/anomaly/anomaly'
+import { Machine } from '@/domain'
 
 export interface AnomalyPolicy {
-  evaluate(event: TelemetryEvent, config: MachineConfig): Anomaly[]
+  evaluate(event: Machine, config: MachineConfig): Anomaly[]
 }
