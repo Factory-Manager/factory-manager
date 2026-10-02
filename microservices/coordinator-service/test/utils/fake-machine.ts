@@ -8,13 +8,19 @@ export function fakeMachine(overrides?: {
   emissions?: number
   vibration?: number
   pressure?: number
+  occurredAt?: Date
+  processedAt?: Date
+  sequenceNumber?: number
 }) {
-  return MachineFactory.createFromSensors(
+  return MachineFactory.create(
     overrides?.id ?? MACHINE_VALUES.ID,
     overrides?.temperature ?? MACHINE_VALUES.TEMPERATURE.SAFE,
     overrides?.powerConsumption ?? MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
     overrides?.emissions ?? MACHINE_VALUES.EMISSION.SAFE,
     overrides?.vibration ?? MACHINE_VALUES.VIBRATION.SAFE,
-    overrides?.pressure ?? MACHINE_VALUES.PRESSURE.SAFE
+    overrides?.pressure ?? MACHINE_VALUES.PRESSURE.SAFE,
+    overrides?.occurredAt ?? MACHINE_VALUES.OCCURRED_AT,
+    overrides?.processedAt ?? MACHINE_VALUES.PROCESSED_AT,
+    overrides?.sequenceNumber ?? MACHINE_VALUES.SEQUENCE_NUMBER
   )
 }

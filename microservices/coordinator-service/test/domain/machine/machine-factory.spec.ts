@@ -13,13 +13,16 @@ describe('MachineFactory', () => {
       pressure: 5
     }
 
-    const machine = MachineFactory.createFromSensors(
+    const machine = MachineFactory.create(
       telemetryInput.id,
       telemetryInput.temperature,
       telemetryInput.powerConsumption,
       telemetryInput.emissions,
       telemetryInput.vibration,
-      telemetryInput.pressure
+      telemetryInput.pressure,
+      new Date('2025-12-31T23:59:00.000Z'),
+      new Date('2026-01-01T00:00:00Z'),
+      1
     )
 
     expect(machine).toMatchObject({

@@ -36,8 +36,8 @@ describe('ProcessTelemetry', () => {
 
     const result = useCase.execute(input, fakeConfig())
 
-    expect(result.event.machineId).toBe(MACHINE_VALUES.ID)
-    expect(result.event.operatingTemperature).toBe(
+    expect(result.machine.id.value).toBe(MACHINE_VALUES.ID)
+    expect(result.machine.temperature.value).toBe(
       MACHINE_VALUES.TEMPERATURE.SAFE
     )
     expect(result.anomalies).toHaveLength(0)
@@ -74,12 +74,12 @@ describe('ProcessTelemetry', () => {
 
     const result = useCase.execute(input, fakeConfig())
 
-    expect(result.event.machineId).toBe(MACHINE_VALUES.ID)
-    expect(result.event.operatingTemperature).toBe(
+    expect(result.machine.id.value).toBe(MACHINE_VALUES.ID)
+    expect(result.machine.temperature.value).toBe(
       MACHINE_VALUES.TEMPERATURE.OVER
     )
-    expect(result.event.occurredAt).toEqual(occurredAtDate)
-    expect(result.event.processedAt).toEqual(processedAtDate)
+    expect(result.machine.occurredAt).toEqual(occurredAtDate)
+    expect(result.machine.processedAt).toEqual(processedAtDate)
     expect(result.anomalies).toHaveLength(1)
     expect(result.anomalies[0].sensorType).toBe(SensorType.TEMPERATURE)
     expect(result.anomalies[0].value).toBe(MACHINE_VALUES.TEMPERATURE.OVER)

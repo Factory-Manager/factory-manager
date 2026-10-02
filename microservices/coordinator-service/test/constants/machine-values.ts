@@ -6,8 +6,6 @@ export const MACHINE_IDS = {
 export const MACHINE_VALUES = {
   ID: MACHINE_IDS.DEFAULT,
 
-  SEQUENCE_NUMBER: 1,
-
   TEMPERATURE: {
     SAFE: 55,
     OVER: 90,
@@ -32,5 +30,11 @@ export const MACHINE_VALUES = {
   PRESSURE: {
     SAFE: 6,
     OVER: 12
-  }
+  },
+
+  OCCURRED_AT: new Date('2025-12-31T23:59:00.000Z'),
+
+  PROCESSED_AT: new Date('2026-01-01T00:00:00Z'),
+
+  SEQUENCE_NUMBER: 1
 }
