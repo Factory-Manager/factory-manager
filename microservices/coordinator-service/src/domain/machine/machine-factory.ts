@@ -7,13 +7,16 @@ import { Vibration } from './value-objects/vibration'
 import { MachineId } from './value-objects/machine-id'
 
 export class MachineFactory {
-  static createFromSensors(
+  static create(
     id: string,
     temperature: number,
     powerConsumption: number,
     emissions: number,
     vibration: number,
-    pressure: number
+    pressure: number,
+    occurredAt: Date,
+    processedAt: Date,
+    sequenceNumber: number
   ): Machine {
     return new Machine(
       new MachineId(id),
@@ -21,7 +24,10 @@ export class MachineFactory {
       new PowerConsumption(powerConsumption),
       new Emission(emissions),
       new Vibration(vibration),
-      new Pressure(pressure)
+      new Pressure(pressure),
+      new Date(occurredAt),
+      new Date(processedAt),
+      sequenceNumber
     )
   }
 }

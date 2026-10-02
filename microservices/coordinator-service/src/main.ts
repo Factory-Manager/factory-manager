@@ -22,6 +22,7 @@ import { VibrationPolicy } from './domain/anomaly/services/policies/vibration-po
 import { PressurePolicy } from './domain/anomaly/services/policies/pressure-policy'
 import { EmissionPolicy } from './domain/anomaly/services/policies/emission-policy'
 import { PowerConsumptionPolicy } from './domain/anomaly/services/policies/power-consumption-policy'
+import { UUIDGenerator } from './infrastructure/adapters/uuid-generator'
 
 async function bootstrap() {
   const config = getConfig()
@@ -45,12 +46,14 @@ async function bootstrap() {
     baseLogger.child({ service: 'http-core-rest-service' })
   )
 
+  const generator = new UUIDGenerator()
+
   const policies = [
-    new TemperaturePolicy(),
-    new VibrationPolicy(),
-    new PressurePolicy(),
-    new EmissionPolicy(),
-    new PowerConsumptionPolicy()
+    new TemperaturePolicy(generator),
+    new VibrationPolicy(generator),
+    new PressurePolicy(generator),
+    new EmissionPolicy(generator),
+    new PowerConsumptionPolicy(generator)
   ]
   const anomalyDetector = new AnomalyDetector(policies)
   const processTelemetry = new ProcessTelemetry(anomalyDetector, clock, logger)
