@@ -1,3 +1,5 @@
+import { InboxMessage } from '@/infrastructure/persistence/sqlite/models/inbox-message'
+
 /**
  * Interface for processing messages based on their topic.
  */
@@ -10,9 +12,8 @@ export interface MessageProcessor {
   canHandle(topic: string): boolean
 
   /**
-   * Processes the message for the given topic.
-   * @param topic The topic of the message.
-   * @param message The message payload as a Buffer.
+   * Processes the incoming message.
+   * @param inboxMessage  The inbox message to be processed.
    */
-  process(topic: string, message: Buffer): void
+  process(inboxMessage: InboxMessage): Promise<void>
 }

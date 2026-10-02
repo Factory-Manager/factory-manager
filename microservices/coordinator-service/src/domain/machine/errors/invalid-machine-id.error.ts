@@ -1,6 +1,6 @@
 export class InvalidMachineIdError extends Error {
-  constructor() {
-    super('MachineId cannot be empty')
+  constructor(machineId: string) {
+    super(`MachineId must be a 24-character hexadecimal string: ${machineId}`)
     this.name = 'InvalidMachineIdError'
   }
 }

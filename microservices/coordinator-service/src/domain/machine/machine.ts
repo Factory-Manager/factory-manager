@@ -25,7 +25,10 @@ export class Machine {
     public powerConsumption: PowerConsumption,
     public emissions: Emission,
     public vibration: Vibration,
-    public pressure: Pressure
+    public pressure: Pressure,
+    public occurredAt: Date,
+    public processedAt: Date,
+    public sequenceNumber: number
   ) {}
 
   /**

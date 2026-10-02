@@ -1,25 +1,23 @@
-import { randomUUID } from 'crypto'
-import { TelemetryEvent } from '@/application/telemetry/dto/telemetry-event'
 import { MachineConfig } from '@/domain/machine/machine-config'
-import { MachineId } from '@/domain/machine/value-objects/machine-id'
 import { Anomaly } from '@/domain/anomaly/anomaly'
 import { AnomalyEventId } from '@/domain/anomaly/value-objects/anomaly-event-id'
 import { SensorType } from '@/domain/anomaly/value-objects/sensor-type'
 import { AnomalyPolicy } from './anomaly-policy'
-import { Temperature } from '@/domain/machine/value-objects/temperature'
+import { Machine } from '@/domain/machine/machine'
+import { IdGenerator } from '@/domain/ports/id-generator'
 
 export class TemperaturePolicy implements AnomalyPolicy {
-  evaluate(event: TelemetryEvent, config: MachineConfig): Anomaly[] {
+  constructor(private readonly generator: IdGenerator) {}
+
+  evaluate(event: Machine, config: MachineConfig): Anomaly[] {
     const anomalies: Anomaly[] = []
-    if (
-      !config.temperature.contains(new Temperature(event.operatingTemperature))
-    ) {
+    if (!config.temperature.contains(event.temperature)) {
       anomalies.push(
         new Anomaly(
-          new AnomalyEventId(randomUUID()),
-          new MachineId(event.machineId),
+          new AnomalyEventId(this.generator.generateId()),
+          event.id,
           SensorType.TEMPERATURE,
-          event.operatingTemperature,
+          event.temperature.value,
           event.occurredAt,
           event.processedAt
         )

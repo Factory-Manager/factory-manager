@@ -2,14 +2,17 @@ import { MessageProcessor } from '@/application/messaging/message-processor'
 import { MachineConfig } from '@/domain/machine/machine-config'
 import { ProcessTelemetry } from '../../telemetry/process-telemetry'
 import { TelemetryInput } from '../../telemetry/dto/telemetry-input'
-import { TelemetryMessageMapper } from '../../telemetry/mapper/map-telemetry-message'
+import { InboxMessage } from '@/infrastructure/persistence/sqlite/models/inbox-message'
+import { CoreRestService } from '@/application/ports/core-rest-service'
+import { ConfigurationNotFoundError } from '@/application/errors/configuration-not-found.error'
+import { MachineId } from '@/domain/machine/value-objects/machine-id'
 
 export class TelemetryProcessor implements MessageProcessor {
   constructor(
     private readonly processTelemetry: ProcessTelemetry,
-    private readonly machineConfig: MachineConfig,
-    private readonly telemetryMessageMapper: TelemetryMessageMapper,
-    private readonly telemetryTopicPrefix: string
+    private readonly machineConfigs: Map<string, MachineConfig>,
+    private readonly telemetryTopicPrefix: string,
+    private readonly coreRestService: CoreRestService
   ) {}
 
   canHandle(topic: string): boolean {
@@ -19,11 +22,32 @@ export class TelemetryProcessor implements MessageProcessor {
     return topic.startsWith(prefix)
   }
 
-  process(topic: string, message: Buffer): void {
-    const input: TelemetryInput = this.telemetryMessageMapper.map(
-      topic,
-      message
-    )
-    this.processTelemetry.execute(input, this.machineConfig)
+  async process(inboxMessage: InboxMessage): Promise<void> {
+    const machineId = inboxMessage.topic.split('/').pop()
+    const payload = JSON.parse(inboxMessage.payload.toString())
+    const input: TelemetryInput = {
+      machineId,
+      ...payload
+    }
+    const machineIdVO = new MachineId(input.machineId)
+    const machineConfig = this.machineConfigs.get(machineIdVO.value)
+    if (!machineConfig) {
+      throw new ConfigurationNotFoundError(machineIdVO.value)
+    }
+    const result = this.processTelemetry.execute(input, machineConfig)
+    await this.coreRestService.publishTelemetry(result)
+
+    if (result.anomalies.length > 0) {
+      await this.coreRestService.updateMachineState(
+        input.machineId,
+        'anomaly',
+        result.anomalies.map((anomaly) => anomaly.sensorType)
+      )
+    } else {
+      await this.coreRestService.updateMachineState(
+        input.machineId,
+        'operational'
+      )
+    }
   }
 }
