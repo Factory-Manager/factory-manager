@@ -1,7 +1,7 @@
 import { MessageProcessor } from '@/application/messaging/message-processor'
 import { ProcessHeartbeat } from '../../heartbeat/process-heartbeat'
 import { HeartbeatInput } from '../../heartbeat/dto/heartbeat-input'
-import { InboxMessage } from '@/infrastructure/persistence/sqlite/models/inbox-message'
+import { InboxMessage } from '@/application/messaging/inbox-message'
 import { MachineConfig } from '@/domain/machine/machine-config'
 import { MachineId } from '@/domain/machine/value-objects/machine-id'
 import { ConfigurationNotFoundError } from '@/application/errors/configuration-not-found.error'

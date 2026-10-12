@@ -1,4 +1,4 @@
-import { InboxMessage } from '@/infrastructure/persistence/sqlite/models/inbox-message'
+import { InboxMessage } from '@/application/messaging/inbox-message'
 
 /**
  * Interface for processing messages based on their topic.

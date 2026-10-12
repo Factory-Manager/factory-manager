@@ -1,7 +1,7 @@
 import {
   InboxMessage,
   InboxStatus
-} from '@/infrastructure/persistence/sqlite/models/inbox-message'
+} from '@/application/messaging/inbox-message'
 import { InboxRepository } from '@/application/ports/inbox.repository'
 import { Database } from 'better-sqlite3'
 
@@ -10,8 +10,8 @@ export class SqliteInboxRepository implements InboxRepository {
   save(message: InboxMessage): void {
     const query = `
       INSERT OR IGNORE INTO coordinator_inbox (
-        event_id, 
-        topic, 
+        event_id,
+        topic,
         payload,
         status,
         attempts,
@@ -54,7 +54,7 @@ export class SqliteInboxRepository implements InboxRepository {
 
   findPending(): InboxMessage[] {
     const query = `
-    SELECT 
+    SELECT
       event_id,
       topic,
       payload,

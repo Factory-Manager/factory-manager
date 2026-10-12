@@ -3,7 +3,7 @@ import { InboxRepository } from '../ports/inbox.repository'
 import {
   InboxMessage,
   InboxStatus
-} from '@/infrastructure/persistence/sqlite/models/inbox-message'
+} from '@/application/messaging/inbox-message'
 import { IncomingMessage } from './incoming-message'
 
 export class InboxReceiver {
