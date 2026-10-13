@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { createAnomalyDetectorMock } from '@test/mocks/anomaly-detector.mock'
 import { createLoggerMock } from '@test/mocks/logger.mock'
 import { fakeConfig } from '@test/utils/fake-config'
@@ -10,6 +10,9 @@ import { TelemetryInput } from '@/application/telemetry/dto/telemetry-input'
 describe('ProcessTelemetry', () => {
   const occurredAtDate: Date = new Date('2025-12-31T23:59:00.000Z')
   const processedAtDate: Date = new Date('2026-01-01T00:00:00.000Z')
+  const fakeGenerator = {
+    generateId: vi.fn(() => MACHINE_VALUES.EVENT_ID)
+  }
 
   it('should process telemetry correctly', () => {
     const logger = createLoggerMock()
@@ -19,6 +22,7 @@ describe('ProcessTelemetry', () => {
 
     const useCase = new ProcessTelemetry(
       detector as any,
+      fakeGenerator,
       fakeClock,
       logger as any
     )
@@ -57,6 +61,7 @@ describe('ProcessTelemetry', () => {
 
     const useCase = new ProcessTelemetry(
       detector as any,
+      fakeGenerator,
       fakeClock,
       logger as any
     )
@@ -94,6 +99,7 @@ describe('ProcessTelemetry', () => {
 
     const useCase = new ProcessTelemetry(
       detector as any,
+      fakeGenerator,
       fakeClock,
       logger as any
     )
@@ -119,6 +125,7 @@ describe('ProcessTelemetry', () => {
 
     const useCase = new ProcessTelemetry(
       detector as any,
+      fakeGenerator,
       fakeClock,
       logger as any
     )
@@ -144,6 +151,7 @@ describe('ProcessTelemetry', () => {
 
     const useCase = new ProcessTelemetry(
       detector as any,
+      fakeGenerator,
       fakeClock,
       logger as any
     )

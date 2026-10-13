@@ -7,8 +7,8 @@ import { MACHINE_VALUES } from '@test/constants/machine-values'
 import { fakeConfig } from '@test/utils/fake-config'
 import { VibrationPolicy } from '@/domain/anomaly/services/policies/vibration-policy'
 import { UUIDGenerator } from '@/infrastructure/adapters/uuid-generator'
-import { MachineFactory } from '@/domain/machine/machine-factory'
-import { Machine } from '@/domain/machine/machine'
+import { TelemetryFactory } from '@/domain/machine/telemetry-factory'
+import { TelemetryEvent } from '@/domain/machine/telemetry'
 
 describe('AnomalyDetector', () => {
   const generator = new UUIDGenerator()
@@ -16,8 +16,9 @@ describe('AnomalyDetector', () => {
   it('should return an empty array when no policies detect anomalies', () => {
     const detector = new AnomalyDetector([new TemperaturePolicy(generator)])
 
-    const machine: Machine = MachineFactory.create(
+    const machine: TelemetryEvent = TelemetryFactory.create(
       MACHINE_VALUES.ID,
+      MACHINE_VALUES.EVENT_ID,
       MACHINE_VALUES.TEMPERATURE.SAFE,
       MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
       MACHINE_VALUES.EMISSION.SAFE,
@@ -41,8 +42,9 @@ describe('AnomalyDetector', () => {
   it('should detect an anomaly from a single policy', () => {
     const detector = new AnomalyDetector([new TemperaturePolicy(generator)])
 
-    const machine: Machine = MachineFactory.create(
+    const machine: TelemetryEvent = TelemetryFactory.create(
       MACHINE_VALUES.ID,
+      MACHINE_VALUES.EVENT_ID,
       MACHINE_VALUES.TEMPERATURE.OVER,
       MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
       MACHINE_VALUES.EMISSION.SAFE,
@@ -76,8 +78,9 @@ describe('AnomalyDetector', () => {
       new VibrationPolicy(generator)
     ])
 
-    const machine: Machine = MachineFactory.create(
+    const machine: TelemetryEvent = TelemetryFactory.create(
       MACHINE_VALUES.ID,
+      MACHINE_VALUES.EVENT_ID,
       MACHINE_VALUES.TEMPERATURE.OVER,
       MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
       MACHINE_VALUES.EMISSION.SAFE,
@@ -116,8 +119,9 @@ describe('AnomalyDetector', () => {
   it('should not detect an anomaly when no policy is defined for the sensor type', () => {
     const detector = new AnomalyDetector([new TemperaturePolicy(generator)])
 
-    const machine: Machine = MachineFactory.create(
+    const machine: TelemetryEvent = TelemetryFactory.create(
       MACHINE_VALUES.ID,
+      MACHINE_VALUES.EVENT_ID,
       MACHINE_VALUES.TEMPERATURE.SAFE,
       MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
       MACHINE_VALUES.EMISSION.SAFE,

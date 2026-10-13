@@ -5,8 +5,8 @@ import { MachineConfig } from '@/domain/machine/machine-config'
 import { MACHINE_LIMITS } from '@test/constants/machine-limits'
 import { TemperaturePolicy } from '@/domain/anomaly/services/policies/temperature-policy'
 import { SensorType } from '@/domain/anomaly/value-objects/sensor-type'
-import { MachineFactory } from '@/domain/machine/machine-factory'
-import { Machine } from '@/domain/machine/machine'
+import { TelemetryFactory } from '@/domain/machine/telemetry-factory'
+import { TelemetryEvent } from '@/domain/machine/telemetry'
 import { UUIDGenerator } from '@/infrastructure/adapters/uuid-generator'
 
 describe('TemperaturePolicy', () => {
@@ -14,8 +14,9 @@ describe('TemperaturePolicy', () => {
 
   it('should return an anomaly with correct details when temperature is over the maximum limit', () => {
     const policy = new TemperaturePolicy(generator)
-    const machine: Machine = MachineFactory.create(
+    const machine: TelemetryEvent = TelemetryFactory.create(
       MACHINE_VALUES.ID,
+      MACHINE_VALUES.EVENT_ID,
       MACHINE_VALUES.TEMPERATURE.OVER,
       MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
       MACHINE_VALUES.EMISSION.SAFE,
@@ -39,8 +40,9 @@ describe('TemperaturePolicy', () => {
 
   it('should detect temperature anomalies under the minimum limit', () => {
     const policy = new TemperaturePolicy(generator)
-    const machine: Machine = MachineFactory.create(
+    const machine: TelemetryEvent = TelemetryFactory.create(
       MACHINE_VALUES.ID,
+      MACHINE_VALUES.EVENT_ID,
       MACHINE_VALUES.TEMPERATURE.UNDER,
       MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
       MACHINE_VALUES.EMISSION.SAFE,
@@ -64,8 +66,9 @@ describe('TemperaturePolicy', () => {
 
   it('should not detect any anomaly when temperature is within limits', () => {
     const policy = new TemperaturePolicy(generator)
-    const machine: Machine = MachineFactory.create(
+    const machine: TelemetryEvent = TelemetryFactory.create(
       MACHINE_VALUES.ID,
+      MACHINE_VALUES.EVENT_ID,
       MACHINE_VALUES.TEMPERATURE.SAFE,
       MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
       MACHINE_VALUES.EMISSION.SAFE,

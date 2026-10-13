@@ -6,16 +6,17 @@ import { MACHINE_LIMITS } from '@test/constants/machine-limits'
 import { SensorType } from '@/domain/anomaly/value-objects/sensor-type'
 import { EmissionPolicy } from '@/domain/anomaly/services/policies/emission-policy'
 import { UUIDGenerator } from '@/infrastructure/adapters/uuid-generator'
-import { MachineFactory } from '@/domain/machine/machine-factory'
-import { Machine } from '@/domain/machine/machine'
+import { TelemetryFactory } from '@/domain/machine/telemetry-factory'
+import { TelemetryEvent } from '@/domain/machine/telemetry'
 
 describe('EmissionPolicy', () => {
   const generator = new UUIDGenerator()
 
   it('should return an anomaly with correct details when emission is over the maximum limit', () => {
     const policy = new EmissionPolicy(generator)
-    const machine: Machine = MachineFactory.create(
+    const machine: TelemetryEvent = TelemetryFactory.create(
       MACHINE_VALUES.ID,
+      MACHINE_VALUES.EVENT_ID,
       MACHINE_VALUES.TEMPERATURE.SAFE,
       MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
       MACHINE_VALUES.EMISSION.OVER,
@@ -39,8 +40,9 @@ describe('EmissionPolicy', () => {
 
   it('should not detect any anomaly when emissions is within limits', () => {
     const policy = new EmissionPolicy(generator)
-    const machine: Machine = MachineFactory.create(
+    const machine: TelemetryEvent = TelemetryFactory.create(
       MACHINE_VALUES.ID,
+      MACHINE_VALUES.EVENT_ID,
       MACHINE_VALUES.TEMPERATURE.SAFE,
       MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
       MACHINE_VALUES.EMISSION.SAFE,

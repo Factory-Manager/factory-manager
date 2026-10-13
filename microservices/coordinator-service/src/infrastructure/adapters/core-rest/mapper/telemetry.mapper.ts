@@ -5,16 +5,16 @@ export function toTelemetryDto(
   telemetryData: ProcessTelemetryResult
 ): TelemetryDto {
   return {
-    eventId: telemetryData.event.eventId,
-    machineId: telemetryData.event.machineId,
-    sequenceNumber: telemetryData.event.sequenceNumber,
-    capturedAt: telemetryData.event.occurredAt.toISOString(),
+    eventId: telemetryData.machine.eventId.value,
+    machineId: telemetryData.machine.id.value,
+    sequenceNumber: telemetryData.machine.sequenceNumber,
+    capturedAt: telemetryData.machine.occurredAt.toISOString(),
     readings: {
-      powerConsumption: telemetryData.event.powerConsumption,
-      emissions: telemetryData.event.emissions,
-      operatingTemperature: telemetryData.event.operatingTemperature,
-      vibration: telemetryData.event.vibration,
-      pressure: telemetryData.event.pressure
+      powerConsumption: telemetryData.machine.powerConsumption.value,
+      emissions: telemetryData.machine.emissions.value,
+      operatingTemperature: telemetryData.machine.temperature.value,
+      vibration: telemetryData.machine.vibration.value,
+      pressure: telemetryData.machine.pressure.value
     },
     anomaly: {
       isAnomaly: telemetryData.anomalies.length > 0,

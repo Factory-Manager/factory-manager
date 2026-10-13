@@ -56,7 +56,12 @@ async function bootstrap() {
     new PowerConsumptionPolicy(generator)
   ]
   const anomalyDetector = new AnomalyDetector(policies)
-  const processTelemetry = new ProcessTelemetry(anomalyDetector, clock, logger)
+  const processTelemetry = new ProcessTelemetry(
+    anomalyDetector,
+    generator,
+    clock,
+    logger
+  )
   const processHeartbeat = new ProcessHeartbeat(clock, logger)
   const machineConfigs = await coreRestService.getMachineConfigs({
     limit: 50,

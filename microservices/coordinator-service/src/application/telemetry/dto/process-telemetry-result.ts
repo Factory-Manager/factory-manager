@@ -1,7 +1,7 @@
-import { Machine } from '@/domain/machine/machine'
+import { TelemetryEvent } from '@/domain/machine/telemetry'
 import { Anomaly } from '../../../domain/anomaly/anomaly'
 
 export type ProcessTelemetryResult = {
-  machine: Machine
+  machine: TelemetryEvent
   anomalies: Anomaly[]
 }

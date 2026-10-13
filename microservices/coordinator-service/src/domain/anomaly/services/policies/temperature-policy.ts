@@ -3,13 +3,13 @@ import { Anomaly } from '@/domain/anomaly/anomaly'
 import { AnomalyEventId } from '@/domain/anomaly/value-objects/anomaly-event-id'
 import { SensorType } from '@/domain/anomaly/value-objects/sensor-type'
 import { AnomalyPolicy } from './anomaly-policy'
-import { Machine } from '@/domain/machine/machine'
+import { TelemetryEvent } from '@/domain/machine/telemetry'
 import { IdGenerator } from '@/domain/ports/id-generator'
 
 export class TemperaturePolicy implements AnomalyPolicy {
   constructor(private readonly generator: IdGenerator) {}
 
-  evaluate(event: Machine, config: MachineConfig): Anomaly[] {
+  evaluate(event: TelemetryEvent, config: MachineConfig): Anomaly[] {
     const anomalies: Anomaly[] = []
     if (!config.temperature.contains(event.temperature)) {
       anomalies.push(

@@ -1,26 +1,32 @@
-import type { Emission } from './value-objects/emission'
-import type { MachineConfig } from './machine-config'
-import type { PowerConsumption } from './value-objects/power-consumption'
-import type { Pressure } from './value-objects/pressure'
-import type { Temperature } from './value-objects/temperature'
-import type { Vibration } from './value-objects/vibration'
-import type { MachineId } from './value-objects/machine-id'
+import { MachineId } from './value-objects/machine-id'
+import { PowerConsumption } from './value-objects/power-consumption'
+import { Emission } from './value-objects/emission'
+import { Vibration } from './value-objects/vibration'
+import { Pressure } from './value-objects/pressure'
+import { Temperature } from './value-objects/temperature'
+import { TelemetryEventId } from './value-objects/telemetry-event-id'
+import { MachineConfig } from './machine-config'
 
 /**
- * Represents a machine in a factory, with its current state and behavior to check if it's operating within the specified configuration limits.
+ * Represents a telemetry event for a machine, containing measurement of sensors and timestamps.
  */
-export class Machine {
+export class TelemetryEvent {
   /**
-   * Creates a new {@link Machine} instance with the given parameters.
+   * Creates a new {@link TelemetryEvent} instance with the given parameters.
    * @param id the unique identifier of the machine
+   * @param eventId the unique identifier of the telemetry event
    * @param temperature the current temperature of the machine
    * @param powerConsumption the current power consumption of the machine
    * @param emissions the current emissions of the machine
    * @param vibration the current vibration level of the machine
    * @param pressure the current pressure of the machine
+   * @param occurredAt the timestamp when the telemetry event was recorded
+   * @param processedAt the timestamp when the telemetry event was processed
+   * @param sequenceNumber the sequence number of the telemetry event
    */
   constructor(
     public readonly id: MachineId,
+    public eventId: TelemetryEventId,
     public temperature: Temperature,
     public powerConsumption: PowerConsumption,
     public emissions: Emission,
@@ -36,7 +42,7 @@ export class Machine {
    * @param other the other machine to compare with
    * @returns true if the machines are equal, false otherwise
    */
-  isEqual(other: Machine): boolean {
+  isEqual(other: TelemetryEvent): boolean {
     return this.id.equals(other.id)
   }
 

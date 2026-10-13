@@ -6,6 +6,8 @@ export const MACHINE_IDS = {
 export const MACHINE_VALUES = {
   ID: MACHINE_IDS.DEFAULT,
 
+  EVENT_ID: '563efbc3-6e91-4d98-b10d-67e68edddc5c',
+
   TEMPERATURE: {
     SAFE: 55,
     OVER: 90,

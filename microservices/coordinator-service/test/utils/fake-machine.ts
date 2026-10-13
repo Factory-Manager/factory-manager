@@ -1,8 +1,9 @@
-import { MachineFactory } from '@/domain/machine/machine-factory'
+import { TelemetryFactory } from '@/domain/machine/telemetry-factory'
 import { MACHINE_VALUES } from '@test/constants/machine-values'
 
 export function fakeMachine(overrides?: {
   id?: string
+  eventId?: string
   temperature?: number
   powerConsumption?: number
   emissions?: number
@@ -12,8 +13,9 @@ export function fakeMachine(overrides?: {
   processedAt?: Date
   sequenceNumber?: number
 }) {
-  return MachineFactory.create(
+  return TelemetryFactory.create(
     overrides?.id ?? MACHINE_VALUES.ID,
+    overrides?.eventId ?? MACHINE_VALUES.EVENT_ID,
     overrides?.temperature ?? MACHINE_VALUES.TEMPERATURE.SAFE,
     overrides?.powerConsumption ?? MACHINE_VALUES.POWER_CONSUMPTION.SAFE,
     overrides?.emissions ?? MACHINE_VALUES.EMISSION.SAFE,

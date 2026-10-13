@@ -1,13 +1,15 @@
-import { Machine, MachineConfig, MachineFactory } from '@/domain'
+import { TelemetryEvent, MachineConfig, TelemetryFactory } from '@/domain'
 import { AnomalyDetector } from '@/domain/anomaly/services/anomaly-detector'
 import { Clock } from '../ports/clock'
 import { Logger } from '../ports/logger'
 import { ProcessTelemetryResult } from './dto/process-telemetry-result'
 import { TelemetryInput } from './dto/telemetry-input'
+import { IdGenerator } from '@/domain/ports/id-generator'
 
 export class ProcessTelemetry {
   constructor(
     private readonly anomalyDetector: AnomalyDetector,
+    private readonly generator: IdGenerator,
     private readonly clock: Clock,
     private readonly logger: Logger
   ) {}
@@ -43,8 +45,9 @@ export class ProcessTelemetry {
     const vibration = toFiniteNumber(input.vibration, 'vibration')
     const pressure = toFiniteNumber(input.pressure, 'pressure')
 
-    const machine: Machine = MachineFactory.create(
+    const machine: TelemetryEvent = TelemetryFactory.create(
       machineId,
+      this.generator.generateId(),
       operatingTemperature,
       powerConsumption,
       emissions,
