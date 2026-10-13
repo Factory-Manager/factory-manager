@@ -1,7 +1,7 @@
-import { TelemetryEvent } from '@/application/telemetry/dto/telemetry-event'
 import { MachineConfig } from '@/domain/machine/machine-config'
 import { Anomaly } from '../anomaly'
 import { AnomalyPolicy } from './policies/anomaly-policy'
+import { TelemetryEvent } from '@/domain/machine/telemetry'
 
 export class AnomalyDetector {
   constructor(private readonly policies: AnomalyPolicy[]) {}

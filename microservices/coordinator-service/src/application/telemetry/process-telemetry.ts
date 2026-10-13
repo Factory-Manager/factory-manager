@@ -1,14 +1,15 @@
-import { MachineConfig } from '@/domain'
+import { TelemetryEvent, MachineConfig, TelemetryFactory } from '@/domain'
 import { AnomalyDetector } from '@/domain/anomaly/services/anomaly-detector'
 import { Clock } from '../ports/clock'
 import { Logger } from '../ports/logger'
 import { ProcessTelemetryResult } from './dto/process-telemetry-result'
-import { TelemetryEvent } from './dto/telemetry-event'
 import { TelemetryInput } from './dto/telemetry-input'
+import { IdGenerator } from '@/domain/ports/id-generator'
 
 export class ProcessTelemetry {
   constructor(
     private readonly anomalyDetector: AnomalyDetector,
+    private readonly generator: IdGenerator,
     private readonly clock: Clock,
     private readonly logger: Logger
   ) {}
@@ -32,35 +33,43 @@ export class ProcessTelemetry {
     }
     this.logger.info('Processing telemetry data', input)
 
-    const event: TelemetryEvent = {
-      machineId,
-      occurredAt,
-      processedAt: this.clock.now(),
-      operatingTemperature: toFiniteNumber(
-        input.operatingTemperature,
-        'operatingTemperature'
-      ),
-      powerConsumption: toFiniteNumber(
-        input.powerConsumption,
-        'powerConsumption'
-      ),
-      emissions: toFiniteNumber(input.emissions, 'emissions'),
-      vibration: toFiniteNumber(input.vibration, 'vibration'),
-      pressure: toFiniteNumber(input.pressure, 'pressure')
-    }
+    const operatingTemperature = toFiniteNumber(
+      input.operatingTemperature,
+      'operatingTemperature'
+    )
+    const powerConsumption = toFiniteNumber(
+      input.powerConsumption,
+      'powerConsumption'
+    )
+    const emissions = toFiniteNumber(input.emissions, 'emissions')
+    const vibration = toFiniteNumber(input.vibration, 'vibration')
+    const pressure = toFiniteNumber(input.pressure, 'pressure')
 
-    const anomalies = this.anomalyDetector.detect(event, machineConfig)
+    const machine: TelemetryEvent = TelemetryFactory.create(
+      machineId,
+      this.generator.generateId(),
+      operatingTemperature,
+      powerConsumption,
+      emissions,
+      vibration,
+      pressure,
+      occurredAt,
+      this.clock.now(),
+      input.sequenceNumber
+    )
+
+    const anomalies = this.anomalyDetector.detect(machine, machineConfig)
     if (anomalies.length > 0) {
       this.logger.warn('Anomalies detected', {
-        machineId: event.machineId,
+        machineId: machine.id.value,
         anomalies
       })
     } else {
-      this.logger.info('No anomalies detected', { machineId: event.machineId })
+      this.logger.info('No anomalies detected', { machineId: machine.id.value })
     }
 
-    this.logger.info('Processed telemetry event', { event })
+    this.logger.info('Processed telemetry event', { machine: machine })
 
-    return { event, anomalies }
+    return { machine, anomalies }
   }
 }

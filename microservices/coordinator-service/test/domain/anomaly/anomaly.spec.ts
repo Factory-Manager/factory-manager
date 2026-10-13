@@ -12,14 +12,14 @@ describe('Anomaly', () => {
     const processedAt = new Date('2026-01-01T00:00:00.000Z')
     const anomaly = new Anomaly(
       new AnomalyEventId('A1'),
-      new MachineId('M1'),
+      new MachineId(MACHINE_VALUES.ID),
       SensorType.TEMPERATURE,
       MACHINE_VALUES.TEMPERATURE.OVER,
       occurredAt,
       processedAt
     )
     expect(anomaly.id).toEqual(new AnomalyEventId('A1'))
-    expect(anomaly.machineId).toEqual(new MachineId('M1'))
+    expect(anomaly.machineId).toEqual(new MachineId(MACHINE_VALUES.ID))
     expect(anomaly.sensorType).toEqual(SensorType.TEMPERATURE)
     expect(anomaly.value).toEqual(MACHINE_VALUES.TEMPERATURE.OVER)
     expect(anomaly.occurredAt).toEqual(occurredAt)
@@ -31,7 +31,7 @@ describe('Anomaly', () => {
       () =>
         new Anomaly(
           new AnomalyEventId(''),
-          new MachineId('M1'),
+          new MachineId(MACHINE_VALUES.ID),
           SensorType.TEMPERATURE,
           MACHINE_VALUES.TEMPERATURE.OVER,
           new Date('2025-12-31T23:59:00.000Z'),

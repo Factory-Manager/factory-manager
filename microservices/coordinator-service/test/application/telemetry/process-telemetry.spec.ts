@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { createAnomalyDetectorMock } from '@test/mocks/anomaly-detector.mock'
 import { createLoggerMock } from '@test/mocks/logger.mock'
 import { fakeConfig } from '@test/utils/fake-config'
@@ -10,6 +10,9 @@ import { TelemetryInput } from '@/application/telemetry/dto/telemetry-input'
 describe('ProcessTelemetry', () => {
   const occurredAtDate: Date = new Date('2025-12-31T23:59:00.000Z')
   const processedAtDate: Date = new Date('2026-01-01T00:00:00.000Z')
+  const fakeGenerator = {
+    generateId: vi.fn(() => MACHINE_VALUES.EVENT_ID)
+  }
 
   it('should process telemetry correctly', () => {
     const logger = createLoggerMock()
@@ -19,12 +22,14 @@ describe('ProcessTelemetry', () => {
 
     const useCase = new ProcessTelemetry(
       detector as any,
+      fakeGenerator,
       fakeClock,
       logger as any
     )
 
     const input: TelemetryInput = {
       machineId: MACHINE_VALUES.ID,
+      sequenceNumber: MACHINE_VALUES.SEQUENCE_NUMBER,
       occurredAt: occurredAtDate.toISOString(),
       operatingTemperature: MACHINE_VALUES.TEMPERATURE.SAFE.toString(),
       powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE.toString(),
@@ -35,8 +40,8 @@ describe('ProcessTelemetry', () => {
 
     const result = useCase.execute(input, fakeConfig())
 
-    expect(result.event.machineId).toBe(MACHINE_VALUES.ID)
-    expect(result.event.operatingTemperature).toBe(
+    expect(result.machine.id.value).toBe(MACHINE_VALUES.ID)
+    expect(result.machine.temperature.value).toBe(
       MACHINE_VALUES.TEMPERATURE.SAFE
     )
     expect(result.anomalies).toHaveLength(0)
@@ -56,12 +61,14 @@ describe('ProcessTelemetry', () => {
 
     const useCase = new ProcessTelemetry(
       detector as any,
+      fakeGenerator,
       fakeClock,
       logger as any
     )
 
     const input: TelemetryInput = {
       machineId: MACHINE_VALUES.ID,
+      sequenceNumber: MACHINE_VALUES.SEQUENCE_NUMBER,
       occurredAt: occurredAtDate.toISOString(),
       operatingTemperature: MACHINE_VALUES.TEMPERATURE.OVER.toString(),
       powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE.toString(),
@@ -72,12 +79,12 @@ describe('ProcessTelemetry', () => {
 
     const result = useCase.execute(input, fakeConfig())
 
-    expect(result.event.machineId).toBe(MACHINE_VALUES.ID)
-    expect(result.event.operatingTemperature).toBe(
+    expect(result.machine.id.value).toBe(MACHINE_VALUES.ID)
+    expect(result.machine.temperature.value).toBe(
       MACHINE_VALUES.TEMPERATURE.OVER
     )
-    expect(result.event.occurredAt).toEqual(occurredAtDate)
-    expect(result.event.processedAt).toEqual(processedAtDate)
+    expect(result.machine.occurredAt).toEqual(occurredAtDate)
+    expect(result.machine.processedAt).toEqual(processedAtDate)
     expect(result.anomalies).toHaveLength(1)
     expect(result.anomalies[0].sensorType).toBe(SensorType.TEMPERATURE)
     expect(result.anomalies[0].value).toBe(MACHINE_VALUES.TEMPERATURE.OVER)
@@ -92,12 +99,14 @@ describe('ProcessTelemetry', () => {
 
     const useCase = new ProcessTelemetry(
       detector as any,
+      fakeGenerator,
       fakeClock,
       logger as any
     )
 
     const input: TelemetryInput = {
       machineId: '',
+      sequenceNumber: MACHINE_VALUES.SEQUENCE_NUMBER,
       occurredAt: occurredAtDate.toISOString(),
       operatingTemperature: MACHINE_VALUES.TEMPERATURE.SAFE.toString(),
       powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE.toString(),
@@ -116,12 +125,14 @@ describe('ProcessTelemetry', () => {
 
     const useCase = new ProcessTelemetry(
       detector as any,
+      fakeGenerator,
       fakeClock,
       logger as any
     )
 
     const input: TelemetryInput = {
       machineId: MACHINE_VALUES.ID,
+      sequenceNumber: MACHINE_VALUES.SEQUENCE_NUMBER,
       occurredAt: 'invalid-date',
       operatingTemperature: MACHINE_VALUES.TEMPERATURE.SAFE.toString(),
       powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE.toString(),
@@ -140,12 +151,14 @@ describe('ProcessTelemetry', () => {
 
     const useCase = new ProcessTelemetry(
       detector as any,
+      fakeGenerator,
       fakeClock,
       logger as any
     )
 
     const input: TelemetryInput = {
       machineId: MACHINE_VALUES.ID,
+      sequenceNumber: MACHINE_VALUES.SEQUENCE_NUMBER,
       occurredAt: occurredAtDate.toISOString(),
       operatingTemperature: 'NaN',
       powerConsumption: MACHINE_VALUES.POWER_CONSUMPTION.SAFE.toString(),

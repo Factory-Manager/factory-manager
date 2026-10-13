@@ -1,10 +1,14 @@
 import { InvalidMachineIdError } from '../errors/invalid-machine-id.error'
 
 export class MachineId {
-  constructor(public readonly value: string) {
-    if (!value || value.trim().length === 0) {
-      throw new InvalidMachineIdError()
+  public readonly value: string
+
+  constructor(value: string) {
+    const normalizedValue = value.trim()
+    if (!/^[a-fA-F0-9]{24}$/.test(normalizedValue)) {
+      throw new InvalidMachineIdError(normalizedValue)
     }
+    this.value = normalizedValue
   }
 
   equals(other: MachineId): boolean {

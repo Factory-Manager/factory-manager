@@ -1,3 +1,3 @@
-export { Machine } from './machine/machine'
-export { MachineFactory } from './machine/machine-factory'
+export { TelemetryEvent } from './machine/telemetry'
+export { TelemetryFactory } from './machine/telemetry-factory'
 export * from './machine/machine-config'
